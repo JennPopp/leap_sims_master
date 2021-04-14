@@ -65,33 +65,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4String procName = endPoint->GetProcessDefinedStep()->GetProcessName();
   fRunAction->CountProcesses(procName);
 
-  if (prePoint->GetTouchableHandle()->GetVolume()==fDetector->GetBox() &&
-      endPoint->GetTouchableHandle()->GetVolume()==fDetector->GetWorld()) {
-    G4Track* aTrack = aStep->GetTrack();
-    const G4ParticleDefinition* part =
-      aTrack->GetDynamicParticle()->GetDefinition();
-    //    G4cout<<"a "<<particleName<<" left the Box \n";
-    G4ThreeVector position  = endPoint->GetPosition();
-    G4ThreeVector direction = endPoint->GetMomentumDirection();
-    G4double kinEnergy = endPoint->GetKineticEnergy();
-
-    G4ThreeVector beamDirection =
-      fPrimary->GetParticleGun()->GetParticleMomentumDirection();
-    G4double polZ = endPoint->GetPolarization().z();
-
-    G4double costheta = direction*beamDirection;
-
-    G4double xdir =
-      direction*G4PolarizationHelper::GetParticleFrameX(beamDirection);
-    G4double ydir =
-      direction*G4PolarizationHelper::GetParticleFrameY(beamDirection);
-
-    G4double phi=std::atan2(ydir,xdir);
-    fRunAction->FillData(part,kinEnergy,costheta,phi,polZ);
-
-
-
-  }
   // get volume of the current step
   auto volume = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
 
