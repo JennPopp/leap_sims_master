@@ -33,8 +33,7 @@
 
 #include "SteppingAction.hh"
 #include "DetectorConstruction.hh"
-#include "PrimaryGeneratorAction.hh"
-#include "RunAction.hh"
+#include "EventAction.hh"
 
 #include "G4RunManager.hh"
 #include "G4PolarizationHelper.hh"
@@ -45,9 +44,9 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 SteppingAction::SteppingAction(DetectorConstruction* det,
-                               PrimaryGeneratorAction* prim, RunAction* ruAct)
+                               EventAction* eventAction)
  : G4UserSteppingAction(),
-   fDetector(det), fPrimary(prim), fRunAction(ruAct)
+   fDetector(det), fRunAction(ruAct),fEventAction(eventAction)
 { }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -59,7 +58,6 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
-  G4StepPoint* prePoint = aStep->GetPreStepPoint();
   G4StepPoint* endPoint = aStep->GetPostStepPoint();
 
   G4String procName = endPoint->GetProcessDefinedStep()->GetProcessName();
