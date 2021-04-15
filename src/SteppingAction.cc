@@ -68,19 +68,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // get volume of the current step
   auto volume = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
 
-      if ( volume == fDetector->GetVacStep1PV() ) {
-           // get analysis manager
-           auto analysisManager = G4AnalysisManager::Instance();
+  if ( volume == fDetector->GetVacStep1PV() ) {
+       // get analysis manager
+       auto Eval=step->GetPostStepPoint()->GetKineticEnergy()/MeV;
+       fEventAction->AddVals(Eval,1);
 
-           // fill ntuple id=0
-           analysisManager->FillNtupleIColumn(0,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
-
-           analysisManager->FillNtupleDColumn(0,1, aStep->GetPostStepPoint()->GetKineticEnergy()/MeV);
-
-           analysisManager->AddNtupleRow(0);
-
-      //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
-         }
+  //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
+     }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
