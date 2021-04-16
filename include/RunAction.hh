@@ -55,22 +55,19 @@ public:
 
   RunAction(DetectorConstruction*, PrimaryGeneratorAction*);
   virtual ~RunAction();
-
+G4String outFileName;
   virtual void BeginOfRunAction(const G4Run*);
   virtual void   EndOfRunAction(const G4Run*);
 
   void CountProcesses(G4String);
 
-  void EventFinished();
 
 private:
 
   void BookHisto();
   void SaveHisto(G4int nevents);
 
-  const G4ParticleDefinition* fGamma;
-  const G4ParticleDefinition* fElectron;
-  const G4ParticleDefinition* fPositron;
+
 
   DetectorConstruction*   fDetector;
   PrimaryGeneratorAction* fPrimary;
@@ -80,19 +77,12 @@ private:
 
   G4int fTotalEventCount;
 
-  ParticleStatistics fPhotonStats;
-  ParticleStatistics fElectronStats;
-  ParticleStatistics fPositronStats;
 
-  G4double fEnergySum;
-  G4double fNP;
+
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-// inline functions
-inline void E166CalorEventAction::AddVals(G4double Eval, G4double Npart) {
-  fEnergySum += Eval;
-  fNP += Npart;
-}
+
 
 #endif
