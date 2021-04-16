@@ -59,6 +59,14 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 void EventAction::EndOfEventAction(const G4Event*)
 {
+  // get analysis manager
+  auto analysisManager = G4AnalysisManager::Instance();
+
+  // fill ntuple id=0
+  analysisManager->FillNtupleDColumn(0,0, fEnergySum);
+  analysisManager->FillNtupleIColumn(0,1, fNP);
+  analysisManager->AddNtupleRow(0);
+
   fRunAction->EventFinished();
 }
 
