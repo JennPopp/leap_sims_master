@@ -79,9 +79,10 @@ int main(int argc,char** argv) {
 
   // set user action classes
   RunAction* run;
+  EventAction* event;
   runManager->SetUserAction(run = new RunAction(det,prim));
   runManager->SetUserAction(new EventAction(run));
-  runManager->SetUserAction(new SteppingAction(det,prim,run));
+  runManager->SetUserAction(new SteppingAction(det,event,run));
 
   // get the pointer to the User Interface manager
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
