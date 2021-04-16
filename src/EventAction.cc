@@ -27,7 +27,7 @@
 /// \brief Implementation of the EventAction class
 //
 // $Id: EventAction.cc 98772 2016-08-09 14:25:31Z gcosmo $
-// 
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -36,8 +36,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EventAction::EventAction(RunAction * ra) 
-: G4UserEventAction(), 
+EventAction::EventAction(RunAction * ra)
+: G4UserEventAction(),
   fRunAction(ra)
 {}
 
@@ -49,14 +49,17 @@ EventAction::~EventAction()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void EventAction::BeginOfEventAction(const G4Event*)
-{}
+{
+  // initialisation per event
+  fEnergySum = 0.; // Sum of energy of particles behind magnet
+  fNP=0; // Number of particles behind magnet
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void EventAction::EndOfEventAction(const G4Event*)
 {
-  fRunAction->EventFinished(); 
+  fRunAction->EventFinished();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
