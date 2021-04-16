@@ -60,5 +60,11 @@ private:
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// inline functions
+inline void EventAction::AddVals(G4double Eval, G4double Npart) {
+  fEnergySum += Eval;
+  fNP += Npart;
+}
+
 
 #endif
