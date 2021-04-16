@@ -67,7 +67,6 @@ void EventAction::EndOfEventAction(const G4Event*)
   analysisManager->FillNtupleIColumn(0,1, fNP);
   analysisManager->AddNtupleRow(0);
 
-  fRunAction->EventFinished();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

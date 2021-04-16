@@ -37,7 +37,7 @@
 #include "G4UserRunAction.hh"
 #include "ProcessesCount.hh"
 #include "globals.hh"
-#include "g4root.hh"
+#include "Analysis.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -50,22 +50,6 @@ class G4ParticleDefinition;
 
 class RunAction : public G4UserRunAction
 {
-  class ParticleStatistics {
-  public:
-    ParticleStatistics();
-    ~ParticleStatistics();
-    void EventFinished();
-    void FillData(G4double kinEnergy, G4double costheta,
-                  G4double longitudinalPolarization);
-    void PrintResults(G4int totalNumberOfEvents);
-    void Clear();
-  private:
-    G4int fCurrentNumber;
-    G4int fTotalNumber, fTotalNumber2;
-    G4double fSumEnergy, fSumEnergy2;
-    G4double fSumPolarization, fSumPolarization2;
-    G4double fSumCosTheta, fSumCosTheta2;
-  };
 
 public:
 
@@ -77,12 +61,8 @@ public:
 
   void CountProcesses(G4String);
 
-  void FillData(const G4ParticleDefinition* particle,
-                G4double kinEnergy, G4double costheta, G4double phi,
-                G4double longitudinalPolarization);
-
   void EventFinished();
-                                     
+
 private:
 
   void BookHisto();
@@ -97,14 +77,22 @@ private:
   ProcessesCount*         fProcCounter;
 
   G4AnalysisManager*      fAnalysisManager;
-  
+
   G4int fTotalEventCount;
 
   ParticleStatistics fPhotonStats;
   ParticleStatistics fElectronStats;
   ParticleStatistics fPositronStats;
+
+  G4double fEnergySum;
+  G4double fNP;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// inline functions
+inline void E166CalorEventAction::AddVals(G4double Eval, G4double Npart) {
+  fEnergySum += Eval;
+  fNP += Npart;
+}
 
 #endif

@@ -32,6 +32,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "RunAction.hh"
+#include "Analysis.hh"
 
 #include "DetectorConstruction.hh"
 #include "PrimaryGeneratorAction.hh"
