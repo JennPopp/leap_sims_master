@@ -53,22 +53,10 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim)
+RunAction::RunAction()
 : G4UserRunAction(),
-  fGamma(0), fElectron(0), fPositron(0),
-  fDetector(det), fPrimary(prim), fProcCounter(0), fAnalysisManager(0),
-  fTotalEventCount(0),
-  fPhotonStats(), fElectronStats(), fPositronStats()
-{
-  fGamma = G4Gamma::Gamma();
-  fElectron = G4Electron::Electron();
-  fPositron = G4Positron::Positron();
-
-
-
-
-
-}
+   fProcCounter(0), fAnalysisManager(0)
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -104,9 +92,7 @@ void RunAction::BeginOfRunAction(const G4Run* aRun)
   if (fProcCounter) delete fProcCounter;
   fProcCounter = new ProcessesCount;
   fTotalEventCount = 0;
-  fPhotonStats.Clear();
-  fElectronStats.Clear();
-  fPositronStats.Clear();
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -178,8 +164,6 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   //restore default format
   G4cout.precision(prec);
 
-  // write out histograms
-  SaveHisto(NbOfEvents);
 
   // show Rndm status
   CLHEP::HepRandom::showEngineStatus();

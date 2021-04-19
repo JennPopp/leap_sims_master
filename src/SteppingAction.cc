@@ -44,7 +44,9 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 SteppingAction::SteppingAction(DetectorConstruction* det,
-                               EventAction* eventAction)
+                               EventAction* eventAction,
+                               RunAction* ruAct
+                             )
  : G4UserSteppingAction(),
    fDetector(det), fRunAction(ruAct),fEventAction(eventAction)
 { }
@@ -68,7 +70,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   if ( volume == fDetector->GetVacStep1PV() ) {
        // get analysis manager
-       auto Eval=step->GetPostStepPoint()->GetKineticEnergy()/MeV;
+       auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
        fEventAction->AddVals(Eval,1);
 
   //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;

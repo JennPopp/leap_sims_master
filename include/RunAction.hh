@@ -53,7 +53,7 @@ class RunAction : public G4UserRunAction
 
 public:
 
-  RunAction(DetectorConstruction*, PrimaryGeneratorAction*);
+  RunAction();
   virtual ~RunAction();
 G4String outFileName;
   virtual void BeginOfRunAction(const G4Run*);
