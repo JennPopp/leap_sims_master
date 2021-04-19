@@ -1,0 +1,11 @@
+#Ignore the build dir#
+######################
+**/build
+
+#other folders to ignore#
+######################
+**/log
+**/out
+**/err
+**/results
+**/macros
