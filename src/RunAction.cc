@@ -32,6 +32,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "RunAction.hh"
+#include "Analysis.hh"
 
 #include "DetectorConstruction.hh"
 #include "PrimaryGeneratorAction.hh"
@@ -54,20 +55,8 @@
 
 RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim)
 : G4UserRunAction(),
-  fGamma(0), fElectron(0), fPositron(0),
-  fDetector(det), fPrimary(prim), fProcCounter(0), fAnalysisManager(0),
-  fTotalEventCount(0),
-  fPhotonStats(), fElectronStats(), fPositronStats()
-{
-  fGamma = G4Gamma::Gamma();
-  fElectron = G4Electron::Electron();
-  fPositron = G4Positron::Positron();
-
-
-
-
-
-}
+   fDetector(det), fPrimary(prim),fProcCounter(0), fAnalysisManager(0)
+{}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -103,35 +92,7 @@ void RunAction::BeginOfRunAction(const G4Run* aRun)
   if (fProcCounter) delete fProcCounter;
   fProcCounter = new ProcessesCount;
   fTotalEventCount = 0;
-  fPhotonStats.Clear();
-  fElectronStats.Clear();
-  fPositronStats.Clear();
-}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void RunAction::FillData(const G4ParticleDefinition* particle,
-                         G4double kinEnergy, G4double costheta,
-                         G4double phi,
-                         G4double longitudinalPolarization)
-{
-  G4int id = -1;
-  if (particle == fGamma) {
-    fPhotonStats.FillData(kinEnergy, costheta, longitudinalPolarization);
-    if(fAnalysisManager) { id = 1; }
-  } else if (particle == fElectron) {
-    fElectronStats.FillData(kinEnergy, costheta, longitudinalPolarization);
-    if(fAnalysisManager) { id = 5; }
-  } else if (particle == fPositron) {
-    fPositronStats.FillData(kinEnergy, costheta, longitudinalPolarization);
-    if(fAnalysisManager) { id = 9; }
-  }
-  if(id > 0) {
-    fAnalysisManager->FillH1(id,kinEnergy,1.0);
-    fAnalysisManager->FillH1(id+1,costheta,1.0);
-    fAnalysisManager->FillH1(id+2,phi,1.0);
-    fAnalysisManager->FillH1(id+3,longitudinalPolarization,1.0);
-  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -139,62 +100,18 @@ void RunAction::FillData(const G4ParticleDefinition* particle,
 void RunAction::BookHisto()
 {
 
-  fAnalysisManager->SetFirstHistoId(1);
-
-  // Creating an 1-dimensional histograms in the root directory of the tree
-  const G4String id[] = { "h1", "h2", "h3", "h4", "h5",
-                          "h6", "h7", "h8", "h9", "h10", "h11", "h12"};
-  const G4String title[] =
-                { "Gamma Energy distribution",                      //1
-                  "Gamma Cos(Theta) distribution",                  //2
-                  "Gamma Phi angular distribution",                 //3
-                  "Gamma longitudinal Polarization",                //4
-                  "Electron Energy distribution",                   //5
-                  "Electron Cos(Theta) distribution",               //6
-                  "Electron Phi angular distribution",              //7
-                  "Electron longitudinal Polarization",             //8
-                  "Positron Energy distribution",                   //9
-                  "Positron Cos(Theta) distribution",               //10
-                  "Positron Phi angular distribution",              //11
-                  "Positron longitudinal Polarization"              //12
-                 };
-  G4double vmin, vmax;
-  G4int nbins = 120;
-  for(int i=0; i<12; ++i) {
-    G4int j = i - i/4*4;
-    if(0==j)      { vmin = 0.; vmax = 12.*MeV; }
-    else if(1==j) { vmin = -1.; vmax = 1.; }
-    else if(2==j) { vmin = 0.; vmax = pi; }
-    else          { vmin = -1.5; vmax = 1.5; }
-    G4int ih = fAnalysisManager->CreateH1(id[i],title[i],nbins,vmin,vmax);
-    fAnalysisManager->SetH1Activation(ih, false);
-  }
-
   // Creating ntuple
   //
+  fAnalysisManager->CreateNtuple("bremssim2", "vacstep1");
+  fAnalysisManager->CreateNtupleDColumn("Esum");
+  fAnalysisManager->CreateNtupleIColumn("NP");
+  fAnalysisManager->FinishNtuple();
   // Creating ntuple vacstep1 , id=0
   //
-  fAnalysisManager->CreateNtuple("bremssim2", "vacstep1");
-  fAnalysisManager->CreateNtupleIColumn("pdg");
-  fAnalysisManager->CreateNtupleDColumn("E");
-  fAnalysisManager->FinishNtuple();
+
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void RunAction::SaveHisto(G4int nevents)
-{
-  if(fAnalysisManager) {
-    G4double norm = 1.0/G4double(nevents);
-    for(int i=0; i<12; ++i) {
-      fAnalysisManager->ScaleH1(i, norm);
-    }
-    fAnalysisManager->Write();
-    fAnalysisManager->CloseFile();
-    delete fAnalysisManager;
-    fAnalysisManager = 0;
-  }
-}
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -240,15 +157,6 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
      G4cout << "\t" << procName << " = " << count<<"\n";
   }
 
-  if (fTotalEventCount == 0) return;
-
-  G4cout<<" Gamma: \n";
-  fPhotonStats.PrintResults(fTotalEventCount);
-  G4cout<<" Electron: \n";
-  fElectronStats.PrintResults(fTotalEventCount);
-  G4cout<<" Positron: \n";
-  fPositronStats.PrintResults(fTotalEventCount);
-
   //cross check from G4EmCalculator
   //  G4cout << "\n Verification from G4EmCalculator. \n";
   //  G4EmCalculator emCal;
@@ -256,88 +164,19 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   //restore default format
   G4cout.precision(prec);
 
-  // write out histograms
-  SaveHisto(NbOfEvents);
 
   // show Rndm status
   CLHEP::HepRandom::showEngineStatus();
+
+
+  fAnalysisManager = G4AnalysisManager::Instance();
+  fAnalysisManager->Write();
+  fAnalysisManager->CloseFile();
+
+
+  G4cout << "### Run " << aRun->GetRunID() << " Ended." << G4endl;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void RunAction::EventFinished()
-{
-  ++fTotalEventCount;
-  fPhotonStats.EventFinished();
-  fElectronStats.EventFinished();
-  fPositronStats.EventFinished();
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-RunAction::ParticleStatistics::ParticleStatistics()
-  : fCurrentNumber(0),
-    fTotalNumber(0), fTotalNumber2(0),
-    fSumEnergy(0), fSumEnergy2(0),
-    fSumPolarization(0), fSumPolarization2(0),
-    fSumCosTheta(0), fSumCosTheta2(0)
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-RunAction::ParticleStatistics::~ParticleStatistics()
-{}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void RunAction::ParticleStatistics::EventFinished()
-{
-  fTotalNumber+=fCurrentNumber;
-  fTotalNumber2+=fCurrentNumber*fCurrentNumber;
-  fCurrentNumber=0;
-}
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void RunAction::ParticleStatistics:: FillData(G4double kinEnergy,
-                                              G4double costheta,
-                                              G4double longitudinalPolarization)
-{
-  ++fCurrentNumber;
-  fSumEnergy+=kinEnergy;
-  fSumEnergy2+=kinEnergy*kinEnergy;
-  fSumPolarization+=longitudinalPolarization;
-  fSumPolarization2+=longitudinalPolarization*longitudinalPolarization;
-  fSumCosTheta+=costheta;
-  fSumCosTheta2+=costheta*costheta;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void RunAction::ParticleStatistics::PrintResults(G4int totalNumberOfEvents)
-{
-  G4cout<<"Mean Number per Event :"
-        <<G4double(fTotalNumber)/G4double(totalNumberOfEvents)<<"\n";
-  if (fTotalNumber==0) fTotalNumber=1;
-  G4double energyMean=fSumEnergy/fTotalNumber;
-  G4double energyRms=std::sqrt(fSumEnergy2/fTotalNumber-energyMean*energyMean);
-  G4cout<<"Mean Energy :"<< G4BestUnit(energyMean,"Energy")
-        <<" +- "<<G4BestUnit(energyRms,"Energy")<<"\n";
-  G4double polarizationMean=fSumPolarization/fTotalNumber;
-  G4double polarizationRms=
-    std::sqrt(fSumPolarization2/fTotalNumber-polarizationMean*polarizationMean);
-  G4cout<<"Mean Polarization :"<< polarizationMean
-        <<" +- "<<polarizationRms<<"\n";
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void RunAction::ParticleStatistics::Clear()
-{
-  fCurrentNumber=0;
-  fTotalNumber=fTotalNumber2=0;
-  fSumEnergy=fSumEnergy2=0;
-  fSumPolarization=fSumPolarization2=0;
-  fSumCosTheta=fSumCosTheta2=0;
-}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -27,32 +27,44 @@
 /// \brief Definition of the EventAction class
 //
 // $Id: EventAction.hh 98772 2016-08-09 14:25:31Z gcosmo $
-// 
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #ifndef EventAction_h
 #define EventAction_h 1
 
+#include "RunAction.hh"
 #include "G4UserEventAction.hh"
+#include "globals.hh"
 
 class RunAction;
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class EventAction : public G4UserEventAction
 {
 public:
-  EventAction(RunAction *);
+  EventAction(RunAction*);
   virtual ~EventAction();
 
   virtual void BeginOfEventAction(const G4Event*);
   virtual void EndOfEventAction(const G4Event*);
-    
+
+  void AddVals(G4double Eval, G4double Npart);
+
 private:
   RunAction*            fRunAction;
+
+  G4double fEnergySum;
+  G4double fNP;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// inline functions
+inline void EventAction::AddVals(G4double Eval, G4double Npart) {
+  fEnergySum += Eval;
+  fNP += Npart;
+}
+
 
 #endif

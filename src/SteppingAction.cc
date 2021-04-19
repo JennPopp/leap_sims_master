@@ -33,8 +33,7 @@
 
 #include "SteppingAction.hh"
 #include "DetectorConstruction.hh"
-#include "PrimaryGeneratorAction.hh"
-#include "RunAction.hh"
+#include "EventAction.hh"
 
 #include "G4RunManager.hh"
 #include "G4PolarizationHelper.hh"
@@ -45,9 +44,11 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 SteppingAction::SteppingAction(DetectorConstruction* det,
-                               PrimaryGeneratorAction* prim, RunAction* ruAct)
+                               EventAction* eventAction,
+                               RunAction* ruAct
+                             )
  : G4UserSteppingAction(),
-   fDetector(det), fPrimary(prim), fRunAction(ruAct)
+   fDetector(det), fRunAction(ruAct),fEventAction(eventAction)
 { }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -59,55 +60,21 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
-  G4StepPoint* prePoint = aStep->GetPreStepPoint();
   G4StepPoint* endPoint = aStep->GetPostStepPoint();
 
   G4String procName = endPoint->GetProcessDefinedStep()->GetProcessName();
   fRunAction->CountProcesses(procName);
 
-  if (prePoint->GetTouchableHandle()->GetVolume()==fDetector->GetBox() &&
-      endPoint->GetTouchableHandle()->GetVolume()==fDetector->GetWorld()) {
-    G4Track* aTrack = aStep->GetTrack();
-    const G4ParticleDefinition* part =
-      aTrack->GetDynamicParticle()->GetDefinition();
-    //    G4cout<<"a "<<particleName<<" left the Box \n";
-    G4ThreeVector position  = endPoint->GetPosition();
-    G4ThreeVector direction = endPoint->GetMomentumDirection();
-    G4double kinEnergy = endPoint->GetKineticEnergy();
-
-    G4ThreeVector beamDirection =
-      fPrimary->GetParticleGun()->GetParticleMomentumDirection();
-    G4double polZ = endPoint->GetPolarization().z();
-
-    G4double costheta = direction*beamDirection;
-
-    G4double xdir =
-      direction*G4PolarizationHelper::GetParticleFrameX(beamDirection);
-    G4double ydir =
-      direction*G4PolarizationHelper::GetParticleFrameY(beamDirection);
-
-    G4double phi=std::atan2(ydir,xdir);
-    fRunAction->FillData(part,kinEnergy,costheta,phi,polZ);
-
-
-
-  }
   // get volume of the current step
   auto volume = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
 
-      if ( volume == fDetector->GetVacStep1PV() ) {
-           // get analysis manager
-           auto analysisManager = G4AnalysisManager::Instance();
+  if ( volume == fDetector->GetVacStep1PV() ) {
+       // get analysis manager
+       auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+       fEventAction->AddVals(Eval,1);
 
-           // fill ntuple id=0
-           analysisManager->FillNtupleIColumn(0,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
-
-           analysisManager->FillNtupleDColumn(0,1, aStep->GetPostStepPoint()->GetKineticEnergy()/MeV);
-
-           analysisManager->AddNtupleRow(0);
-
-      //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
-         }
+  //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
+     }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
