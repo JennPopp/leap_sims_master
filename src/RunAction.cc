@@ -103,8 +103,8 @@ void RunAction::BookHisto()
   // Creating ntuple
   //
   fAnalysisManager->CreateNtuple("bremssim2", "vacstep1");
-  fAnalysisManager->CreateNtupleIColumn("pdg");
-  fAnalysisManager->CreateNtupleDColumn("E");
+  fAnalysisManager->CreateNtupleDColumn("Esum");
+  fAnalysisManager->CreateNtupleIColumn("NP");
   fAnalysisManager->FinishNtuple();
   // Creating ntuple vacstep1 , id=0
   //
