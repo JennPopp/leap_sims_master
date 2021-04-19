@@ -41,10 +41,10 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+
 class DetectorConstruction;
 class PrimaryGeneratorAction;
 class G4Run;
-class G4ParticleDefinition;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -53,7 +53,7 @@ class RunAction : public G4UserRunAction
 
 public:
 
-  RunAction();
+  RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim);
   virtual ~RunAction();
 G4String outFileName;
   virtual void BeginOfRunAction(const G4Run*);

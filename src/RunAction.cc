@@ -53,9 +53,9 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-RunAction::RunAction()
+RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim)
 : G4UserRunAction(),
-   fProcCounter(0), fAnalysisManager(0)
+   fDetector(det), fPrimary(prim),fProcCounter(0), fAnalysisManager(0)
 {}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
