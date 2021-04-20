@@ -80,10 +80,11 @@ private:
   G4VPhysicalVolume*    fBox;
   G4VPhysicalVolume*   fVacStepPV1;
 
-  G4double              fBoxSizeXY;
-  G4double              fBoxSizeZ;
+  G4double              fSizeXY;
+  G4double              fCoreZ;
+  G4double              fConvZ;
   G4double              fWorldSize;
-  G4Material*           fTargetMaterial;
+  G4Material*           fConvMaterial;
   G4Material*           fWorldMaterial;
 
   DetectorMessenger* fMessenger;

@@ -42,21 +42,21 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
-:G4UImessenger(), 
+:G4UImessenger(),
  fDetector(det), fTestemDir(0), fDetDir(0),
- fMaterCmd(0), fSizeXYCmd(0), fSizeZCmd(0), fUpdateCmd(0)
-{ 
+ fMaterCmd(0), fSizeXYCmd(0), fCoreZCmd(0), fConvZCmd(0),fUpdateCmd(0)
+{
   fTestemDir = new G4UIdirectory("/testem/");
   fTestemDir->SetGuidance("commands specific to this example");
-  
+
   fDetDir = new G4UIdirectory("/testem/det/");
   fDetDir->SetGuidance("detector construction");
-        
+
   fMaterCmd = new G4UIcmdWithAString("/testem/det/setMat",this);
   fMaterCmd->SetGuidance("Select material of the box.");
   fMaterCmd->SetParameterName("choice",false);
   fMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  
+
   fSizeXYCmd = new G4UIcmdWithADoubleAndUnit("/testem/det/setSizeXY",this);
   fSizeXYCmd->SetGuidance("Set sizeXY of the box");
   fSizeXYCmd->SetParameterName("Size",false);
@@ -70,7 +70,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fSizeZCmd->SetRange("SizeZ>0.");
   fSizeZCmd->SetUnitCategory("Length");
   fSizeZCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-    
+
   fUpdateCmd = new G4UIcmdWithoutParameter("/testem/det/update",this);
   fUpdateCmd->SetGuidance("Update calorimeter geometry.");
   fUpdateCmd->SetGuidance("This command MUST be applied before \"beamOn\" ");
@@ -84,25 +84,25 @@ DetectorMessenger::~DetectorMessenger()
 {
   delete fMaterCmd;
   delete fSizeXYCmd;
-  delete fSizeZCmd; 
+  delete fSizeZCmd;
   delete fUpdateCmd;
-  delete fDetDir;  
+  delete fDetDir;
   delete fTestemDir;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
-{ 
+{
   if( command == fMaterCmd )
    { fDetector->SetTargetMaterial(newValue);}
-   
+
   if( command == fSizeXYCmd )
    { fDetector->SetSizeXY(fSizeXYCmd->GetNewDoubleValue(newValue));}
-   
+
   if( command == fSizeZCmd )
    { fDetector->SetSizeZ(fSizeZCmd->GetNewDoubleValue(newValue));}
-     
+
   if( command == fUpdateCmd )
    { fDetector->UpdateGeometry(); }
 }
