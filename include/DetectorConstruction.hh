@@ -55,35 +55,38 @@ public:
   G4VPhysicalVolume* Construct();
 
   void SetSizeXY   (G4double);
-  void SetSizeZ    (G4double);
-  void SetTargetMaterial (G4String);
+  void SetCoreThick   (G4double);
+  void SetConvThick   (G4double);
+  void SetConvMaterial (G4String);
   void SetWorldMaterial (G4String);
 
   void UpdateGeometry();
 
 public:
 
-  const G4VPhysicalVolume* GetWorld()      {return fWorld;};
-  const G4VPhysicalVolume* GetBox()        {return fBox;};
+  const G4VPhysicalVolume* GetWorld()      {return PhysicalWorld;};
+//  const G4VPhysicalVolume* GetBox()        {return fBox;};
   const G4VPhysicalVolume* GetVacStep1PV() const;
 
   G4double           GetWorldSize()  {return fWorldSize;};
-  G4double           GetBoxSizeXY()  {return fBoxSizeXY;};
-  G4double           GetBoxSizeZ()   {return fBoxSizeZ;};
-  G4Material*        GetMaterial()   {return fTargetMaterial;};
+  G4double           GetSizeXY()  {return fSizeXY;};
+  G4double           GetCoreZ()   {return fCoreThick;};
+  G4double           GetConvZ()   {return fConvThick;};
+  G4Material*        GetMaterial()   {return fConvMaterial;};
 
   void               PrintParameters();
 
 private:
 
-  G4VPhysicalVolume*    fWorld;
-  G4VPhysicalVolume*    fBox;
+  G4VPhysicalVolume*    PhysicalWorld;
+  G4VPhysicalVolume*    PhysicalCore;
   G4VPhysicalVolume*   fVacStepPV1;
 
-  G4double              fBoxSizeXY;
-  G4double              fBoxSizeZ;
+  G4double              fSizeXY;
+  G4double              fCoreThick;
+  G4double              fConvThick;
   G4double              fWorldSize;
-  G4Material*           fTargetMaterial;
+  G4Material*           fConvMaterial;
   G4Material*           fWorldMaterial;
 
   DetectorMessenger* fMessenger;
