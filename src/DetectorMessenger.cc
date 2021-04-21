@@ -44,7 +44,7 @@
 DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
 :G4UImessenger(),
  fDetector(det), fTestemDir(0), fDetDir(0),
- fMaterCmd(0), fSizeXYCmd(0), fCoreZCmd(0), fConvZCmd(0),fUpdateCmd(0)
+ fConvMaterCmd(0), fSizeXYCmd(0), fCoreZCmd(0), fConvZCmd(0),fUpdateCmd(0)
 {
   fTestemDir = new G4UIdirectory("/testem/");
   fTestemDir->SetGuidance("commands specific to this example");
@@ -52,24 +52,32 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fDetDir = new G4UIdirectory("/testem/det/");
   fDetDir->SetGuidance("detector construction");
 
-  fMaterCmd = new G4UIcmdWithAString("/testem/det/setMat",this);
-  fMaterCmd->SetGuidance("Select material of the box.");
-  fMaterCmd->SetParameterName("choice",false);
-  fMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fConvMaterCmd = new G4UIcmdWithAString("/testem/det/SetConvMaterial",this);
+  fConvMaterCmd->SetGuidance("Select material of the Converter Target.");
+  fConvMaterCmd->SetParameterName("choice",false);
+  fConvMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fSizeXYCmd = new G4UIcmdWithADoubleAndUnit("/testem/det/setSizeXY",this);
-  fSizeXYCmd->SetGuidance("Set sizeXY of the box");
+  fSizeXYCmd = new G4UIcmdWithADoubleAndUnit("/testem/det/SetSizeXY",this);
+  fSizeXYCmd->SetGuidance("Set diameter of the converter target and iron core");
   fSizeXYCmd->SetParameterName("Size",false);
   fSizeXYCmd->SetRange("Size>0.");
   fSizeXYCmd->SetUnitCategory("Length");
   fSizeXYCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fSizeZCmd = new G4UIcmdWithADoubleAndUnit("/testem/det/setSizeZ",this);
-  fSizeZCmd->SetGuidance("Set sizeZ of the box");
-  fSizeZCmd->SetParameterName("SizeZ",false);
-  fSizeZCmd->SetRange("SizeZ>0.");
-  fSizeZCmd->SetUnitCategory("Length");
-  fSizeZCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fCoreZCmd = new G4UIcmdWithADoubleAndUnit("/testem/det/SetCoreThick",this);
+  fCoreZCmd->SetGuidance("Set sizeZ of the iron core");
+  fCoreZCmd->SetParameterName("CoreThick",false);
+  fCoreZCmd->SetRange("CoreThick>0.");
+  fCoreZCmd->SetUnitCategory("Length");
+  fCoreZCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fConvZCmd = new G4UIcmdWithADoubleAndUnit("/testem/det/SetConvThick",this);
+  fConvZCmd->SetGuidance("Set sizeZ of the converter target");
+  fConvZCmd->SetParameterName("ConvThick",false);
+  fConvZCmd->SetRange("ConvThick>0.");
+  fConvZCmd->SetUnitCategory("Length");
+  fConvZCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
 
   fUpdateCmd = new G4UIcmdWithoutParameter("/testem/det/update",this);
   fUpdateCmd->SetGuidance("Update calorimeter geometry.");
@@ -82,9 +90,10 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
 
 DetectorMessenger::~DetectorMessenger()
 {
-  delete fMaterCmd;
+  delete fConvMaterCmd;
   delete fSizeXYCmd;
-  delete fSizeZCmd;
+  delete fCoreZCmd;
+  delete fConvZCmd;
   delete fUpdateCmd;
   delete fDetDir;
   delete fTestemDir;
@@ -94,14 +103,17 @@ DetectorMessenger::~DetectorMessenger()
 
 void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
-  if( command == fMaterCmd )
-   { fDetector->SetTargetMaterial(newValue);}
+  if( command == fConvMaterCmd )
+   { fDetector->SetConvMaterial(newValue);}
 
   if( command == fSizeXYCmd )
    { fDetector->SetSizeXY(fSizeXYCmd->GetNewDoubleValue(newValue));}
 
-  if( command == fSizeZCmd )
-   { fDetector->SetSizeZ(fSizeZCmd->GetNewDoubleValue(newValue));}
+  if( command == fCoreZCmd )
+   { fDetector->SetCoreThick(fCoreZCmd->GetNewDoubleValue(newValue));}
+
+   if( command == fConvZCmd )
+    { fDetector->SetConvThick(fConvZCmd->GetNewDoubleValue(newValue));}
 
   if( command == fUpdateCmd )
    { fDetector->UpdateGeometry(); }
