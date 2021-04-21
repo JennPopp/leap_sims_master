@@ -56,12 +56,13 @@
 
 DetectorConstruction::DetectorConstruction()
 : G4VUserDetectorConstruction(),
-  fWorld(0), fBox(0), fTargetMaterial(0), fWorldMaterial(0)
+  fWorld(0), fCore(0), fConvMaterial(0), fWorldMaterial(0)
 {
-  fBoxSizeXY = 50*mm;
-  fBoxSizeZ = 75*mm;
+  fSizeXY = 50*mm;
+  fCoreZ = 75*mm;
+  fConvZ = 1.75*mm;
   fWorldSize = 1.*m;
-  SetTargetMaterial("G4_Fe");
+  SetConvMaterial("G4_W");
   SetWorldMaterial("G4_Galactic");
   fMessenger = new DetectorMessenger(this);
 }
@@ -88,11 +89,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Geometry parameters
   G4double  maggap1 = 48.5*mm;
   G4double  maggap2 = 12.5*mm;
-  G4double  absrad  = fBoxSizeXY/2.;
+  G4double  absrad  = fSizeXY/2.;
   G4double shieldrad=75.0*mm;
   G4double vacthick = 1.0*mm;
-  G4double corethick = fBoxSizeZ;
-  G4double convthick = 1.75*mm;
+  G4double corethick = fCoreThick;
+  G4double convthick = fConvThick;
   G4double  coilthick = corethick + 25.0*mm;
   G4double  shieldthick = corethick - 25.0*mm;
   G4double  conedist = corethick/2. + maggap2;

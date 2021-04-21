@@ -64,20 +64,21 @@ public:
 public:
 
   const G4VPhysicalVolume* GetWorld()      {return fWorld;};
-  const G4VPhysicalVolume* GetBox()        {return fBox;};
+//  const G4VPhysicalVolume* GetBox()        {return fBox;};
   const G4VPhysicalVolume* GetVacStep1PV() const;
 
   G4double           GetWorldSize()  {return fWorldSize;};
-  G4double           GetBoxSizeXY()  {return fBoxSizeXY;};
-  G4double           GetBoxSizeZ()   {return fBoxSizeZ;};
-  G4Material*        GetMaterial()   {return fTargetMaterial;};
+  G4double           GetSizeXY()  {return fSizeXY;};
+  G4double           GetCoreZ()   {return fCoreThick;};
+  G4double           GetConvZ()   {return fConvThick;};
+  G4Material*        GetMaterial()   {return fConvMaterial;};
 
   void               PrintParameters();
 
 private:
 
   G4VPhysicalVolume*    fWorld;
-  G4VPhysicalVolume*    fBox;
+  G4VPhysicalVolume*    fCore;
   G4VPhysicalVolume*   fVacStepPV1;
 
   G4double              fSizeXY;

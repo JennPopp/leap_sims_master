@@ -144,10 +144,12 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   G4String Particle = particle->GetParticleName();
   G4double energy = fPrimary->GetParticleGun()->GetParticleEnergy();
   G4cout << "\n The run consists of " << NbOfEvents << " "<< Particle << " of "
-         << G4BestUnit(energy,"Energy") << " through "
-         << G4BestUnit(fDetector->GetBoxSizeZ(),"Length") << " of "
+         << G4BestUnit(energy,"Energy") << " through a Converter Target of"
+         << G4BestUnit(fDetector->GetConvZ(),"Length") << " of "
          << material->GetName() << " (density: "
-         << G4BestUnit(density,"Volumic Mass") << ")" << G4endl;
+         << G4BestUnit(density,"Volumic Mass") << ")" <<
+         << " and a"<< G4BestUnit(fDetector->GetCoreZ(),"Length")  
+         <<" iron core "<< G4endl;
 
   //frequency of processes
   G4cout << "\n Process calls frequency --->\n";
