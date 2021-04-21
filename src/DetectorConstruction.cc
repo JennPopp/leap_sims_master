@@ -114,7 +114,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                    fWorldSize/2,fWorldSize/2,fWorldSize/2); //dimensions
 
   G4LogicalVolume*
-  LogicalWorld = new G4LogicalVolume(sWorld,                   //shape
+  LogicalWorld = new G4LogicalVolume(SolidWorld,                   //shape
                                fWorldMaterial,           //material
                               "World");                  //name
 
@@ -230,11 +230,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                              magMat,             //its material
                              "IronCore");                   //its name
 
-  PhysicialCore = new G4PVPlacement(0,                             //no rotation
+  PhysicalCore = new G4PVPlacement(0,                             //no rotation
                            G4ThreeVector(),               //at (0,0,0)
-                           lBox,                          //its logical volume
-                           fTargetMaterial->GetName(),    //its name
-                           lWorld,                        //its mother  volume
+                           LogicalCore,                          //its logical volume
+                           "IronCorePV",    //its name
+                           LogicalWorld,                        //its mother  volume
                            false,                         //no boolean operation
                            0);                            //copy number
 
@@ -261,20 +261,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                         G4ThreeVector(0.,0.,corethick/2 + vacthick/2 + 10.0*mm),    //its position
                                 VacStepLV1,            //its logical volume
                                 "VacStep2",                 //its name
-                                lWorld,               //its mother
+                                LogicalWorld,               //its mother
                                 false,                     //no boolean operat
                                 0);                        //copy number
 
   //always return the root volume
   //
-  return fWorld;
+  return PhysicalWorld;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void DetectorConstruction::PrintParameters()
 {
-  G4cout << "\n The ConverterTarget is made of " << fTargetMaterial->GetName()
+  G4cout << "\n The ConverterTarget is made of " << fConvMaterial->GetName()
           << " , " << G4BestUnit(fSizeXY,"Length")<<  "in diameter and "
          <<  G4BestUnit(fConvThick,"Length") << " thick"
            << G4endl;
@@ -328,14 +328,14 @@ void DetectorConstruction::SetSizeXY(G4double value)
   UpdateGeometry();
 }
 
-void DetectorConstruction::SetCoreZ(G4double value)
+void DetectorConstruction::SetCoreThick(G4double value)
 {
   fCoreThick = value;
   if (fWorldSize<fCoreThick) fWorldSize = 10*fCoreThick;
   UpdateGeometry();
 }
 
-void DetectorConstruction::SetConvZ(G4double value)
+void DetectorConstruction::SetConvThick(G4double value)
 {
   fConvThick = value;
   UpdateGeometry();

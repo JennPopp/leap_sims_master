@@ -55,8 +55,9 @@ public:
   G4VPhysicalVolume* Construct();
 
   void SetSizeXY   (G4double);
-  void SetSizeZ    (G4double);
-  void SetTargetMaterial (G4String);
+  void SetCoreThick   (G4double);
+  void SetConvThick   (G4double);
+  void SetConvMaterial (G4String);
   void SetWorldMaterial (G4String);
 
   void UpdateGeometry();
