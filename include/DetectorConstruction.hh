@@ -77,13 +77,13 @@ public:
 
 private:
 
-  G4VPhysicalVolume*    fWorld;
-  G4VPhysicalVolume*    fCore;
+  G4VPhysicalVolume*    PhysicalWorld;
+  G4VPhysicalVolume*    PhysicalCore;
   G4VPhysicalVolume*   fVacStepPV1;
 
   G4double              fSizeXY;
-  G4double              fCoreZ;
-  G4double              fConvZ;
+  G4double              fCoreThick;
+  G4double              fConvThick;
   G4double              fWorldSize;
   G4Material*           fConvMaterial;
   G4Material*           fWorldMaterial;

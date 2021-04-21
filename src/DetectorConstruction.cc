@@ -56,11 +56,11 @@
 
 DetectorConstruction::DetectorConstruction()
 : G4VUserDetectorConstruction(),
-  fWorld(0), fCore(0), fConvMaterial(0), fWorldMaterial(0)
+  PhysicalWorld(0), PhysicalCore(0), fConvMaterial(0), fWorldMaterial(0)
 {
   fSizeXY = 50*mm;
-  fCoreZ = 75*mm;
-  fConvZ = 1.75*mm;
+  fCoreThick = 75*mm;
+  fConvThick = 1.75*mm;
   fWorldSize = 1.*m;
   SetConvMaterial("G4_W");
   SetWorldMaterial("G4_Galactic");
@@ -110,17 +110,17 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // World
   //
   G4Box*
-  sWorld = new G4Box("World",                            //name
+  SolidWorld = new G4Box("World",                            //name
                    fWorldSize/2,fWorldSize/2,fWorldSize/2); //dimensions
 
   G4LogicalVolume*
-  lWorld = new G4LogicalVolume(sWorld,                   //shape
+  LogicalWorld = new G4LogicalVolume(sWorld,                   //shape
                                fWorldMaterial,           //material
                               "World");                  //name
 
-  fWorld = new G4PVPlacement(0,                          //no rotation
+  PhysicalWorld = new G4PVPlacement(0,                          //no rotation
                              G4ThreeVector(),            //at (0,0,0)
-                             lWorld,                     //logical volume
+                             LogicalWorld,                     //logical volume
                              "World",                    //name
                              0,                          //mother volume
                              false,                      //no boolean operation
@@ -149,7 +149,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   								 G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm),// translation position
   								 LogicalMagnet,      //its logical volume
   						       "PhysicalMagnet",   //its name  (2nd constructor)
-  						       lWorld,         //its mother volume
+  						       LogicalWorld,         //its mother volume
   						       false,              //no boolean operation
   						       0);                 //copy number
 
@@ -216,21 +216,21 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
               G4ThreeVector(0.0*mm, 0.0*mm, -maggap2-convthick/2-corethick/2),
             LogicalReconversion,         //its logical volume
             "PhysicalReconversion",   //its name  (2nd constructor)
-            lWorld,              //its mother volume
+            LogicalWorld,              //its mother volume
             false,                 //no boolean operation
             0);                       //copy number
 
   // Iron Core
   //
-  auto sBox = new G4Tubs ("Container",                           //its name
+  auto solidCore = new G4Tubs ("Container",                           //its name
                    0.0*mm, absrad*mm, corethick/2, 0.0*deg, 360.0*deg );//its dimensions
 
   G4LogicalVolume*
-  lBox = new G4LogicalVolume(sBox,                        //its shape
-                             fTargetMaterial,             //its material
-                             "theBox");                   //its name
+  LogicalCore = new G4LogicalVolume(solidCore,                        //its shape
+                             magMat,             //its material
+                             "IronCore");                   //its name
 
-  fBox = new G4PVPlacement(0,                             //no rotation
+  PhysicialCore = new G4PVPlacement(0,                             //no rotation
                            G4ThreeVector(),               //at (0,0,0)
                            lBox,                          //its logical volume
                            fTargetMaterial->GetName(),    //its name
@@ -240,26 +240,26 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // register logical Volume in PolarizationManager with polarization
   G4PolarizationManager * polMgr = G4PolarizationManager::GetInstance();
-  polMgr->SetVolumePolarization(lBox,G4ThreeVector(0.,0.,1.));
+  polMgr->SetVolumePolarization(LogicalCore,G4ThreeVector(0.,0.,1.));
 
   PrintParameters();
 
   // VacStep
   //
-  auto fVacStepS1 = new G4Tubs("VacStep1",  //Name
+  auto VacStepS1 = new G4Tubs("VacStep1",  //Name
                                0.,         // inner radius
                                absrad,     // outer radius
                                vacthick/2., // half length in z
                                0.0*deg,    // starting phi angle
                                360.0*deg); // angle of the segment
 
-   auto fVacStepLV1 = new G4LogicalVolume(fVacStepS1,    //its solid
+   auto VacStepLV1 = new G4LogicalVolume(VacStepS1,    //its solid
                                         fWorldMaterial,    //its material
                                         "VacStep1");       //its name
 
    fVacStepPV1 = new G4PVPlacement(0,                   //no rotation
                         G4ThreeVector(0.,0.,corethick/2 + vacthick/2 + 10.0*mm),    //its position
-                                fVacStepLV1,            //its logical volume
+                                VacStepLV1,            //its logical volume
                                 "VacStep2",                 //its name
                                 lWorld,               //its mother
                                 false,                     //no boolean operat
@@ -274,25 +274,28 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 void DetectorConstruction::PrintParameters()
 {
-  G4cout << "\n The Box is " << G4BestUnit(fBoxSizeXY,"Length")
-         << " x " << G4BestUnit(fBoxSizeXY,"Length")
-         << " x " << G4BestUnit(fBoxSizeZ,"Length")
-         << " of " << fTargetMaterial->GetName() << G4endl;
+  G4cout << "\n The ConverterTarget is made of " << fTargetMaterial->GetName()
+          << " , " << G4BestUnit(fSizeXY,"Length")<<  "in diameter and "
+         <<  G4BestUnit(fConvThick,"Length") << " thick"
+           << G4endl;
+ G4cout << "\n The IronCore is"
+        <<  G4BestUnit(fCoreThick,"Length") << " thick"
+          << G4endl;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void DetectorConstruction::SetTargetMaterial(G4String materialChoice)
+void DetectorConstruction::SetConvMaterial(G4String materialChoice)
 {
   // search the material by its name
   G4Material* mat =
     G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);
-  if (mat != fTargetMaterial) {
+  if (mat != fConvMaterial) {
     if(mat) {
-      fTargetMaterial = mat;
+      fConvMaterial = mat;
       UpdateGeometry();
     } else {
-      G4cout << "### Warning!  Target material: <"
+      G4cout << "### Warning!  Converter Target material: <"
            << materialChoice << "> not found" << G4endl;
     }
   }
@@ -320,25 +323,30 @@ void DetectorConstruction::SetWorldMaterial(G4String materialChoice)
 
 void DetectorConstruction::SetSizeXY(G4double value)
 {
-  fBoxSizeXY = value;
-  if (fWorldSize<fBoxSizeXY) fWorldSize = 1.2*fBoxSizeXY;
+  fSizeXY = value;
+  if (fWorldSize<fSizeXY) fWorldSize = 10*fSizeXY;
   UpdateGeometry();
 }
 
-void DetectorConstruction::SetSizeZ(G4double value)
+void DetectorConstruction::SetCoreZ(G4double value)
 {
-  fBoxSizeZ = value;
-  if (fWorldSize<fBoxSizeZ) fWorldSize = 1.2*fBoxSizeZ;
+  fCoreThick = value;
+  if (fWorldSize<fCoreThick) fWorldSize = 10*fCoreThick;
   UpdateGeometry();
 }
 
+void DetectorConstruction::SetConvZ(G4double value)
+{
+  fConvThick = value;
+  UpdateGeometry();
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4RunManager.hh"
 
 void DetectorConstruction::UpdateGeometry()
 {
-  if (fWorld)
+  if (PhysicalWorld)
     G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
 }
 
