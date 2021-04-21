@@ -60,11 +60,11 @@ class DetectorMessenger: public G4UImessenger
 
     G4UIdirectory*             fTestemDir;
     G4UIdirectory*             fDetDir;
-
     G4UIcmdWithAString*        fConvMaterCmd;
     G4UIcmdWithADoubleAndUnit* fConvZCmd;
-    G4UIcmdWithADoubleAndUnit* fSizeXYCmd;
     G4UIcmdWithADoubleAndUnit* fCoreZCmd;
+    G4UIcmdWithADoubleAndUnit* fSizeXYCmd;
+
     G4UIcmdWithoutParameter*   fUpdateCmd;
 };
 

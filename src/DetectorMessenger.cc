@@ -43,8 +43,7 @@
 
 DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
 :G4UImessenger(),
- fDetector(det), fTestemDir(0), fDetDir(0),
- fConvMaterCmd(0), fSizeXYCmd(0), fCoreZCmd(0), fConvZCmd(0),fUpdateCmd(0)
+ fDetector(det)
 {
   fTestemDir = new G4UIdirectory("/testem/");
   fTestemDir->SetGuidance("commands specific to this example");
