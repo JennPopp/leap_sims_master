@@ -63,7 +63,7 @@ public:
 
 public:
 
-  const G4VPhysicalVolume* GetWorld()      {return fWorld;};
+  const G4VPhysicalVolume* GetWorld()      {return PhysicalWorld;};
 //  const G4VPhysicalVolume* GetBox()        {return fBox;};
   const G4VPhysicalVolume* GetVacStep1PV() const;
 
