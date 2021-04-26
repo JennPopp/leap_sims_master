@@ -54,6 +54,17 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 int main(int argc,char** argv) {
+  G4String outFile;
+ 	if (argc==3)
+ 	{
+ 		 outFile = argv[2];
+ 	}
+ 	else
+ 	{
+ 		 outFile = "result.root";
+ 	}
+
+
 
   //choose the Random engine
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
