@@ -1,8 +1,8 @@
-executable = /afs/desy.de/group/flc/pool/jenpopp/E166_Asy_NurAnalysemagnet/submit_jobs/startConvThickRun.sh
+executable = /afs/desy.de/group/flc/pool/jenpopp/leaps_sims_master/submit_jobs/startConvThickRun.sh
 arguments = $(ProcID) $(convthick)
 
-log = /afs/desy.de/group/flc/pool/jenpopp/E166_Asy_NurAnalysemagnet/log/job_$(ProcID).log
-output = /afs/desy.de/group/flc/pool/jenpopp/E166_Asy_NurAnalysemagnet/out/job_$(ProcID).out
-error = /afs/desy.de/group/flc/pool/jenpopp/E166_Asy_NurAnalysemagnet/err/job_$(ProcID).err
+log = /afs/desy.de/group/flc/pool/jenpopp/leaps_sims_master/log/job_$(ProcID).log
+output = /afs/desy.de/group/flc/pool/jenpopp/leaps_sims_master/out/job_$(ProcID).out
+error = /afs/desy.de/group/flc/pool/jenpopp/leaps_sims_master/err/job_$(ProcID).err
 
 queue 100 convthick in 0.5,1,1.5,2,2.5,3,3.5,4,4.5
