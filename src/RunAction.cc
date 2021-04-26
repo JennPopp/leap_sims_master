@@ -53,10 +53,12 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim)
+RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim, G4String outFile)
 : G4UserRunAction(),
    fDetector(det), fPrimary(prim),fProcCounter(0), fAnalysisManager(0)
-{}
+{
+  outFileName=outFile;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -73,7 +75,8 @@ void RunAction::BeginOfRunAction(const G4Run* aRun)
   fAnalysisManager->SetVerboseLevel(1);
 
   std :: ostringstream oss;
-  oss << "Result_Run_" << aRun->GetRunID();
+  //oss << "Result_Run_" << aRun->GetRunID();
+oss << "run"<< aRun->GetRunID()<< "_"<< outFileName ;
 
   G4String fileName=oss.str();
 

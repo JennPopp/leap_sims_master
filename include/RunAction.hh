@@ -53,9 +53,9 @@ class RunAction : public G4UserRunAction
 
 public:
 
-  RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim);
+  RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim, G4String outFile);
   virtual ~RunAction();
-G4String outFileName;
+
   virtual void BeginOfRunAction(const G4Run*);
   virtual void   EndOfRunAction(const G4Run*);
 
@@ -67,7 +67,7 @@ private:
   void BookHisto();
   void SaveHisto(G4int nevents);
 
-
+G4String outFileName;
 
   DetectorConstruction*   fDetector;
   PrimaryGeneratorAction* fPrimary;
