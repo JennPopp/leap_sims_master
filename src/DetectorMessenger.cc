@@ -45,32 +45,32 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
 :G4UImessenger(),
  fDetector(det)
 {
-  fTestemDir = new G4UIdirectory("/testem/");
-  fTestemDir->SetGuidance("commands specific to this example");
+  fLeapDir = new G4UIdirectory("/leap/");
+  fLeapDir->SetGuidance("commands specific to this example");
 
-  fDetDir = new G4UIdirectory("/testem/det/");
+  fDetDir = new G4UIdirectory("/leap/det/");
   fDetDir->SetGuidance("detector construction");
 
-  fConvMaterCmd = new G4UIcmdWithAString("/testem/det/SetConvMaterial",this);
+  fConvMaterCmd = new G4UIcmdWithAString("/leap/det/SetConvMaterial",this);
   fConvMaterCmd->SetGuidance("Select material of the Converter Target.");
   fConvMaterCmd->SetParameterName("choice",false);
   fConvMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fSizeXYCmd = new G4UIcmdWithADoubleAndUnit("/testem/det/SetSizeXY",this);
+  fSizeXYCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/SetSizeXY",this);
   fSizeXYCmd->SetGuidance("Set diameter of the converter target and iron core");
   fSizeXYCmd->SetParameterName("Size",false);
   fSizeXYCmd->SetRange("Size>0.");
   fSizeXYCmd->SetUnitCategory("Length");
   fSizeXYCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fCoreZCmd = new G4UIcmdWithADoubleAndUnit("/testem/det/SetCoreThick",this);
+  fCoreZCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/SetCoreThick",this);
   fCoreZCmd->SetGuidance("Set sizeZ of the iron core");
   fCoreZCmd->SetParameterName("CoreThick",false);
   fCoreZCmd->SetRange("CoreThick>0.");
   fCoreZCmd->SetUnitCategory("Length");
   fCoreZCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fConvZCmd = new G4UIcmdWithADoubleAndUnit("/testem/det/SetConvThick",this);
+  fConvZCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/SetConvThick",this);
   fConvZCmd->SetGuidance("Set sizeZ of the converter target");
   fConvZCmd->SetParameterName("ConvThick",false);
   fConvZCmd->SetRange("ConvThick>0.");
@@ -78,7 +78,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fConvZCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
 
-  fUpdateCmd = new G4UIcmdWithoutParameter("/testem/det/update",this);
+  fUpdateCmd = new G4UIcmdWithoutParameter("/leap/det/update",this);
   fUpdateCmd->SetGuidance("Update calorimeter geometry.");
   fUpdateCmd->SetGuidance("This command MUST be applied before \"beamOn\" ");
   fUpdateCmd->SetGuidance("if you changed geometrical value(s).");
