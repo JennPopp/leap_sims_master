@@ -1,0 +1,30 @@
+#test.mac
+/control/verbose 2
+/run/verbose 2
+/leap/phys/addPhysics polarized
+
+
+/run/printProgress 5000
+
+/run/initialize
+
+#-----------geometry-----------------------------
+/leap/det/SetCoreThick corethick mm
+/leap/det/SetConvThick convthick mm
+/leap/det/update
+
+/polarization/manager/verbose 1
+/polarization/volume/set Magnet 0. 0. 1
+/polarization/volume/list
+
+#-----------energy-------------------------------
+/gun/energy eKin MeV
+/gun/number NBunch
+#------------------------------------------------------
+/gun/polarization 0. 0. +1.
+
+/run/beamOn 10
+
+/gun/polarization 0. 0. -1.
+
+/run/beamOn 10
