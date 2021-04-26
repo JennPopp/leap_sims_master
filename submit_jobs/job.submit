@@ -1,0 +1,8 @@
+executable = /afs/desy.de/group/flc/pool/jenpopp/E166_Asy_NurAnalysemagnet/submit_jobs/startrun.sh
+arguments = $(ProcID) $(eKin)
+
+log = /afs/desy.de/group/flc/pool/jenpopp/E166_Asy_NurAnalysemagnet/log/job_$(ProcID).log
+output = /afs/desy.de/group/flc/pool/jenpopp/E166_Asy_NurAnalysemagnet/out/job_$(ProcID).out
+error = /afs/desy.de/group/flc/pool/jenpopp/E166_Asy_NurAnalysemagnet/err/job_$(ProcID).err
+
+queue 1 eKin in 1,2,5,7.5,10,20,75,100
