@@ -1,6 +1,6 @@
 /control/verbose 2
 /run/verbose 2
-#/leap/phys/addPhysics polarized
+/leap/phys/addPhysics polarized
 
 
 /run/printProgress 5000

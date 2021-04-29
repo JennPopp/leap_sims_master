@@ -95,7 +95,7 @@ DetectorMessenger::~DetectorMessenger()
   delete fConvZCmd;
   delete fUpdateCmd;
   delete fDetDir;
-  delete fTestemDir;
+  delete fLeapDir;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
