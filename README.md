@@ -13,3 +13,8 @@
   `/cvmfs/sft.cern.ch/lcg/releases/LCG_97/CMake/3.14.3/x86_64-centos7-gcc8-opt/bin/cmake ../`  
   `make`  
   `./leap_sims  macfile.mac` 
+  
+  
+  To run the analysis code you have to
+  `source /cvmfs/sft.cern.ch/lcg/views/LCG_98python3/x86_64-centos7-gcc10-opt/setup.sh`
+  when you are running it on the NAF
