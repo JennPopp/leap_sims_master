@@ -16,7 +16,7 @@ void showEntries(){
 // get file of magnetic field parallel to polarization and propagation direction of incoming e-
   TFile *F0 = new TFile(name0);
   //pointer to ttree of sensor after magnet
-  TTree *TTP0=(TTree*)F0->Get("bremssim1");
+  TTree *TTP0=(TTree*)F0->Get("bremssim2");
 
   TTP0->Scan("Esum:NP");
 }

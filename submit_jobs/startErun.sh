@@ -1,6 +1,6 @@
 #!/bin/bash
 
-corethick=300
+corethick=75
 convthick=1.75
 eKin=${2}
 NBunch=100000

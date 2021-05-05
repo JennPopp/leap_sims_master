@@ -16,7 +16,7 @@ auto read_files(TString fname){
   // get file of magnetic field parallel to polarization and propagation direction of incoming e-
   TFile *F0 = new TFile(fname);
   //pointer to ttree of sensor after magnet
-  TTree *TTP0=(TTree*)F0->Get("bremssim1");
+  TTree *TTP0=(TTree*)F0->Get("bremssim2");
   //------------get number of entries ----------------
   const int Nruns = TTP0->GetEntries();
 
@@ -359,10 +359,10 @@ void plot_convRun(const vector<string> &E,const  vector<string> &core,
 
 int asy_ana2(){
   //vector<string> E={"1","2","3","5","7","10","15","20","30","40","50","60","80","100","120"};
-  //vector<string> E={"5","7","10","15","20","30","40","50","60","80","100","120"};
-  vector<string> E={"60"};
-  vector<string> core={"50","75","100","125","150","175","200","225","250","275","300"};
-  //vector<string> core={"75"};
+  vector<string> E={"5","7","10","15","20","30","40","50","60","80","100","120"};
+  //vector<string> E={"60"};
+  //vector<string> core={"50","75","100","125","150","175","200","225","250","275","300"};
+  vector<string> core={"75"};
   //vector<string> conv={"0.5","1","1.5","1.75","2","2.5","3","3.5","4","4.5"};
   vector<string> conv={"1.75"};
   string NBunch = "100000";
@@ -461,7 +461,7 @@ for(int i=0;i<size(loopvar);i++){
       NP1.insert(NP1.end(), p.first.begin(), p.first.end());
     }
 
-    plot_Esum(Esum0, Esum1);
+    //plot_Esum(Esum0, Esum1);
 
     meanEsum0.push_back(TMath::Mean(Esum0.begin(), Esum0.end()));
     meanEsum1.push_back(TMath::Mean(Esum1.begin(), Esum1.end()));
@@ -470,7 +470,7 @@ for(int i=0;i<size(loopvar);i++){
     ErrE0.push_back(StdDevE0/sqrt(size(Esum0)));
     ErrE1.push_back(StdDevE1/sqrt(size(Esum1)));
 
-    Asy.push_back((meanEsum1[i]-meanEsum0[i])/(meanEsum1[i]+meanEsum0[i])*100);
+    Asy.push_back((meanEsum0[i]-meanEsum1[i])/(meanEsum1[i]+meanEsum0[i])*100);
     //ErrAsy.push_back(2/((meanEsum1[i]+meanEsum0[i])*(meanEsum1[i]+meanEsum0[i]))
     //                * sqrt(((meanEsum0[i]*ErrE1[i])*(meanEsum0[i]*ErrE1[i]))
     //                +((meanEsum1[i]*ErrE0[i])*(meanEsum1[i]*ErrE0[i])))*100);
