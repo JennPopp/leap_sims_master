@@ -103,16 +103,58 @@ oss << "run"<< aRun->GetRunID()<< "_"<< outFileName ;
 
 void RunAction::BookHisto()
 {
+  if (outType == "bunch"){
+    // Creating ntuple
+    //
+     fAnalysisManager->CreateNtuple("bremssim2", "vacstep1");
+      fAnalysisManager->CreateNtupleDColumn("Esum");
+      fAnalysisManager->CreateNtupleIColumn("NP");
+      fAnalysisManager->FinishNtuple();}
+  else if (outType == "single"){
+    // Creating ntuple vacstep1 , id=0
+    //
+    analysisManager->CreateNtuple("bremssim1", "vacstep1");
+    analysisManager->CreateNtupleIColumn("pdg");
+    analysisManager->CreateNtupleDColumn("E");
+    analysisManager->CreateNtupleDColumn("x");
+    analysisManager->CreateNtupleDColumn("y");
+    analysisManager->CreateNtupleDColumn("z");
+    analysisManager->CreateNtupleDColumn("startx");
+    analysisManager->CreateNtupleDColumn("starty");
+    analysisManager->CreateNtupleDColumn("startz");
+    analysisManager->CreateNtupleDColumn("px");
+    analysisManager->CreateNtupleDColumn("py");
+    analysisManager->CreateNtupleDColumn("pz");
+    analysisManager->CreateNtupleDColumn("Polx");
+    analysisManager->CreateNtupleDColumn("Poly");
+    analysisManager->CreateNtupleDColumn("Polz");
+    analysisManager->CreateNtupleDColumn("TrackID");
+    analysisManager->CreateNtupleDColumn("ParentID");
+    analysisManager->CreateNtupleDColumn("EventID");
+    analysisManager->FinishNtuple();
 
-  // Creating ntuple
-  //
-  fAnalysisManager->CreateNtuple("bremssim2", "vacstep1");
-  fAnalysisManager->CreateNtupleDColumn("Esum");
-  fAnalysisManager->CreateNtupleIColumn("NP");
-  fAnalysisManager->FinishNtuple();
-  // Creating ntuple vacstep1 , id=0
-  //
-
+    // Creating ntuple vacstep2 , id=1
+    //
+    analysisManager->CreateNtuple("bremssim2", "vacstep2");
+    analysisManager->CreateNtupleIColumn("pdg");
+    analysisManager->CreateNtupleDColumn("E");
+    analysisManager->CreateNtupleDColumn("x");
+    analysisManager->CreateNtupleDColumn("y");
+    analysisManager->CreateNtupleDColumn("z");
+    analysisManager->CreateNtupleDColumn("startx");
+    analysisManager->CreateNtupleDColumn("starty");
+    analysisManager->CreateNtupleDColumn("startz");
+    analysisManager->CreateNtupleDColumn("px");
+    analysisManager->CreateNtupleDColumn("py");
+    analysisManager->CreateNtupleDColumn("pz");
+    analysisManager->CreateNtupleDColumn("Polx");
+    analysisManager->CreateNtupleDColumn("Poly");
+    analysisManager->CreateNtupleDColumn("Polz");
+    analysisManager->CreateNtupleDColumn("TrackID");
+    analysisManager->CreateNtupleDColumn("ParentID");
+    analysisManager->CreateNtupleDColumn("EventID");
+    analysisManager->FinishNtuple();
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
