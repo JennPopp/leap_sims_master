@@ -107,9 +107,9 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   // set user action classes
   RunAction* run;
   EventAction* event;
-  runManager->SetUserAction(run = new RunAction(det,prim,outFile));
-  runManager->SetUserAction(event = new EventAction(run));
-  runManager->SetUserAction(new SteppingAction(det,event,run));
+  runManager->SetUserAction(run = new RunAction(det,prim,outFile,outType));
+  runManager->SetUserAction(event = new EventAction(run, outType));
+  runManager->SetUserAction(new SteppingAction(det,event,run, outType));
 
   // get the pointer to the User Interface manager
     G4UImanager* UImanager = G4UImanager::GetUIpointer();

@@ -36,7 +36,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EventAction::EventAction(RunAction *ra)
+EventAction::EventAction(RunAction *ra, G4String outType)
 : G4UserEventAction(),
   fRunAction(ra)
 {}

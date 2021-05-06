@@ -53,7 +53,8 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim, G4String outFile)
+RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim,
+  G4String outFile, G4String outType)
 : G4UserRunAction(),
    fDetector(det), fPrimary(prim),fProcCounter(0), fAnalysisManager(0)
 {
