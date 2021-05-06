@@ -244,22 +244,51 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   PrintParameters();
 
-  // VacStep
+  //
+  //vacuum step 1
   //
   auto VacStepS1 = new G4Tubs("VacStep1",  //Name
+                              0.,         // inner radius
+                              absrad,     // outer radius
+                              vacthick/2., // half length in z
+                              0.0*deg,    // starting phi angle
+                              360.0*deg); // angle of the segment
+
+
+auto  VacStepLV1 = new G4LogicalVolume(VacStepS1,    //its solid
+                                       fWorldMaterial,    //its material
+                                       "VacStep1");  //its name
+
+  fVacStepPV1 = new G4PVPlacement(0,                   //no rotation
+                       G4ThreeVector(0.,0., - corethick/2 -maggap2 +vacthick/2 +1.0*mm),    //its position
+                               VacStepLV1,            //its logical volume
+                               "VacStep1",                 //its name
+                               LogicalWorld,               //its mother
+                               false,                     //no boolean operat
+                               0);                        //copy number
+
+   //
+
+
+
+
+
+  // VacStep
+  //
+  auto VacStepS2 = new G4Tubs("VacStep2",  //Name
                                0.,         // inner radius
                                absrad,     // outer radius
                                vacthick/2., // half length in z
                                0.0*deg,    // starting phi angle
                                360.0*deg); // angle of the segment
 
-   auto VacStepLV1 = new G4LogicalVolume(VacStepS1,    //its solid
+   auto VacStepLV2 = new G4LogicalVolume(VacStepS2,    //its solid
                                         fWorldMaterial,    //its material
                                         "VacStep1");       //its name
 
-   fVacStepPV1 = new G4PVPlacement(0,                   //no rotation
+   fVacStepPV2 = new G4PVPlacement(0,                   //no rotation
                         G4ThreeVector(0.,0.,corethick/2 + vacthick/2 + 10.0*mm),    //its position
-                                VacStepLV1,            //its logical volume
+                                VacStepLV2,            //its logical volume
                                 "VacStep2",                 //its name
                                 LogicalWorld,               //its mother
                                 false,                     //no boolean operat

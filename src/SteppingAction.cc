@@ -48,8 +48,9 @@ SteppingAction::SteppingAction(DetectorConstruction* det,
                                RunAction* ruAct, G4String outType
                              )
  : G4UserSteppingAction(),
-   fDetector(det), fRunAction(ruAct),fEventAction(eventAction)
-{ }
+   fDetector(det), fRunAction(ruAct),fEventAction(eventAction){
+outputType=outType;
+ }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -65,10 +66,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4String procName = endPoint->GetProcessDefinedStep()->GetProcessName();
   fRunAction->CountProcesses(procName);
 
-  // get volume of the current step
+  // get volume of the current aStep
   auto volume = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
 
-  if (outType == "bunch"){
+  if (outputType == "bunch"){
     if ( volume == fDetector->GetVacStep2PV() ) {
          // get analysis manager
          auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
@@ -77,70 +78,70 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
     }
   }
-  else if (outType == "single"){
-    if ( volume == fDetConstruction->GetVacStep1PV() ) {
+  else if (outputType == "single"){
+    if ( volume == fDetector->GetVacStep1PV() ) {
          // get analysis manager
-         auto analysisManager = G4AnalysisManager::Instance();
+         auto fAnalysisManager = G4AnalysisManager::Instance();
 
          // fill ntuple id=0
-         analysisManager->FillNtupleIColumn(0,0, step->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+         fAnalysisManager->FillNtupleIColumn(0,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
-         analysisManager->FillNtupleDColumn(0,1, step->GetPostStepPoint()->GetKineticEnergy()/MeV);
+         fAnalysisManager->FillNtupleDColumn(0,1, aStep->GetPostStepPoint()->GetKineticEnergy()/MeV);
 
-         analysisManager->FillNtupleDColumn(0,2, step->GetPostStepPoint()->GetPosition().x());
-         analysisManager->FillNtupleDColumn(0,3, step->GetPostStepPoint()->GetPosition().y());
-         analysisManager->FillNtupleDColumn(0,4, step->GetPostStepPoint()->GetPosition().z());
+         fAnalysisManager->FillNtupleDColumn(0,2, aStep->GetPostStepPoint()->GetPosition().x());
+         fAnalysisManager->FillNtupleDColumn(0,3, aStep->GetPostStepPoint()->GetPosition().y());
+         fAnalysisManager->FillNtupleDColumn(0,4, aStep->GetPostStepPoint()->GetPosition().z());
 
-         analysisManager->FillNtupleDColumn(0,5, step->GetTrack()->GetVertexPosition().x());
-         analysisManager->FillNtupleDColumn(0,6, step->GetTrack()->GetVertexPosition().y());
-         analysisManager->FillNtupleDColumn(0,7, step->GetTrack()->GetVertexPosition().z());
+         fAnalysisManager->FillNtupleDColumn(0,5, aStep->GetTrack()->GetVertexPosition().x());
+         fAnalysisManager->FillNtupleDColumn(0,6, aStep->GetTrack()->GetVertexPosition().y());
+         fAnalysisManager->FillNtupleDColumn(0,7, aStep->GetTrack()->GetVertexPosition().z());
 
-         analysisManager->FillNtupleDColumn(0,8, step->GetPostStepPoint()->GetMomentumDirection().x());
-         analysisManager->FillNtupleDColumn(0,9, step->GetPostStepPoint()->GetMomentumDirection().y());
-         analysisManager->FillNtupleDColumn(0,10, step->GetPostStepPoint()->GetMomentumDirection().z());
+         fAnalysisManager->FillNtupleDColumn(0,8, aStep->GetPostStepPoint()->GetMomentumDirection().x());
+         fAnalysisManager->FillNtupleDColumn(0,9, aStep->GetPostStepPoint()->GetMomentumDirection().y());
+         fAnalysisManager->FillNtupleDColumn(0,10, aStep->GetPostStepPoint()->GetMomentumDirection().z());
 
-         analysisManager->FillNtupleDColumn(0,11, step->GetTrack()->GetPolarization().x());
-         analysisManager->FillNtupleDColumn(0,12, step->GetTrack()->GetPolarization().y());
-         analysisManager->FillNtupleDColumn(0,13, step->GetTrack()->GetPolarization().z());
+         fAnalysisManager->FillNtupleDColumn(0,11, aStep->GetTrack()->GetPolarization().x());
+         fAnalysisManager->FillNtupleDColumn(0,12, aStep->GetTrack()->GetPolarization().y());
+         fAnalysisManager->FillNtupleDColumn(0,13, aStep->GetTrack()->GetPolarization().z());
 
-         analysisManager->FillNtupleDColumn(0,14, step->GetTrack()->GetTrackID());
-         analysisManager->FillNtupleDColumn(0,15, step->GetTrack()->GetParentID());
-         analysisManager->FillNtupleDColumn(0,16, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+         fAnalysisManager->FillNtupleDColumn(0,14, aStep->GetTrack()->GetTrackID());
+         fAnalysisManager->FillNtupleDColumn(0,15, aStep->GetTrack()->GetParentID());
+         fAnalysisManager->FillNtupleDColumn(0,16, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
 
-         analysisManager->AddNtupleRow(0);
+         fAnalysisManager->AddNtupleRow(0);
 
     //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
        }
 
-       if ( volume == fDetConstruction->GetVacStep2PV() ) {
+       if ( volume == fDetector->GetVacStep2PV() ) {
 
-            auto analysisManager = G4AnalysisManager::Instance();
+            auto fAnalysisManager = G4AnalysisManager::Instance();
            //~//~//~//
-           analysisManager->FillNtupleIColumn(1,0, step->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+           fAnalysisManager->FillNtupleIColumn(1,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
-           analysisManager->FillNtupleDColumn(1,1, step->GetPostStepPoint()->GetKineticEnergy()/MeV);
+           fAnalysisManager->FillNtupleDColumn(1,1, aStep->GetPostStepPoint()->GetKineticEnergy()/MeV);
 
-           analysisManager->FillNtupleDColumn(1,2, step->GetPostStepPoint()->GetPosition().x());
-           analysisManager->FillNtupleDColumn(1,3, step->GetPostStepPoint()->GetPosition().y());
-           analysisManager->FillNtupleDColumn(1,4, step->GetPostStepPoint()->GetPosition().z());
+           fAnalysisManager->FillNtupleDColumn(1,2, aStep->GetPostStepPoint()->GetPosition().x());
+           fAnalysisManager->FillNtupleDColumn(1,3, aStep->GetPostStepPoint()->GetPosition().y());
+           fAnalysisManager->FillNtupleDColumn(1,4, aStep->GetPostStepPoint()->GetPosition().z());
 
-           analysisManager->FillNtupleDColumn(1,5, step->GetTrack()->GetVertexPosition().x());
-           analysisManager->FillNtupleDColumn(1,6, step->GetTrack()->GetVertexPosition().y());
-           analysisManager->FillNtupleDColumn(1,7, step->GetTrack()->GetVertexPosition().z());
+           fAnalysisManager->FillNtupleDColumn(1,5, aStep->GetTrack()->GetVertexPosition().x());
+           fAnalysisManager->FillNtupleDColumn(1,6, aStep->GetTrack()->GetVertexPosition().y());
+           fAnalysisManager->FillNtupleDColumn(1,7, aStep->GetTrack()->GetVertexPosition().z());
 
-           analysisManager->FillNtupleDColumn(1,8, step->GetPostStepPoint()->GetMomentumDirection().x());
-           analysisManager->FillNtupleDColumn(1,9, step->GetPostStepPoint()->GetMomentumDirection().y());
-           analysisManager->FillNtupleDColumn(1,10, step->GetPostStepPoint()->GetMomentumDirection().z());
+           fAnalysisManager->FillNtupleDColumn(1,8, aStep->GetPostStepPoint()->GetMomentumDirection().x());
+           fAnalysisManager->FillNtupleDColumn(1,9, aStep->GetPostStepPoint()->GetMomentumDirection().y());
+           fAnalysisManager->FillNtupleDColumn(1,10, aStep->GetPostStepPoint()->GetMomentumDirection().z());
 
-           analysisManager->FillNtupleDColumn(1,11, step->GetTrack()->GetPolarization().x());
-           analysisManager->FillNtupleDColumn(1,12, step->GetTrack()->GetPolarization().y());
-           analysisManager->FillNtupleDColumn(1,13, step->GetTrack()->GetPolarization().z());
+           fAnalysisManager->FillNtupleDColumn(1,11, aStep->GetTrack()->GetPolarization().x());
+           fAnalysisManager->FillNtupleDColumn(1,12, aStep->GetTrack()->GetPolarization().y());
+           fAnalysisManager->FillNtupleDColumn(1,13, aStep->GetTrack()->GetPolarization().z());
 
-           analysisManager->FillNtupleDColumn(1,14, step->GetTrack()->GetTrackID());
-           analysisManager->FillNtupleDColumn(1,15, step->GetTrack()->GetParentID());
-           analysisManager->FillNtupleDColumn(1,16, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+           fAnalysisManager->FillNtupleDColumn(1,14, aStep->GetTrack()->GetTrackID());
+           fAnalysisManager->FillNtupleDColumn(1,15, aStep->GetTrack()->GetParentID());
+           fAnalysisManager->FillNtupleDColumn(1,16, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
 
-           analysisManager->AddNtupleRow(1);
+           fAnalysisManager->AddNtupleRow(1);
 
 
       //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;

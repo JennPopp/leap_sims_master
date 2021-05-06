@@ -68,6 +68,7 @@ private:
   void SaveHisto(G4int nevents);
 
 G4String outFileName;
+G4String outputType;
 
   DetectorConstruction*   fDetector;
   PrimaryGeneratorAction* fPrimary;

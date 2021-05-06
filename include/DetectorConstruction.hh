@@ -67,6 +67,7 @@ public:
   const G4VPhysicalVolume* GetWorld()      {return PhysicalWorld;};
 //  const G4VPhysicalVolume* GetBox()        {return fBox;};
   const G4VPhysicalVolume* GetVacStep1PV() const;
+  const G4VPhysicalVolume* GetVacStep2PV() const;
 
   G4double           GetWorldSize()  {return fWorldSize;};
   G4double           GetSizeXY()  {return fSizeXY;};
@@ -81,6 +82,7 @@ private:
   G4VPhysicalVolume*    PhysicalWorld;
   G4VPhysicalVolume*    PhysicalCore;
   G4VPhysicalVolume*   fVacStepPV1;
+  G4VPhysicalVolume*   fVacStepPV2;
 
   G4double              fSizeXY;
   G4double              fCoreThick;
@@ -95,6 +97,9 @@ private:
 
 inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep1PV() const {
   return fVacStepPV1;
+}
+inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep2PV() const {
+  return fVacStepPV2;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

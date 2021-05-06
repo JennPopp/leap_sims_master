@@ -57,6 +57,7 @@ private:
 
   G4double fEnergySum;
   G4double fNP;
+  G4String outputType;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

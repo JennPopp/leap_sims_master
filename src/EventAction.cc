@@ -39,7 +39,9 @@
 EventAction::EventAction(RunAction *ra, G4String outType)
 : G4UserEventAction(),
   fRunAction(ra)
-{}
+{
+  outputType=outType;
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -50,7 +52,7 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event*)
 {
-  if (outType == "bunch"){
+  if (outputType == "bunch"){
     // initialisation per event
     fEnergySum = 0.; // Sum of energy of particles behind magnet
     fNP=0; // Number of particles behind magnet
@@ -61,7 +63,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
 
 void EventAction::EndOfEventAction(const G4Event*)
 {
-  if (outType == "bunch"){
+  if (outputType == "bunch"){
     // get analysis manager
     auto analysisManager = G4AnalysisManager::Instance();
 

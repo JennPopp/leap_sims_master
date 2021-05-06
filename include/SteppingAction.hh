@@ -53,6 +53,7 @@ public:
   virtual void UserSteppingAction(const G4Step*);
 
 private:
+  G4String outputType;
   DetectorConstruction*   fDetector;
   RunAction*              fRunAction;
   EventAction*  fEventAction;

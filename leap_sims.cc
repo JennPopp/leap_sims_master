@@ -76,9 +76,9 @@ for ( G4int i=1; i<argc; i=i+2 ) {
     PrintUsage();
     return 1;
   }
-
-  if(!outFile){outFile = "result.root"};
-  if (!outType){outType = "bunch"};
+}
+  if(!outFile){outFile = "result.root";}
+  if (!outType){outType = "bunch";}
 
 
 
