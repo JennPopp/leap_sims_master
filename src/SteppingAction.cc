@@ -68,13 +68,84 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // get volume of the current step
   auto volume = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
 
-  if ( volume == fDetector->GetVacStep1PV() ) {
-       // get analysis manager
-       auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
-       fEventAction->AddVals(Eval,1);
+  if (outType == "bunch"){
+    if ( volume == fDetector->GetVacStep2PV() ) {
+         // get analysis manager
+         auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+         fEventAction->AddVals(Eval,1);
 
-  //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
-     }
+    //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
+    }
+  }
+  else if (outType == "single"){
+    if ( volume == fDetConstruction->GetVacStep1PV() ) {
+         // get analysis manager
+         auto analysisManager = G4AnalysisManager::Instance();
+
+         // fill ntuple id=0
+         analysisManager->FillNtupleIColumn(0,0, step->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+
+         analysisManager->FillNtupleDColumn(0,1, step->GetPostStepPoint()->GetKineticEnergy()/MeV);
+
+         analysisManager->FillNtupleDColumn(0,2, step->GetPostStepPoint()->GetPosition().x());
+         analysisManager->FillNtupleDColumn(0,3, step->GetPostStepPoint()->GetPosition().y());
+         analysisManager->FillNtupleDColumn(0,4, step->GetPostStepPoint()->GetPosition().z());
+
+         analysisManager->FillNtupleDColumn(0,5, step->GetTrack()->GetVertexPosition().x());
+         analysisManager->FillNtupleDColumn(0,6, step->GetTrack()->GetVertexPosition().y());
+         analysisManager->FillNtupleDColumn(0,7, step->GetTrack()->GetVertexPosition().z());
+
+         analysisManager->FillNtupleDColumn(0,8, step->GetPostStepPoint()->GetMomentumDirection().x());
+         analysisManager->FillNtupleDColumn(0,9, step->GetPostStepPoint()->GetMomentumDirection().y());
+         analysisManager->FillNtupleDColumn(0,10, step->GetPostStepPoint()->GetMomentumDirection().z());
+
+         analysisManager->FillNtupleDColumn(0,11, step->GetTrack()->GetPolarization().x());
+         analysisManager->FillNtupleDColumn(0,12, step->GetTrack()->GetPolarization().y());
+         analysisManager->FillNtupleDColumn(0,13, step->GetTrack()->GetPolarization().z());
+
+         analysisManager->FillNtupleDColumn(0,14, step->GetTrack()->GetTrackID());
+         analysisManager->FillNtupleDColumn(0,15, step->GetTrack()->GetParentID());
+         analysisManager->FillNtupleDColumn(0,16, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+
+         analysisManager->AddNtupleRow(0);
+
+    //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
+       }
+
+       if ( volume == fDetConstruction->GetVacStep2PV() ) {
+
+            auto analysisManager = G4AnalysisManager::Instance();
+           //~//~//~//
+           analysisManager->FillNtupleIColumn(1,0, step->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+
+           analysisManager->FillNtupleDColumn(1,1, step->GetPostStepPoint()->GetKineticEnergy()/MeV);
+
+           analysisManager->FillNtupleDColumn(1,2, step->GetPostStepPoint()->GetPosition().x());
+           analysisManager->FillNtupleDColumn(1,3, step->GetPostStepPoint()->GetPosition().y());
+           analysisManager->FillNtupleDColumn(1,4, step->GetPostStepPoint()->GetPosition().z());
+
+           analysisManager->FillNtupleDColumn(1,5, step->GetTrack()->GetVertexPosition().x());
+           analysisManager->FillNtupleDColumn(1,6, step->GetTrack()->GetVertexPosition().y());
+           analysisManager->FillNtupleDColumn(1,7, step->GetTrack()->GetVertexPosition().z());
+
+           analysisManager->FillNtupleDColumn(1,8, step->GetPostStepPoint()->GetMomentumDirection().x());
+           analysisManager->FillNtupleDColumn(1,9, step->GetPostStepPoint()->GetMomentumDirection().y());
+           analysisManager->FillNtupleDColumn(1,10, step->GetPostStepPoint()->GetMomentumDirection().z());
+
+           analysisManager->FillNtupleDColumn(1,11, step->GetTrack()->GetPolarization().x());
+           analysisManager->FillNtupleDColumn(1,12, step->GetTrack()->GetPolarization().y());
+           analysisManager->FillNtupleDColumn(1,13, step->GetTrack()->GetPolarization().z());
+
+           analysisManager->FillNtupleDColumn(1,14, step->GetTrack()->GetTrackID());
+           analysisManager->FillNtupleDColumn(1,15, step->GetTrack()->GetParentID());
+           analysisManager->FillNtupleDColumn(1,16, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+
+           analysisManager->AddNtupleRow(1);
+
+
+      //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
+         }
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

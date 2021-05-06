@@ -50,22 +50,26 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event*)
 {
-  // initialisation per event
-  fEnergySum = 0.; // Sum of energy of particles behind magnet
-  fNP=0; // Number of particles behind magnet
+  if (outType == "bunch"){
+    // initialisation per event
+    fEnergySum = 0.; // Sum of energy of particles behind magnet
+    fNP=0; // Number of particles behind magnet
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void EventAction::EndOfEventAction(const G4Event*)
 {
-  // get analysis manager
-  auto analysisManager = G4AnalysisManager::Instance();
+  if (outType == "bunch"){
+    // get analysis manager
+    auto analysisManager = G4AnalysisManager::Instance();
 
-  // fill ntuple id=0
-  analysisManager->FillNtupleDColumn(0,0, fEnergySum);
-  analysisManager->FillNtupleIColumn(0,1, fNP);
-  analysisManager->AddNtupleRow(0);
+    // fill ntuple id=0
+    analysisManager->FillNtupleDColumn(0,0, fEnergySum);
+    analysisManager->FillNtupleIColumn(0,1, fNP);
+    analysisManager->AddNtupleRow(0);
+  }
 
 }
 
