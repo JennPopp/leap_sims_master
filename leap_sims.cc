@@ -51,18 +51,34 @@
 #include "G4UIExecutive.hh"
 #endif
 
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+namespace {
+  void PrintUsage() {
+    G4cerr << " Usage: " << G4endl;
+    G4cerr << " leap_sims [-m macro ] [-f outFileName] [-t outType]" << G4endl;
+  }
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 int main(int argc,char** argv) {
-  G4String outFile;
- 	if (argc==3)
- 	{
- 		 outFile = argv[2];
- 	}
- 	else
- 	{
- 		 outFile = "result.root";
- 	}
+
+G4String macro;
+G4String outFile;
+G4String outType;
+
+for ( G4int i=1; i<argc; i=i+2 ) {
+  if      ( G4String(argv[i]) == "-m" ) macro = argv[i+1];
+  else if ( G4String(argv[i]) == "-f" ) outFile = argv[i+1];
+  else if ( G4String(argv[i]) == "-t" ) outType = argv[i+1];
+  else {
+    PrintUsage();
+    return 1;
+  }
+
+  if(!outFile){outFile = "result.root"};
+  if (!outType){outType = "bunch"};
 
 
 
@@ -113,8 +129,8 @@ int main(int argc,char** argv) {
   else           // Batch mode
     {
       G4String command = "/control/execute ";
-      G4String fileName = argv[1];
-      UImanager->ApplyCommand(command+fileName);
+
+      UImanager->ApplyCommand(command+macro);
     }
 
   // job termination
