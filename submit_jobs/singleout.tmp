@@ -16,7 +16,7 @@
 /polarization/volume/set IronCore 0. 0. 1
 /polarization/volume/list
 
------------energy-------------------------------
+#-----------energy-------------------------------
 /gun/energy eKin MeV
 /gun/number NBunch
 #------------------------------------------------------
