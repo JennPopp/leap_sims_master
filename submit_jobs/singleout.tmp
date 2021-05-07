@@ -13,7 +13,7 @@
 /leap/det/update
 
 /polarization/manager/verbose 1
-/polarization/volume/set Magnet 0. 0. 1
+/polarization/volume/set IronCore 0. 0. 1
 /polarization/volume/list
 
 -----------energy-------------------------------

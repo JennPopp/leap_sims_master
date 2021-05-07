@@ -21,4 +21,4 @@ sed -i  "s/NBunch/$NBunch/g" singleout.mac
 mv run0_$outFile ../results_single/run0_$outFile
 mv run1_$outFile ../results_single/run1_$outFile
 
-#rm singleout.mac
+rm singleout.mac
