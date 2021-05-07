@@ -8,5 +8,6 @@
 **/out
 **/err
 **/results
+**/results_single
 **/macros
 **/plots
