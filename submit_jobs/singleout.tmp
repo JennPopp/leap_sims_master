@@ -1,7 +1,6 @@
-#test.mac
 /control/verbose 2
 /run/verbose 2
-/leap/phys/addPhysics polarized
+#/leap/phys/addPhysics polarized
 
 
 /run/printProgress 2
@@ -17,14 +16,14 @@
 /polarization/volume/set Magnet 0. 0. 1
 /polarization/volume/list
 
-#-----------energy-------------------------------
+-----------energy-------------------------------
 /gun/energy eKin MeV
 /gun/number NBunch
 #------------------------------------------------------
 /gun/polarization 0. 0. +1.
 
-/run/beamOn 10
+/run/beamOn 1
 
 /gun/polarization 0. 0. -1.
 
-/run/beamOn 10
+/run/beamOn 1

@@ -1,0 +1,310 @@
+
+**************************************************************
+ Geant4 version Name: geant4-10-06-patch-01 [MT]   (14-February-2020)
+                       Copyright : Geant4 Collaboration
+                      References : NIM A 506 (2003), 250-303
+                                 : IEEE-TNS 53 (2006), 270-278
+                                 : NIM A 835 (2016), 186-225
+                             WWW : http://geant4.org/
+**************************************************************
+
+/run/verbose 2
+/leap/phys/addPhysics polarized
+PhysicsList::AddPhysicsList: <polarized>
+/run/printProgress 2
+/run/initialize
+userDetector->Construct() start.
+
+ The ConverterTarget is made of G4_W , 5 cm in diameter and 1.75 mm  thick
+
+ The IronCore is7.5 cm  thick
+World is registered to the default region.
+physicsList->Construct() start.
+physicsList->CheckParticleList() start.
+physicsList->setCut() start.
+#-----------geometry-----------------------------
+/leap/det/SetCoreThick 300 mm
+
+ The ConverterTarget is made of G4_W , 5 cm in diameter and 1.75 mm  thick
+
+ The IronCore is30 cm  thick
+Obsolete world logical volume is removed from the default region.
+World is registered to the default region.
+/leap/det/SetConvThick 1.75 mm
+
+ The ConverterTarget is made of G4_W , 5 cm in diameter and 1.75 mm  thick
+
+ The IronCore is30 cm  thick
+Obsolete world logical volume is removed from the default region.
+World is registered to the default region.
+/leap/det/update
+
+ The ConverterTarget is made of G4_W , 5 cm in diameter and 1.75 mm  thick
+
+ The IronCore is30 cm  thick
+Obsolete world logical volume is removed from the default region.
+World is registered to the default region.
+/polarization/manager/verbose 1
+/polarization/volume/set Magnet 0. 0. 1
+ logical volume 'Magnet'not registerd yet 
+ please register before using '/polarization/volume/set' 
+/polarization/volume/list
+ Polarization for 1 registered volume(s) : 
+IronCore : (0,0,1)
+#-----------energy-------------------------------
+/gun/energy 20 MeV
+/gun/number 100000
+#------------------------------------------------------
+/gun/polarization 0. 0. +1.
+/run/beamOn 10
+ buildBhabha cross section 0
+ buildBhabha cross section 0
+G4PolarizedPEEffectCrossSection() init
+
+pol-phot:  for gamma SubType=12 BuildTable=0
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+Polarized-PhotoElectric : Emin=    0 eV  Emax=  100 TeV  SauterGavrila
+
+pol-compt:  for gamma SubType=13 BuildTable=1
+      Lambda table from 100 eV  to 1 MeV, 7 bins/decade, spline: 1
+      LambdaPrime table from 1 MeV to 100 TeV in 56 bins 
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+   Polarized-Compton : Emin=    0 eV  Emax=  100 TeV
+
+pol-conv:  for gamma SubType=14 BuildTable=1
+      Lambda table from 1.022 MeV to 100 TeV, 18 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+             polConv : Emin=    0 eV  Emax=  100 TeV  ModifiedTsai
+
+msc:  for e-  SubType= 10
+      RangeFactor= 0.04, stepLimType: 1, latDisp: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+            UrbanMsc : Emin=    0 eV  Emax=  100 TeV Nbins=84 100 eV  - 100 TeV
+
+pol-eIoni:  for e-  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 84 bins
+      Lambda tables from threshold to 100 TeV, 7 bins/decade, spline: 1
+      StepFunction=(0.2, 1 mm), integ: 1, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+PolarizedMollerBhabha : Emin=    0 eV  Emax=  100 TeV
+
+pol-eBrem:  for e-  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 84 bins
+      Lambda tables from threshold to 100 TeV, 7 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+             PolBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedTsai
+
+msc:  for e+  SubType= 10
+      RangeFactor= 0.04, stepLimType: 1, latDisp: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+            UrbanMsc : Emin=    0 eV  Emax=  100 TeV Nbins=84 100 eV  - 100 TeV
+
+pol-eIoni:  for e+  SubType=2
+      dE/dx and range tables from 100 eV  to 100 TeV in 84 bins
+      Lambda tables from threshold to 100 TeV, 7 bins/decade, spline: 1
+      StepFunction=(0.2, 1 mm), integ: 1, fluct: 1, linLossLim= 0.01
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+PolarizedMollerBhabha : Emin=    0 eV  Emax=  100 TeV
+
+pol-eBrem:  for e+  SubType=3
+      dE/dx and range tables from 100 eV  to 100 TeV in 84 bins
+      Lambda tables from threshold to 100 TeV, 7 bins/decade, spline: 1
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+             PolBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedTsai
+
+pol-annihil:  for e+, integral:1  SubType=5 BuildTable=0
+      ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+Polarized-Annihilation : Emin=    0 eV  Emax=  100 TeV
+
+Region <DefaultRegionForTheWorld> --  -- appears in <World> world volume
+ This region is in the mass world.
+ Root logical volume(s) : World 
+ Pointers : G4VUserRegionInformation[0], G4UserLimits[0], G4FastSimulationManager[0], G4UserSteppingAction[0]
+ Materials : G4_Galactic G4_Fe G4_Cu G4_Pb G4_W 
+ Production cuts :   gamma 1 mm      e- 1 mm      e+ 1 mm  proton 1 mm 
+
+Region <DefaultRegionForParallelWorld> --  -- is not associated to any world.
+ Root logical volume(s) : 
+ Pointers : G4VUserRegionInformation[0], G4UserLimits[0], G4FastSimulationManager[0], G4UserSteppingAction[0]
+ Materials : 
+ Production cuts :   gamma 1 mm      e- 1 mm      e+ 1 mm  proton 1 mm 
+
+========= Table of registered couples ==============================
+
+Index : 0     used in the geometry : Yes
+ Material : G4_Galactic
+ Range cuts        :  gamma  1 mm     e-  1 mm     e+  1 mm  proton 1 mm 
+ Energy thresholds :  gamma  990 eV     e-  990 eV     e+  990 eV  proton 100 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 1     used in the geometry : Yes
+ Material : G4_Fe
+ Range cuts        :  gamma  1 mm     e-  1 mm     e+  1 mm  proton 1 mm 
+ Energy thresholds :  gamma  20.6438 keV    e-  1.29592 MeV    e+  1.21169 MeV proton 100 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 2     used in the geometry : Yes
+ Material : G4_Cu
+ Range cuts        :  gamma  1 mm     e-  1 mm     e+  1 mm  proton 1 mm 
+ Energy thresholds :  gamma  24.7508 keV    e-  1.39534 MeV    e+  1.31345 MeV proton 100 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 3     used in the geometry : Yes
+ Material : G4_Pb
+ Range cuts        :  gamma  1 mm     e-  1 mm     e+  1 mm  proton 1 mm 
+ Energy thresholds :  gamma  101.843 keV    e-  1.36749 MeV    e+  1.27862 MeV proton 100 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 4     used in the geometry : Yes
+ Material : G4_W
+ Range cuts        :  gamma  1 mm     e-  1 mm     e+  1 mm  proton 1 mm 
+ Energy thresholds :  gamma  106.569 keV    e-  2.30976 MeV    e+  2.13081 MeV proton 100 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+====================================================================
+
+Start closing geometry.
+G4GeometryManager::ReportVoxelStats -- Voxel Statistics
+
+    Total memory consumed for geometry optimisation:   1 kByte
+    Total CPU time elapsed for geometry optimisation: 0 seconds
+
+    Voxelisation: top CPU users:
+    Percent   Total CPU    System CPU       Memory  Volume
+    -------   ----------   ----------     --------  ----------
+       0.00         0.00         0.00            1k World
+       0.00         0.00         0.00            0k Magnet
+
+    Voxelisation: top memory users:
+    Percent     Memory      Heads    Nodes   Pointers    Total CPU    Volume
+    -------   --------     ------   ------   --------   ----------    ----------
+      85.45          1k         4       19         32         0.00    World
+      14.55          0k         1        3          4         0.00    Magnet
+### Run 0 starts.
+... open Root analysis file : run0_NBunch_100000_conv_1.75mm_core_300mm_E_20MeV_PrId.root - done
+### Run 0 start.
+--> Event 0 starts.
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.00108844, 0.0008318.  For secondary energy = 0.558492   1001
+--> Event 2 starts.
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.0023728, 0.00227541.  For secondary energy = 0.515268   1001
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.000996551, 0.000991256.  For secondary energy = 0.50263   1001
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.00395821, 0.00392001.  For secondary energy = 0.497507   1001
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.000699995, 0.000584549.  For secondary energy = 0.520524   1001
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.00265406, 0.00248986.  For secondary energy = 0.469732   1001
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.00192543, 0.00190289.  For secondary energy = 0.505684   1001
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.00326888, 0.00305888.  For secondary energy = 0.465391   1001
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.00315785, 0.00304311.  For secondary energy = 0.51542   1001
+--> Event 4 starts.
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.00100261, 0.000941324.  For secondary energy = 0.513863   1001
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.00105065, 0.000958624.  For secondary energy = 0.479113   1001
+--> Event 6 starts.
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.00053025, 0.000407178.  For secondary energy = 0.521623   1001
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.000273188, 0.000266746.  For secondary energy = 0.493637   1001
+--> Event 8 starts.
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.000357259, 0.000345179.  For secondary energy = 0.492387   1001
+ Run terminated.
+Run Summary
+  Number of events processed : 10
+  User=193.960000s Real=194.705324s Sys=0.740000s [Cpu=100.0%]
+
+ The run consists of 10 e- of 20 MeV through a Converter Target of1.75 mm  of G4_W (density: 19.3 g/cm3 ) and a30 cm  iron core 
+
+--------- Ranecu engine status ---------
+ Initial seed (index) = 0
+ Current couple of seeds = 1034312693, 2024694713
+----------------------------------------
+
+ Process calls frequency --->
+	Transportation = 19337874
+	pol-eBrem = 7526581
+	pol-eIoni = 23641143
+	pol-compt = 12461602
+	pol-phot = 7265512
+	msc = 8069011
+	pol-conv = 447439
+	pol-annihil = 448162
+... write Root file : run0_NBunch_100000_conv_1.75mm_core_300mm_E_20MeV_PrId.root - done
+... close Root file : run0_NBunch_100000_conv_1.75mm_core_300mm_E_20MeV_PrId.root - done
+### Run 0 Ended.
+/gun/polarization 0. 0. -1.
+/run/beamOn 10
+
+Region <DefaultRegionForTheWorld> --  -- appears in <World> world volume
+ This region is in the mass world.
+ Root logical volume(s) : World 
+ Pointers : G4VUserRegionInformation[0], G4UserLimits[0], G4FastSimulationManager[0], G4UserSteppingAction[0]
+ Materials : G4_Galactic G4_Fe G4_Cu G4_Pb G4_W 
+ Production cuts :   gamma 1 mm      e- 1 mm      e+ 1 mm  proton 1 mm 
+
+Region <DefaultRegionForParallelWorld> --  -- is not associated to any world.
+ Root logical volume(s) : 
+ Pointers : G4VUserRegionInformation[0], G4UserLimits[0], G4FastSimulationManager[0], G4UserSteppingAction[0]
+ Materials : 
+ Production cuts :   gamma 1 mm      e- 1 mm      e+ 1 mm  proton 1 mm 
+
+========= Table of registered couples ==============================
+
+Index : 0     used in the geometry : Yes
+ Material : G4_Galactic
+ Range cuts        :  gamma  1 mm     e-  1 mm     e+  1 mm  proton 1 mm 
+ Energy thresholds :  gamma  990 eV     e-  990 eV     e+  990 eV  proton 100 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 1     used in the geometry : Yes
+ Material : G4_Fe
+ Range cuts        :  gamma  1 mm     e-  1 mm     e+  1 mm  proton 1 mm 
+ Energy thresholds :  gamma  20.6438 keV    e-  1.29592 MeV    e+  1.21169 MeV proton 100 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 2     used in the geometry : Yes
+ Material : G4_Cu
+ Range cuts        :  gamma  1 mm     e-  1 mm     e+  1 mm  proton 1 mm 
+ Energy thresholds :  gamma  24.7508 keV    e-  1.39534 MeV    e+  1.31345 MeV proton 100 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 3     used in the geometry : Yes
+ Material : G4_Pb
+ Range cuts        :  gamma  1 mm     e-  1 mm     e+  1 mm  proton 1 mm 
+ Energy thresholds :  gamma  101.843 keV    e-  1.36749 MeV    e+  1.27862 MeV proton 100 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+Index : 4     used in the geometry : Yes
+ Material : G4_W
+ Range cuts        :  gamma  1 mm     e-  1 mm     e+  1 mm  proton 1 mm 
+ Energy thresholds :  gamma  106.569 keV    e-  2.30976 MeV    e+  2.13081 MeV proton 100 keV
+ Region(s) which use this couple : 
+    DefaultRegionForTheWorld
+
+====================================================================
+
+### Run 1 starts.
+... open Root analysis file : run1_NBunch_100000_conv_1.75mm_core_300mm_E_20MeV_PrId.root - done
+### Run 1 start.
+--> Event 0 starts.
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.000559431, 0.000546572.  For secondary energy = 0.491767   1001
+WARNING  in PolarizedAnnihilationPS::PostStepDoIt
+eps dicing very inefficient =0.000324053, 0.000308081.  For secondary energy = 0.491427   1001
