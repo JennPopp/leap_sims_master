@@ -1,5 +1,5 @@
 #!/bin/bash
-
+outType=bunch
 corethick=300
 convthick=1.75
 eKin=${2}
@@ -17,7 +17,7 @@ sed -i  "s/convthick/$convthick/g" test${1}.mac
 sed -i  "s/NBunch/$NBunch/g" test${1}.mac
 
 # run executable with macro and result file
-./leap_sims test${1}.mac $outFile
+./leap_sims -m test${1}.mac -f $outFile -t $outType
 
 mv run0_$outFile ../results/run0_$outFile
 mv run1_$outFile ../results/run1_$outFile
