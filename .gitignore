@@ -8,7 +8,7 @@
 **/out
 **/err
 **/results
-**/results_single
+**/results_single/*.root
 **/macros
 **/plots
 **/submit_jobs/singleout.mac
