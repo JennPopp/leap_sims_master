@@ -12,3 +12,4 @@
 **/macros
 **/plots
 **/submit_jobs/singleout.mac
+*.root

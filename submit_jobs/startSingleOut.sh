@@ -1,7 +1,7 @@
 outType=single
-corethick=300
+corethick=75
 convthick=1.75
-eKin=20
+eKin=60
 NBunch=100000
 outFile=NBunch_${NBunch}_conv_${convthick}mm_core_${corethick}mm_E_${eKin}MeV.root
 

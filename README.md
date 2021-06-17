@@ -31,6 +31,6 @@
   5. to stop watching simly press `ctrl` `c`
 
 
-    **Important**: To run the analysis code you have to
-    `source /cvmfs/sft.cern.ch/lcg/views/LCG_98python3/x86_64-centos7-gcc10-opt/setup.sh`
-    when you are running it on the NAF
+  **Important**: To run the analysis code you have to
+  `source /cvmfs/sft.cern.ch/lcg/views/LCG_98python3/x86_64-centos7-gcc10-opt/setup.sh`
+  when you are running it on the NAF

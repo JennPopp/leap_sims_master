@@ -3,9 +3,9 @@
 #include <string>
 #include <array>
 
-void showEntries(){
-  string E[1]={"20"};
-  string core[1]={"300"};
+void showEntries_single(){
+  string E[1]={"60"};
+  string core[1]={"75"};
   string conv[1]={"1.75"};
   string NBunch = "100000";
   TString name0 = string("./run0_")+"NBunch_"+NBunch+"_conv_"+conv[0]
