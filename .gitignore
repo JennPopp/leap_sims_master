@@ -13,3 +13,4 @@
 **/plots
 **/submit_jobs/singleout.mac
 *.root
+*.orig
