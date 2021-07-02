@@ -53,7 +53,7 @@ class RunAction : public G4UserRunAction
 
 public:
 
-  RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim, G4String outFile, G4String outType);
+  RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim, G4String outFile, G4String outType, G4Sting version);
   virtual ~RunAction();
 
   virtual void BeginOfRunAction(const G4Run*);
@@ -69,6 +69,7 @@ private:
 
 G4String outFileName;
 G4String outputType;
+G4String versionType;
 
   DetectorConstruction*   fDetector;
   PrimaryGeneratorAction* fPrimary;

@@ -44,7 +44,7 @@ class RunAction;
 class EventAction : public G4UserEventAction
 {
 public:
-  EventAction(RunAction*, G4String outType);
+  EventAction(RunAction*, G4String outType, G4String version);
   virtual ~EventAction();
 
   virtual void BeginOfEventAction(const G4Event*);
@@ -58,6 +58,7 @@ private:
   G4double fEnergySum;
   G4double fNP;
   G4String outputType;
+  G4String versionType;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
