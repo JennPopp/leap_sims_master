@@ -47,7 +47,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
 
-  DetectorConstruction();
+  DetectorConstruction(G4String version);
   ~DetectorConstruction();
 
 public:
@@ -92,6 +92,8 @@ private:
   G4Material*           fWorldMaterial;
 
   DetectorMessenger* fMessenger;
+
+  G4String versionType;
 
 };
 

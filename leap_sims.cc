@@ -74,6 +74,7 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   else if ( G4String(argv[i]) == "-f" ) outFile = argv[i+1];
   else if ( G4String(argv[i]) == "-t" ) outType = argv[i+1];
   else if ( G4String(argv[i]) == "-v" ) version = argv[i+1];
+  else{
     PrintUsage();
     return 1;
   }
