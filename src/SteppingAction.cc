@@ -67,11 +67,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   G4String procName = endPoint->GetProcessDefinedStep()->GetProcessName();
   fRunAction->CountProcesses(procName);
 
-  // get volume of the current aStep
-  auto volume = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
-
+  // get pre-step-volume of the current aStep
+  auto prevolume = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
+  //get post-step-volume of the current aStep
+  auto postvolume = aStep->GetPostStepPoint()->GetTouchableHandle()->GetVolume();
+  //get vacstep volume
+  auto VacStep1PV=fDetector->GetVacStep1PV()
+  auto VacStep2PV=fDetector->GetVacStep2PV()
   if (outputType == "bunch"){
-    if ( volume == fDetector->GetVacStep2PV() ) {
+  if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
          // get analysis manager
          auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
          fEventAction->AddVals(Eval,1);
@@ -80,7 +84,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     }
   }
   else if (outputType == "single"){
-    if ( volume == fDetector->GetVacStep1PV() ) {
+    if ( postvolume == VacStep1PV && prevolume !=VacStep1PV ) {
          // get analysis manager
          auto fAnalysisManager = G4AnalysisManager::Instance();
 
@@ -114,7 +118,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
        }
 
-       if ( volume == fDetector->GetVacStep2PV() ) {
+       if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
 
             auto fAnalysisManager = G4AnalysisManager::Instance();
            //~//~//~//
