@@ -1,8 +1,8 @@
 void test_asy(){
-  TFile *F0 = new TFile("build/Result_Run_0.root");
+  TFile *F0 = new TFile("submit_jobs/run0_TestRun.root");
   TTree *T0=(TTree*)F0->Get("bremssim2");
 
-  TFile *F1 = new TFile("build/Result_Run_1.root");
+  TFile *F1 = new TFile("submit_jobs/run1_TestRun.root");
   TTree *T1=(TTree*)F1->Get("bremssim2");
 
 double nevt = 100000;
