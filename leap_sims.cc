@@ -101,7 +101,7 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   PrimaryGeneratorAction* prim;
   runManager->SetUserInitialization(det = new DetectorConstruction(version));
   runManager->SetUserInitialization(new PhysicsList);
-  runManager->SetUserAction(prim = new PrimaryGeneratorAction(det));
+  runManager->SetUserAction(prim = new PrimaryGeneratorAction());
 
 #ifdef G4VIS_USE
    G4VisManager* visManager = 0;
