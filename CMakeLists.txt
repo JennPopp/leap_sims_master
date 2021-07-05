@@ -40,7 +40,7 @@ target_link_libraries(leap_sims ${Geant4_LIBRARIES} )
 # relies on these scripts being in the current working directory.
 #
 set(Pol01_SCRIPTS
-    heprep2.mac histo.mac histos.mac pol01.in pol01.out vis.mac test_run.mac
+    heprep2.mac histo.mac histos.mac pol01.in pol01.out vis.mac test_run.mac init_vis.mac
   )
 
 foreach(_script ${leap_sims_SCRIPTS})

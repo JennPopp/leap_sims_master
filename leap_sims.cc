@@ -83,7 +83,12 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   if (!outType){outType = "bunch";}
   if (!version){version = "pol";}
 
-
+  // Detect interactive mode (if no macro provided) and define UI session
+  //
+  G4UIExecutive* ui = nullptr;
+  if ( ! macro.size() ) {
+    ui = new G4UIExecutive(argc, argv, session);
+  }
 
   //choose the Random engine
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
@@ -117,22 +122,21 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   // get the pointer to the User Interface manager
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
-  if (argc==1)   // Define UI terminal for interactive mode
-    {
-
-      visManager = new G4VisExecutive;
-      visManager->Initialize();
-
-
-      G4UIExecutive* ui = new G4UIExecutive(argc, argv);
+    // Process macro or start UI session
+    //
+    if ( macro.size() ) {
+      // batch mode
+      G4String command = "/control/execute ";
+      UImanager->ApplyCommand(command+macro);
+    }
+    else  {
+      // interactive mode : define UI session
+      UImanager->ApplyCommand("/control/execute init_vis.mac");
+      if (ui->IsGUI()) {
+        UImanager->ApplyCommand("/control/execute gui.mac");
+      }
       ui->SessionStart();
       delete ui;
-    }
-  else           // Batch mode
-    {
-      G4String command = "/control/execute ";
-
-      UImanager->ApplyCommand(command+macro);
     }
 
   // job termination
