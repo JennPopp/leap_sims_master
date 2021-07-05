@@ -43,13 +43,13 @@
 #include "EventAction.hh"
 #include "SteppingAction.hh"
 
-#ifdef G4VIS_USE
-#include "G4VisExecutive.hh"
-#endif
 
-#ifdef G4UI_USE
+#include "G4VisExecutive.hh"
+
+
+
 #include "G4UIExecutive.hh"
-#endif
+
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -103,9 +103,9 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   runManager->SetUserInitialization(new PhysicsList);
   runManager->SetUserAction(prim = new PrimaryGeneratorAction());
 
-#ifdef G4VIS_USE
+
    G4VisManager* visManager = 0;
-#endif
+
 
   // set user action classes
   RunAction* run;
@@ -119,15 +119,14 @@ for ( G4int i=1; i<argc; i=i+2 ) {
 
   if (argc==1)   // Define UI terminal for interactive mode
     {
-#ifdef G4VIS_USE
+
       visManager = new G4VisExecutive;
       visManager->Initialize();
-#endif
-#ifdef G4UI_USE
+
+
       G4UIExecutive* ui = new G4UIExecutive(argc, argv);
       ui->SessionStart();
       delete ui;
-#endif
     }
   else           // Batch mode
     {
@@ -137,9 +136,9 @@ for ( G4int i=1; i<argc; i=i+2 ) {
     }
 
   // job termination
-#ifdef G4VIS_USE
+
   delete visManager;
-#endif
+
   delete runManager;
 
   return 0;
