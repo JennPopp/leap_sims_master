@@ -27,7 +27,7 @@
 /// \brief Definition of the PrimaryGeneratorAction class
 //
 // $Id: PrimaryGeneratorAction.hh 98772 2016-08-09 14:25:31Z gcosmo $
-// 
+//
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -35,29 +35,26 @@
 #define PrimaryGeneratorAction_h 1
 
 #include "G4VUserPrimaryGeneratorAction.hh"
-#include "G4ParticleGun.hh"
 #include "globals.hh"
 
+class G4GeneralParticleSource;
 class G4Event;
-class DetectorConstruction;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
   public:
-    PrimaryGeneratorAction(DetectorConstruction*);    
-   ~PrimaryGeneratorAction();
+    PrimaryGeneratorAction();
+    ~PrimaryGeneratorAction();
 
-  public:
+    // methods
     virtual void GeneratePrimaries(G4Event*);
-    G4ParticleGun* GetParticleGun() {return fParticleGun;};
 
   private:
-    G4ParticleGun*        fParticleGun;
-    DetectorConstruction* fDetector;
+    // data members
+    G4GeneralParticleSource*  fGeneralParticleSource;
 };
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
