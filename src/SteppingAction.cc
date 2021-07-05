@@ -72,8 +72,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   //get post-step-volume of the current aStep
   auto postvolume = aStep->GetPostStepPoint()->GetTouchableHandle()->GetVolume();
   //get vacstep volume
-  auto VacStep1PV=fDetector->GetVacStep1PV()
-  auto VacStep2PV=fDetector->GetVacStep2PV()
+  auto VacStep1PV=fDetector->GetVacStep1PV();
+  auto VacStep2PV=fDetector->GetVacStep2PV();
   if (outputType == "bunch"){
   if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
          // get analysis manager
