@@ -7,22 +7,8 @@
 #include "G4Element.hh"
 #include "G4ElementTable.hh"
 #include "G4SystemOfUnits.hh"
-// #include "G4LogicalBorderSurface.hh"
-// #include "G4LogicalSkinSurface.hh"
-// #include "G4Box.hh"
-// #include "G4Tubs.hh"
-// #include "G4Para.hh"
-// #include "G4Trd.hh"
-// #include "G4UnionSolid.hh"
-// #include "G4IntersectionSolid.hh"
-// #include "G4LogicalVolume.hh"
-// #include "G4RotationMatrix.hh"
-// #include "G4SDManager.hh"
-#include "G4ThreeVector.hh"
-// #include "G4Transform3D.hh"
-// #include "G4PVPlacement.hh"
-// #include "G4PVReplica.hh"
-// #include "G4OpBoundaryProcess.hh"
+#include "G4PhysicalConstants.hh"
+//#include "G4ThreeVector.hh"
 #include "G4NistManager.hh"
 
 Materials::Materials()
@@ -47,8 +33,8 @@ void Materials::DefineMaterials()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // define elements
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  G4Element* I       = new G4Element(name="Iodine"  ,symbol="I"   , z= 53., a = 126.904*g/mole);
-  G4Element* Cs      = new G4Element(name="Cesium"  ,symbol="Cs"  , z= 55., a = 132.905*g/mole);
+  // G4Element* I       = new G4Element(name="Iodine"  ,symbol="I"   , z= 53., a = 126.904*g/mole);
+  // G4Element* Cs      = new G4Element(name="Cesium"  ,symbol="Cs"  , z= 55., a = 132.905*g/mole);
   G4Element* O       = new G4Element(name="Oxygen"  ,symbol="O"   , z= 8  , a = 16.000*g/mole);
   G4Element* As      = new G4Element(name="Arsenic" ,symbol="As"  , z= 33 , a = 74.922*g/mole);
   G4Element* Al      = new G4Element(name="Aluminum",symbol="Al"  , z= 13 , a = 26.982*g/mole);
@@ -85,10 +71,10 @@ void Materials::DefineMaterials()
   //material defined using NIST Manager
   auto nistManager = G4NistManager::Instance();
 
-  G4Material* Iron = nistManager->FindOrBuildMaterial("G4_Fe");
-  G4Material* Tungsten = nistManager->FindOrBuildMaterial("G4_W");
-  G4Material* Copper = nistManager->FindOrBuildMaterial("G4_Cu");
-  G4Material* Lead = nistManager->FindOrBuildMaterial("G4_Pb");
+  Iron = nistManager->FindOrBuildMaterial("G4_Fe");
+  Tungsten = nistManager->FindOrBuildMaterial("G4_W");
+  Copper = nistManager->FindOrBuildMaterial("G4_Cu");
+  Lead = nistManager->FindOrBuildMaterial("G4_Pb");
 
   G4Material* PbO = nistManager->FindOrBuildMaterial("G4_LEAD_OXIDE");
   G4Material* SiO2 = nistManager->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
@@ -103,7 +89,7 @@ void Materials::DefineMaterials()
  */
 
   // Lead Glass TF1 with the chemical composition Maryna gave me
-  G4Material* TF1 = new G4Material("TF1", density= 3.860*g/cm3, ncomponents=5);
+  TF1 = new G4Material("TF1", density= 3.860*g/cm3, ncomponents=5);
   TF1->AddMaterial(PbO   , fractionmass=0.512);
   TF1->AddMaterial(SiO2  , fractionmass=0.413);
   TF1->AddMaterial(K2O   , fractionmass=0.035);
@@ -111,29 +97,29 @@ void Materials::DefineMaterials()
   TF1->AddMaterial(As2O3 , fractionmass=0.005);
 
   // Lead Glass TF101 with the chemical composition Maryna gave me
-  G4Material* TF101 = new G4Material("TF101", density= 3.860*g/cm3, ncomponents=4);
+  TF101 = new G4Material("TF101", density= 3.860*g/cm3, ncomponents=4);
   TF101->AddMaterial(Pb3O4 , fractionmass=0.5123);
   TF101->AddMaterial(SiO2  , fractionmass=0.4157); //here 0.4153 but it do not add up to 1 therefore I just use 0.4157
   TF101->AddMaterial(K2O   , fractionmass=0.07);
   TF101->AddMaterial(Cer   , fractionmass=0.002);
 
   // Aluminium
-  G4Material* Aluminium = new G4Material ("Aluminium", density=2.70*g/cm3, ncomponents=1);
+  Aluminium = new G4Material ("Aluminium", density=2.70*g/cm3, ncomponents=1);
   Aluminium->AddElement (Al, 1.);
 
   // Quartz / fused silica
-  G4Material* Quartz = new G4Material ("Quartz", density=2.20*g/cm3, ncomponents=2);
+  Quartz = new G4Material ("Quartz", density=2.20*g/cm3, ncomponents=2);
   Quartz->AddElement (O,  2./3.);
   Quartz->AddElement (Si, 1./3.);
 
   // Air
-  G4Material* Air = new G4Material("Air" , density = 1.290*mg/cm3, ncomponents = 3);
+  Air = new G4Material("Air" , density = 1.290*mg/cm3, ncomponents = 3);
   Air->AddElement(N, 78*perCent);
   Air->AddElement(O, 21*perCent);
   Air->AddElement(Ar, 1*perCent);
 
   // Vacuum
-  G4Material* Galactic = new G4Material("Galactic", z=1., a=1.01*g/mole,density= universe_mean_density,
+  Galactic = new G4Material("Galactic", z=1., a=1.01*g/mole,density= universe_mean_density,
                   kStateGas, 2.73*kelvin, 3.e-18*pascal);
 
 
@@ -175,7 +161,7 @@ void Materials::DefineMaterials()
   Quartz->SetMaterialPropertiesTable(MPT_Quartz);
 
   //-------------------------------------------------------------------------------------
-  // TF1 Lead glass
+  // TF1 / TF101  Lead glass
   //-------------------------------------------------------------------------------------
   const int n_LeadGlass=13;
   const int n_LeadGlass2=20;
@@ -207,7 +193,7 @@ void Materials::DefineMaterials()
   G4MaterialPropertiesTable* MPT_LeadGlass = new G4MaterialPropertiesTable();
   MPT_LeadGlass->AddProperty ("RINDEX", PE_LeadGlass, RI_LeadGlass, n_LeadGlass);
   MPT_LeadGlass->AddProperty ("ABSLENGTH", PE_LeadGlass2, abslength_LeadGlass, n_LeadGlass2);
-  LeadGlass->SetMaterialPropertiesTable (MPT_LeadGlass);
+
   TF1->SetMaterialPropertiesTable (MPT_LeadGlass);
   TF101->SetMaterialPropertiesTable (MPT_LeadGlass);
 
