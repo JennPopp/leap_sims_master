@@ -16,6 +16,7 @@
 /gps/number 100000
 /gps/pos/centre 0.0 0.0 -2m
 
+#just comment this lower part if you do not need it, to get a point source 
 /gps/pos/type Beam
 /gps/pos/sigma_r 1  micron
 /gps/ang/type beam2d
