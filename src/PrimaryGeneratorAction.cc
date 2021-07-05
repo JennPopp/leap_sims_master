@@ -33,11 +33,8 @@
 
 #include "PrimaryGeneratorAction.hh"
 
-#include "DetectorConstruction.hh"
-
 #include "G4Event.hh"
-#include "G4ParticleTable.hh"
-#include "G4ParticleDefinition.hh"
+#include "G4GeneralParticleSource.hh"
 #include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
