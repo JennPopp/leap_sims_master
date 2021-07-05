@@ -33,46 +33,34 @@
 
 #include "PrimaryGeneratorAction.hh"
 
-#include "DetectorConstruction.hh"
-
 #include "G4Event.hh"
-#include "G4ParticleTable.hh"
-#include "G4ParticleDefinition.hh"
+#include "G4GeneralParticleSource.hh"
 #include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det)
-: G4VUserPrimaryGeneratorAction(),
-  fParticleGun(0), fDetector(det)
+PrimaryGeneratorAction::PrimaryGeneratorAction()
+  : G4VUserPrimaryGeneratorAction(),
+    fGeneralParticleSource(nullptr)
 {
-  fParticleGun  = new G4ParticleGun(1);
-  G4ParticleDefinition* particle
-           = G4ParticleTable::GetParticleTable()->FindParticle("e-");
-  fParticleGun->SetParticleDefinition(particle);
-  fParticleGun->SetParticleEnergy(15*MeV);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-  fParticleGun->SetParticlePolarization(G4ThreeVector(0.,0.,-1.));
+  fGeneralParticleSource  = new G4GeneralParticleSource();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
-  delete fParticleGun;
+  delete fGeneralParticleSource;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
-  //this function is called at the begining of event
-  //
-  G4double halfSize = 0.5*(fDetector->GetWorldSize());
-  G4double z0 = - halfSize;
+  // this function is called at the begining of event
 
-  fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., z0));
-  fParticleGun->GeneratePrimaryVertex(anEvent);
+  fGeneralParticleSource->GeneratePrimaryVertex(anEvent);
 }
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

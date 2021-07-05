@@ -186,7 +186,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
 
   G4Material* material = fDetector->GetMaterial();
   G4double density = material->GetDensity();
-
+/*
   G4ParticleDefinition* particle =
                             fPrimary->GetParticleGun()->GetParticleDefinition();
   G4String Particle = particle->GetParticleName();
@@ -198,7 +198,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
          << G4BestUnit(density,"Volumic Mass") << ")"
          << " and a"<< G4BestUnit(fDetector->GetCoreZ(),"Length")
          <<" iron core "<< G4endl;
-
+*/
   //frequency of processes
   G4cout << "\n Process calls frequency --->\n";
   for (size_t i=0; i< fProcCounter->size();i++) {

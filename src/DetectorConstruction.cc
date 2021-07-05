@@ -62,7 +62,7 @@ DetectorConstruction::DetectorConstruction(G4String version)
   fSizeXY = 50*mm;
   fCoreThick = 75*mm;
   fConvThick = 1.75*mm;
-  fWorldSize = 1.*m;
+  fWorldSize = 4.1*m;
   SetConvMaterial("G4_W");
   SetWorldMaterial("G4_Galactic");
   fMessenger = new DetectorMessenger(this);
