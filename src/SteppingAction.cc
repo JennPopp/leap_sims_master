@@ -45,11 +45,12 @@
 
 SteppingAction::SteppingAction(DetectorConstruction* det,
                                EventAction* eventAction,
-                               RunAction* ruAct, G4String outType
+                               RunAction* ruAct, G4String outType, G4String version
                              )
  : G4UserSteppingAction(),
    fDetector(det), fRunAction(ruAct),fEventAction(eventAction){
 outputType=outType;
+versionType=version;
  }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -57,7 +57,7 @@
 namespace {
   void PrintUsage() {
     G4cerr << " Usage: " << G4endl;
-    G4cerr << " leap_sims [-m macro ] [-f outFileName] [-t outType]" << G4endl;
+    G4cerr << " leap_sims [-m macro ] [-f outFileName] [-t outType] [-v version]" << G4endl;
   }
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -67,18 +67,21 @@ int main(int argc,char** argv) {
 G4String macro;
 G4String outFile;
 G4String outType;
+G4String version;
 
 for ( G4int i=1; i<argc; i=i+2 ) {
   if      ( G4String(argv[i]) == "-m" ) macro = argv[i+1];
   else if ( G4String(argv[i]) == "-f" ) outFile = argv[i+1];
   else if ( G4String(argv[i]) == "-t" ) outType = argv[i+1];
-  else {
+  else if ( G4String(argv[i]) == "-v" ) version = argv[i+1];
+  else{
     PrintUsage();
     return 1;
   }
 }
   if(!outFile){outFile = "result.root";}
   if (!outType){outType = "bunch";}
+  if (!version){version = "pol";}
 
 
 
@@ -96,7 +99,7 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   // set mandatory initialization classes
   DetectorConstruction* det;
   PrimaryGeneratorAction* prim;
-  runManager->SetUserInitialization(det = new DetectorConstruction);
+  runManager->SetUserInitialization(det = new DetectorConstruction(version));
   runManager->SetUserInitialization(new PhysicsList);
   runManager->SetUserAction(prim = new PrimaryGeneratorAction(det));
 
@@ -107,9 +110,9 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   // set user action classes
   RunAction* run;
   EventAction* event;
-  runManager->SetUserAction(run = new RunAction(det,prim,outFile,outType));
-  runManager->SetUserAction(event = new EventAction(run, outType));
-  runManager->SetUserAction(new SteppingAction(det,event,run, outType));
+  runManager->SetUserAction(run = new RunAction(det,prim,outFile,outType,version));
+  runManager->SetUserAction(event = new EventAction(run,outType,version));
+  runManager->SetUserAction(new SteppingAction(det,event,run,outType,version));
 
   // get the pointer to the User Interface manager
     G4UImanager* UImanager = G4UImanager::GetUIpointer();

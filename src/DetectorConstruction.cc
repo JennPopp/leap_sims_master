@@ -54,10 +54,11 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-DetectorConstruction::DetectorConstruction()
+DetectorConstruction::DetectorConstruction(G4String version)
 : G4VUserDetectorConstruction(),
   PhysicalWorld(0), PhysicalCore(0), fConvMaterial(0), fWorldMaterial(0)
 {
+  versionType=version;
   fSizeXY = 50*mm;
   fCoreThick = 75*mm;
   fConvThick = 1.75*mm;
