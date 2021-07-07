@@ -49,7 +49,7 @@
 #include "G4UnitsTable.hh"
 
 #include "G4PolarizationManager.hh"
-#include "G4NistManager.hh"
+// #include "G4NistManager.hh"
 #include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -63,8 +63,11 @@ DetectorConstruction::DetectorConstruction(G4String version)
   fCoreThick = 75*mm;
   fConvThick = 1.75*mm;
   fWorldSize = 4.1*m;
+
+  allMaterials = new Materials();
+  allMaterials->DefineMaterials();
   SetConvMaterial("G4_W");
-  SetWorldMaterial("G4_Galactic");
+  SetWorldMaterial("Galactic");
   fMessenger = new DetectorMessenger(this);
 }
 
@@ -101,11 +104,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double  magthick = 2.*(maggap1+convthick+maggap2)+corethick;
 
   //Get materials
-  G4Material* absMat =
-    G4NistManager::Instance()->FindOrBuildMaterial("G4_W");
-  auto magMat =   G4NistManager::Instance()->FindOrBuildMaterial("G4_Fe");
-  auto coilMat =   G4NistManager::Instance()->FindOrBuildMaterial("G4_Cu");
-  auto shieldMat =    G4NistManager::Instance()->FindOrBuildMaterial("G4_Pb");
+  G4Material* absMat    = allMaterials->GetMat("G4_W");
+  G4Material* magMat    = allMaterials->GetMat("G4_Fe");
+  G4Material* coilMat   = allMaterials->GetMat("G4_Cu");
+  G4Material* shieldMat = allMaterials->GetMat("G4_Pb");
 
 
   // World
@@ -318,8 +320,9 @@ void DetectorConstruction::PrintParameters()
 void DetectorConstruction::SetConvMaterial(G4String materialChoice)
 {
   // search the material by its name
-  G4Material* mat =
-    G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);
+  // G4Material* mat =
+  //   G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);
+  G4Material* mat = allMaterials->GetMat(materialChoice);
   if (mat != fConvMaterial) {
     if(mat) {
       fConvMaterial = mat;
@@ -336,8 +339,9 @@ void DetectorConstruction::SetConvMaterial(G4String materialChoice)
 void DetectorConstruction::SetWorldMaterial(G4String materialChoice)
 {
   // search the material by its name
-  G4Material* mat =
-    G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);
+  // G4Material* mat =
+  //   G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);
+  G4Material* mat = allMaterials->GetMat(materialChoice);
   if (mat != fWorldMaterial) {
     if(mat) {
       fWorldMaterial = mat;

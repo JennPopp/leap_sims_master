@@ -36,6 +36,7 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+#include "Materials.hh"
 
 class G4LogicalVolume;
 class G4Material;
@@ -79,6 +80,7 @@ public:
 
 private:
 
+  Materials *allMaterials; // Object giving access to all elements and materials defined by Materials.
   G4VPhysicalVolume*    PhysicalWorld;
   G4VPhysicalVolume*    PhysicalCore;
   G4VPhysicalVolume*   fVacStepPV1;
