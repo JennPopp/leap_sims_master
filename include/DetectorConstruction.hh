@@ -60,6 +60,7 @@ public:
   void SetConvThick   (G4double);
   void SetConvMaterial (G4String);
   void SetWorldMaterial (G4String);
+  void SetCaloMaterial (G4String);
 
   void UpdateGeometry();
 
@@ -92,6 +93,7 @@ private:
   G4double              fWorldSize;
   G4Material*           fConvMaterial;
   G4Material*           fWorldMaterial;
+  G4Material*           fCaloMaterial;
 
   DetectorMessenger* fMessenger;
 

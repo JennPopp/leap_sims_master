@@ -56,18 +56,21 @@
 
 DetectorConstruction::DetectorConstruction(G4String version)
 : G4VUserDetectorConstruction(),
-  PhysicalWorld(0), PhysicalCore(0), fConvMaterial(0), fWorldMaterial(0)
+  PhysicalWorld(0), PhysicalCore(0), fConvMaterial(0), fWorldMaterial(0), fCaloMaterial(0)
 {
   versionType=version;
+  allMaterials = new Materials();
+  allMaterials->DefineMaterials();
+
   fSizeXY = 50*mm;
   fCoreThick = 75*mm;
   fConvThick = 1.75*mm;
   fWorldSize = 4.1*m;
 
-  allMaterials = new Materials();
-  allMaterials->DefineMaterials();
   SetConvMaterial("G4_W");
   SetWorldMaterial("Galactic");
+  SetCaloMaterial("TF101");
+
   fMessenger = new DetectorMessenger(this);
 }
 
@@ -90,7 +93,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   G4PolarizationManager::GetInstance()->Clean();
 
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Geometry parameters
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  //
+  // Polarimeter
+  //
   G4double  maggap1 = 48.5*mm;
   G4double  maggap2 = 12.5*mm;
   G4double  absrad  = fSizeXY/2.;
@@ -103,12 +112,43 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double  conedist = corethick/2. + maggap2;
   G4double  magthick = 2.*(maggap1+convthick+maggap2)+corethick;
 
+  //
+  // Calorimeter
+  //
+  G4double detthick = 45.*cm; // crystal size
+  G4double detx = 3.8 *cm;
+  G4double dety = 3.8 *cm;
+
+  G4double alairgapthick = 0.001 *mm;    // thickness of the air gap between the aluwrapping and the crystal
+  G4double alairgapx = detx + 2*alairgapthick;
+  G4double alairgapy = dety + 2*alairgapthick;
+  G4double alairgaplength = detthick + alairgapthick;
+
+  G4double aluwrapthick = 0.01  *mm;   // wikipedia: alu foil thickness between 0.004 and 0.02 mm
+  G4double aluwrapx = alairgapx + 2*aluwrapthick;
+  G4double aluwrapy = alairgapy + 2*aluwrapthick;
+  G4double aluwraplength = alairgaplength + aluwrapthick + vacthick;
+
+  //defining the size of the Calorimeterzell and the virtual calorimeter (mother volume of the calorimetercells)
+  G4int NbofCalor = 9; //here later free paramter to select numer of crystals
+  G4double calorcellxy = aluwrapx;
+  G4double calorcelllength = aluwraplength;
+  G4double virtcalorxy = NbofCalor*calorcellxy/3;
+  G4double virtcalorlength = aluwraplength;
+
+
+  G4double vac3x = alairgapx;// this version is to place the vacstep in the aluwrapping
+  G4double vac3y = alairgapy; // this version is to place the vacstep in the aluwrapping
+
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   //Get materials
   G4Material* absMat    = allMaterials->GetMat("G4_W");
   G4Material* magMat    = allMaterials->GetMat("G4_Fe");
   G4Material* coilMat   = allMaterials->GetMat("G4_Cu");
   G4Material* shieldMat = allMaterials->GetMat("G4_Pb");
-
+  G4Material* Air       = allMaterials->GetMat("Air");
+  G4Material* Al        = allMaterials->GetMat("Aluminium");
 
   // World
   //
@@ -348,6 +388,25 @@ void DetectorConstruction::SetWorldMaterial(G4String materialChoice)
       UpdateGeometry();
     } else {
       G4cout << "### Warning! World material: <"
+           << materialChoice << "> not found" << G4endl;
+    }
+  }
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void DetectorConstruction::SetCaloMaterial(G4String materialChoice)
+{
+  // search the material by its name
+  // G4Material* mat =
+  //   G4NistManager::Instance()->FindOrBuildMaterial(materialChoice);
+  G4Material* mat = allMaterials->GetMat(materialChoice);
+  if (mat != fCaloMaterial) {
+    if(mat) {
+      fCaloMaterial = mat;
+      UpdateGeometry();
+    } else {
+      G4cout << "### Warning! Calorimeter material: <"
            << materialChoice << "> not found" << G4endl;
     }
   }
