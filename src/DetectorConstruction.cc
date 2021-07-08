@@ -48,6 +48,9 @@
 #include "G4LogicalVolumeStore.hh"
 #include "G4SolidStore.hh"
 
+#include "G4VisAttributes.hh"
+#include "G4Colour.hh"
+
 #include "G4UnitsTable.hh"
 
 #include "G4PolarizationManager.hh"
@@ -178,6 +181,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                              0);                         //copy number
 
 
+  LogicalWorld->SetVisAttributes (G4VisAttributes::GetInvisible());
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Polarimeter geometry
