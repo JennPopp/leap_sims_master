@@ -82,7 +82,7 @@ for ( G4int i=1; i<argc; i=i+2 ) {
 }
   if(!outFile){outFile = "result.root";}
   if (!outType){outType = "bunch";}
-  if (!version){version = "pol";}
+  if (!version){version = "PolCal";}
 
   // Detect interactive mode (if no macro provided) and define UI session
   //

@@ -60,6 +60,7 @@ public:
   void SetConvThick   (G4double);
   void SetConvMaterial (G4String);
   void SetWorldMaterial (G4String);
+  void SetCaloMaterial (G4String);
 
   void UpdateGeometry();
 
@@ -69,6 +70,7 @@ public:
 //  const G4VPhysicalVolume* GetBox()        {return fBox;};
   const G4VPhysicalVolume* GetVacStep1PV() const;
   const G4VPhysicalVolume* GetVacStep2PV() const;
+  const G4VPhysicalVolume* GetVacStep3PV() const;
 
   G4double           GetWorldSize()  {return fWorldSize;};
   G4double           GetSizeXY()  {return fSizeXY;};
@@ -85,6 +87,14 @@ private:
   G4VPhysicalVolume*    PhysicalCore;
   G4VPhysicalVolume*   fVacStepPV1;
   G4VPhysicalVolume*   fVacStepPV2;
+  G4VPhysicalVolume*   fVacStepPV3;
+  G4VPhysicalVolume*   fDetectorPV;
+  G4LogicalVolume*     fDetectorLV;
+  G4VPhysicalVolume*   fAluwrapPV;
+  G4VPhysicalVolume*   fAlAirGapPV;
+  G4VPhysicalVolume*   fVirtCaloPV;
+  G4VPhysicalVolume*   fCaloCellPV;
+
 
   G4double              fSizeXY;
   G4double              fCoreThick;
@@ -92,6 +102,7 @@ private:
   G4double              fWorldSize;
   G4Material*           fConvMaterial;
   G4Material*           fWorldMaterial;
+  G4Material*           fCaloMaterial;
 
   DetectorMessenger* fMessenger;
 
@@ -104,6 +115,9 @@ inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep1PV() const {
 }
 inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep2PV() const {
   return fVacStepPV2;
+}
+inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep3PV() const {
+  return fVacStepPV3;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
