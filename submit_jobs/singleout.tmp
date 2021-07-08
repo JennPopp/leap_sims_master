@@ -16,14 +16,24 @@
 /polarization/volume/set IronCore 0. 0. 1
 /polarization/volume/list
 
-#-----------energy-------------------------------
-/gun/energy eKin MeV
-/gun/number NBunch
+#---------gps-commands-------------------------------------
+#simply comment if not needed
+
+#/gps/pos/type Beam
+#/gps/pos/sigma_r 0.001  mm
+#/gps/ang/type beam2d
+#/gps/ang/sigma_x 0.01 rad
+#/gps/ang/sigma_y 0.01 rad
+#/gps/ang/rot1 0 1 0
+#/gps/ang/rot2 1 0 0
+
 #------------------------------------------------------
-/gun/polarization 0. 0. +1.
+#run in both polarization directions
+
+/gps/polarization 0. 0. +1.
 
 /run/beamOn 1
 
-/gun/polarization 0. 0. -1.
+/gps/polarization 0. 0. -1.
 
 /run/beamOn 1
