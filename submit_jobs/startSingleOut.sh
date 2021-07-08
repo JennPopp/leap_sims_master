@@ -17,7 +17,7 @@ sed -i  "s/convthick/$convthick/g" singleout.mac
 sed -i  "s/NBunch/$NBunch/g" singleout.mac
 
 # run executable with macro and result file
-./leap_sims -m singleout.mac -f $outFile -t $outType # >testOut.txt
+./leap_sims -m singleout.mac -f $outFile -t $outType -v Pol# >testOut.txt
 
 mv run0_$outFile ../results_single/run0_$outFile
 mv run1_$outFile ../results_single/run1_$outFile
