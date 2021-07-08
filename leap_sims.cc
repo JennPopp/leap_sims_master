@@ -64,6 +64,7 @@ namespace {
 
 int main(int argc,char** argv) {
 
+G4String session;
 G4String macro;
 G4String outFile;
 G4String outType;
@@ -109,7 +110,8 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   runManager->SetUserAction(prim = new PrimaryGeneratorAction());
 
 
-   G4VisManager* visManager = 0;
+  G4VisManager* visManager = new G4VisExecutive;
+  visManager->Initialize();
 
 
   // set user action classes

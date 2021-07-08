@@ -17,14 +17,16 @@ endif()
 
 #----------------------------------------------------------------------------
 # Setup Geant4 include directories and compile definitions
-#
+# Setup include directory for this project
+
 include(${Geant4_USE_FILE})
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
 #
-include_directories(${PROJECT_SOURCE_DIR}/include
-                    ${Geant4_INCLUDE_DIR})
+#include_directories(${PROJECT_SOURCE_DIR}/include
+#                    ${Geant4_INCLUDE_DIR})
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
@@ -39,11 +41,17 @@ target_link_libraries(leap_sims ${Geant4_LIBRARIES} )
 # build Pol01. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
-set(Pol01_SCRIPTS
-    heprep2.mac histo.mac histos.mac pol01.in pol01.out vis.mac test_run.mac init_vis.mac
+set(LEAP_SIMS_SCRIPTS
+    heprep2.mac
+    histos.mac
+    pol01.in
+    pol01.out
+    vis.mac
+    init_vis.mac
+    gui.mac
   )
 
-foreach(_script ${leap_sims_SCRIPTS})
+foreach(_script ${LEAP_SIMS_SCRIPTS})
   configure_file(
     ${PROJECT_SOURCE_DIR}/${_script}
     ${PROJECT_BINARY_DIR}/${_script}
