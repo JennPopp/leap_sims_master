@@ -43,13 +43,13 @@
 #include "EventAction.hh"
 #include "SteppingAction.hh"
 
-#ifdef G4VIS_USE
-#include "G4VisExecutive.hh"
-#endif
 
-#ifdef G4UI_USE
+#include "G4VisExecutive.hh"
+
+
+
 #include "G4UIExecutive.hh"
-#endif
+
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -64,6 +64,7 @@ namespace {
 
 int main(int argc,char** argv) {
 
+G4String session;
 G4String macro;
 G4String outFile;
 G4String outType;
@@ -83,7 +84,12 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   if (!outType){outType = "bunch";}
   if (!version){version = "pol";}
 
-
+  // Detect interactive mode (if no macro provided) and define UI session
+  //
+  G4UIExecutive* ui = nullptr;
+  if ( ! macro.size() ) {
+    ui = new G4UIExecutive(argc, argv, session);
+  }
 
   //choose the Random engine
   G4Random::setTheEngine(new CLHEP::RanecuEngine);
@@ -103,9 +109,10 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   runManager->SetUserInitialization(new PhysicsList);
   runManager->SetUserAction(prim = new PrimaryGeneratorAction());
 
-#ifdef G4VIS_USE
-   G4VisManager* visManager = 0;
-#endif
+
+  G4VisManager* visManager = new G4VisExecutive;
+  visManager->Initialize();
+
 
   // set user action classes
   RunAction* run;
@@ -117,29 +124,27 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   // get the pointer to the User Interface manager
     G4UImanager* UImanager = G4UImanager::GetUIpointer();
 
-  if (argc==1)   // Define UI terminal for interactive mode
-    {
-#ifdef G4VIS_USE
-      visManager = new G4VisExecutive;
-      visManager->Initialize();
-#endif
-#ifdef G4UI_USE
-      G4UIExecutive* ui = new G4UIExecutive(argc, argv);
+    // Process macro or start UI session
+    //
+    if ( macro.size() ) {
+      // batch mode
+      G4String command = "/control/execute ";
+      UImanager->ApplyCommand(command+macro);
+    }
+    else  {
+      // interactive mode : define UI session
+      UImanager->ApplyCommand("/control/execute init_vis.mac");
+      if (ui->IsGUI()) {
+        UImanager->ApplyCommand("/control/execute gui.mac");
+      }
       ui->SessionStart();
       delete ui;
-#endif
-    }
-  else           // Batch mode
-    {
-      G4String command = "/control/execute ";
-
-      UImanager->ApplyCommand(command+macro);
     }
 
   // job termination
-#ifdef G4VIS_USE
+
   delete visManager;
-#endif
+
   delete runManager;
 
   return 0;
