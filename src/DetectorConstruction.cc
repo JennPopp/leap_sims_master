@@ -141,7 +141,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double calorcelllength = aluwraplength;
   G4double virtcalorxy = NbofCalor*calorcellxy/3;
   G4double virtcalorlength = aluwraplength;
-  G4double caloZposition = 1.0 *m;
+  G4double spacePolCal = 50. *mm;
+  G4double caloZposition = (magthick+virtcalorlength)/2+spacePolCal;
 
   G4double vac3x = alairgapx;// this version is to place the vacstep in the aluwrapping
   G4double vac3y = alairgapy; // this version is to place the vacstep in the aluwrapping
@@ -298,8 +299,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4PolarizationManager * polMgr = G4PolarizationManager::GetInstance();
   polMgr->SetVolumePolarization(LogicalCore,G4ThreeVector(0.,0.,1.));
 
-  PrintParameters();
-
   //
   //vacuum step 1
   //
@@ -350,7 +349,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Calorimeter geometry
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if (versionType == "Calo" || versionType == "PolCal"){
+  if (versionType == "Cal" || versionType == "PolCal"){
 
   // Virtuel calorimeter (mother volume for the hole calorimeter/detector)
   auto fVirtCaloS= new G4Box("virtualCalorimeter",  //Name
@@ -551,6 +550,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   } //end if-statement for the calorimeter geometry
 
+  PrintParameters();
+
   //always return the root volume
   //
   return PhysicalWorld;
@@ -559,7 +560,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void DetectorConstruction::PrintParameters()
-{
+{ if(versionType=="Pol" || versionType=="PolCal"){
   G4cout << "\n The ConverterTarget is made of " << fConvMaterial->GetName()
           << " , " << G4BestUnit(fSizeXY,"Length")<<  "in diameter and "
          <<  G4BestUnit(fConvThick,"Length") << " thick"
@@ -567,6 +568,11 @@ void DetectorConstruction::PrintParameters()
  G4cout << "\n The IronCore is"
         <<  G4BestUnit(fCoreThick,"Length") << " thick"
           << G4endl;
+  }
+
+  if(versionType=="Cal" || versionType=="PolCal"){
+    G4cout << "\n The Calorimeter is made of " << fCaloMaterial->GetName() << G4endl;
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -1,0 +1,8 @@
+executable = ./startSingleOut_PolCalo.sh
+arguments = $(ProcID) $(eKin)
+
+log = ../log/job_$(ProcID).log
+output = ../out/job_$(ProcID).out
+error = ../err/job_$(ProcID).err
+
+queue 1 eKin in 20
