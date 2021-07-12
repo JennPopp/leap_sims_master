@@ -108,56 +108,144 @@ void RunAction::BookHisto()
   if (outputType == "bunch"){
     // Creating ntuple
     //
+    if(versionType=="Pol"){
      fAnalysisManager->CreateNtuple("bremssim2", "vacstep2");
-      fAnalysisManager->CreateNtupleDColumn("Esum");
-      fAnalysisManager->CreateNtupleIColumn("NP");
-      fAnalysisManager->FinishNtuple();}
-  else if (outputType == "single"){
+     fAnalysisManager->CreateNtupleDColumn("Esum");
+     fAnalysisManager->CreateNtupleIColumn("NP");
+     fAnalysisManager->FinishNtuple();}
+    else if(versionType=="Cal"){
+     fAnalysisManager->CreateNtuple("calorimeter", "crystal");
+     fAnalysisManager->CreateNtupleDColumn("Ecalo");
+     fAnalysisManager->FinishNtuple();}
+    else if(versionType=="PolCal"){
+      //id=0
+     fAnalysisManager->CreateNtuple("bremssim2", "vacstep2");
+     fAnalysisManager->CreateNtupleDColumn("Esum");
+     fAnalysisManager->CreateNtupleIColumn("NP");
+     fAnalysisManager->FinishNtuple();
+      //id=1
+     fAnalysisManager->CreateNtuple("calorimeter", "crystal");
+     fAnalysisManager->CreateNtupleDColumn("Ecalo");
+     fAnalysisManager->FinishNtuple();}
+    }
+
+  else if  (outputType == "single"){
+
+    if(versionType=="Pol"){
     // Creating ntuple vacstep1 , id=0
     //
-    fAnalysisManager->CreateNtuple("bremssim1", "vacstep1");
-    fAnalysisManager->CreateNtupleIColumn("pdg");
-    fAnalysisManager->CreateNtupleDColumn("E");
-    fAnalysisManager->CreateNtupleDColumn("x");
-    fAnalysisManager->CreateNtupleDColumn("y");
-    fAnalysisManager->CreateNtupleDColumn("z");
-    fAnalysisManager->CreateNtupleDColumn("startx");
-    fAnalysisManager->CreateNtupleDColumn("starty");
-    fAnalysisManager->CreateNtupleDColumn("startz");
-    fAnalysisManager->CreateNtupleDColumn("px");
-    fAnalysisManager->CreateNtupleDColumn("py");
-    fAnalysisManager->CreateNtupleDColumn("pz");
-    fAnalysisManager->CreateNtupleDColumn("Polx");
-    fAnalysisManager->CreateNtupleDColumn("Poly");
-    fAnalysisManager->CreateNtupleDColumn("Polz");
-    fAnalysisManager->CreateNtupleDColumn("TrackID");
-    fAnalysisManager->CreateNtupleDColumn("ParentID");
-    fAnalysisManager->CreateNtupleDColumn("EventID");
-    fAnalysisManager->FinishNtuple();
+     fAnalysisManager->CreateNtuple("bremssim1", "vacstep1");
+     fAnalysisManager->CreateNtupleIColumn("pdg");
+     fAnalysisManager->CreateNtupleDColumn("E");
+     fAnalysisManager->CreateNtupleDColumn("x");
+     fAnalysisManager->CreateNtupleDColumn("y");
+     fAnalysisManager->CreateNtupleDColumn("z");
+     fAnalysisManager->CreateNtupleDColumn("startx");
+     fAnalysisManager->CreateNtupleDColumn("starty");
+     fAnalysisManager->CreateNtupleDColumn("startz");
+     fAnalysisManager->CreateNtupleDColumn("px");
+     fAnalysisManager->CreateNtupleDColumn("py");
+     fAnalysisManager->CreateNtupleDColumn("pz");
+     fAnalysisManager->CreateNtupleDColumn("Polx");
+     fAnalysisManager->CreateNtupleDColumn("Poly");
+     fAnalysisManager->CreateNtupleDColumn("Polz");
+     fAnalysisManager->CreateNtupleDColumn("TrackID");
+     fAnalysisManager->CreateNtupleDColumn("ParentID");
+     fAnalysisManager->CreateNtupleDColumn("EventID");
+     fAnalysisManager->FinishNtuple();
 
     // Creating ntuple vacstep2 , id=1
     //
-    fAnalysisManager->CreateNtuple("bremssim2", "vacstep2");
-    fAnalysisManager->CreateNtupleIColumn("pdg");
-    fAnalysisManager->CreateNtupleDColumn("E");
-    fAnalysisManager->CreateNtupleDColumn("x");
-    fAnalysisManager->CreateNtupleDColumn("y");
-    fAnalysisManager->CreateNtupleDColumn("z");
-    fAnalysisManager->CreateNtupleDColumn("startx");
-    fAnalysisManager->CreateNtupleDColumn("starty");
-    fAnalysisManager->CreateNtupleDColumn("startz");
-    fAnalysisManager->CreateNtupleDColumn("px");
-    fAnalysisManager->CreateNtupleDColumn("py");
-    fAnalysisManager->CreateNtupleDColumn("pz");
-    fAnalysisManager->CreateNtupleDColumn("Polx");
-    fAnalysisManager->CreateNtupleDColumn("Poly");
-    fAnalysisManager->CreateNtupleDColumn("Polz");
-    fAnalysisManager->CreateNtupleDColumn("TrackID");
-    fAnalysisManager->CreateNtupleDColumn("ParentID");
-    fAnalysisManager->CreateNtupleDColumn("EventID");
-    fAnalysisManager->FinishNtuple();
+     fAnalysisManager->CreateNtuple("bremssim2", "vacstep2");
+     fAnalysisManager->CreateNtupleIColumn("pdg");
+     fAnalysisManager->CreateNtupleDColumn("E");
+     fAnalysisManager->CreateNtupleDColumn("x");
+     fAnalysisManager->CreateNtupleDColumn("y");
+     fAnalysisManager->CreateNtupleDColumn("z");
+     fAnalysisManager->CreateNtupleDColumn("startx");
+     fAnalysisManager->CreateNtupleDColumn("starty");
+     fAnalysisManager->CreateNtupleDColumn("startz");
+     fAnalysisManager->CreateNtupleDColumn("px");
+     fAnalysisManager->CreateNtupleDColumn("py");
+     fAnalysisManager->CreateNtupleDColumn("pz");
+     fAnalysisManager->CreateNtupleDColumn("Polx");
+     fAnalysisManager->CreateNtupleDColumn("Poly");
+     fAnalysisManager->CreateNtupleDColumn("Polz");
+     fAnalysisManager->CreateNtupleDColumn("TrackID");
+     fAnalysisManager->CreateNtupleDColumn("ParentID");
+     fAnalysisManager->CreateNtupleDColumn("EventID");
+     fAnalysisManager->FinishNtuple();}
+
+    else if(versionType=="Cal"){
+     //id=0
+     fAnalysisManager->CreateNtuple("calorimeter", "vacstep3");
+     fAnalysisManager->CreateNtupleIColumn("pdg");
+     fAnalysisManager->CreateNtupleDColumn("E");
+     fAnalysisManager->CreateNtupleDColumn("CopyNumber");
+     fAnalysisManager->CreateNtupleDColumn("x");
+     fAnalysisManager->CreateNtupleDColumn("y");
+     fAnalysisManager->CreateNtupleDColumn("z");
+     fAnalysisManager->FinishNtuple();}
+
+    else if(versionType=="PolCal"){
+    // Creating ntuple vacstep1 , id=0
+    //
+     fAnalysisManager->CreateNtuple("bremssim1", "vacstep1");
+     fAnalysisManager->CreateNtupleIColumn("pdg");
+     fAnalysisManager->CreateNtupleDColumn("E");
+     fAnalysisManager->CreateNtupleDColumn("x");
+     fAnalysisManager->CreateNtupleDColumn("y");
+     fAnalysisManager->CreateNtupleDColumn("z");
+     fAnalysisManager->CreateNtupleDColumn("startx");
+     fAnalysisManager->CreateNtupleDColumn("starty");
+     fAnalysisManager->CreateNtupleDColumn("startz");
+     fAnalysisManager->CreateNtupleDColumn("px");
+     fAnalysisManager->CreateNtupleDColumn("py");
+     fAnalysisManager->CreateNtupleDColumn("pz");
+     fAnalysisManager->CreateNtupleDColumn("Polx");
+     fAnalysisManager->CreateNtupleDColumn("Poly");
+     fAnalysisManager->CreateNtupleDColumn("Polz");
+     fAnalysisManager->CreateNtupleDColumn("TrackID");
+     fAnalysisManager->CreateNtupleDColumn("ParentID");
+     fAnalysisManager->CreateNtupleDColumn("EventID");
+     fAnalysisManager->FinishNtuple();
+
+    // Creating ntuple vacstep2 , id=1
+    //
+     fAnalysisManager->CreateNtuple("bremssim2", "vacstep2");
+     fAnalysisManager->CreateNtupleIColumn("pdg");
+     fAnalysisManager->CreateNtupleDColumn("E");
+     fAnalysisManager->CreateNtupleDColumn("x");
+     fAnalysisManager->CreateNtupleDColumn("y");
+     fAnalysisManager->CreateNtupleDColumn("z");
+     fAnalysisManager->CreateNtupleDColumn("startx");
+     fAnalysisManager->CreateNtupleDColumn("starty");
+     fAnalysisManager->CreateNtupleDColumn("startz");
+     fAnalysisManager->CreateNtupleDColumn("px");
+     fAnalysisManager->CreateNtupleDColumn("py");
+     fAnalysisManager->CreateNtupleDColumn("pz");
+     fAnalysisManager->CreateNtupleDColumn("Polx");
+     fAnalysisManager->CreateNtupleDColumn("Poly");
+     fAnalysisManager->CreateNtupleDColumn("Polz");
+     fAnalysisManager->CreateNtupleDColumn("TrackID");
+     fAnalysisManager->CreateNtupleDColumn("ParentID");
+     fAnalysisManager->CreateNtupleDColumn("EventID");
+     fAnalysisManager->FinishNtuple();
+
+    // Creating ntuple vacstep3 (Calorimeter) , id=2
+    //
+     fAnalysisManager->CreateNtuple("calorimeter", "vacstep3");
+     fAnalysisManager->CreateNtupleIColumn("pdg");
+     fAnalysisManager->CreateNtupleDColumn("E");
+     fAnalysisManager->CreateNtupleDColumn("CopyNumber");
+     fAnalysisManager->CreateNtupleDColumn("x");
+     fAnalysisManager->CreateNtupleDColumn("y");
+     fAnalysisManager->CreateNtupleDColumn("z");
+     fAnalysisManager->FinishNtuple();}
+
   }
-}
+} 
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 

@@ -71,6 +71,7 @@ public:
   const G4VPhysicalVolume* GetVacStep1PV() const;
   const G4VPhysicalVolume* GetVacStep2PV() const;
   const G4VPhysicalVolume* GetVacStep3PV() const;
+  const G4VPhysicalVolume* GetDetectorPV() const;
 
   G4double           GetWorldSize()  {return fWorldSize;};
   G4double           GetSizeXY()  {return fSizeXY;};
@@ -119,6 +120,10 @@ inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep2PV() const {
 inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep3PV() const {
   return fVacStepPV3;
 }
+inline const G4VPhysicalVolume* DetectorConstruction::GetDetectorPV() const {
+  return fDetectorPV;
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
