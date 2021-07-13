@@ -113,13 +113,13 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   runManager->SetUserInitialization(det = new DetectorConstruction(version));
 
   //Physicslist optical (just for testing)
-  G4VModularPhysicsList* physicsList = new FTFP_BERT;
-  physicsList->ReplacePhysics(new G4EmStandardPhysics_option4());
-  G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
-  physicsList->RegisterPhysics(opticalPhysics);
-  runManager-> SetUserInitialization(physicsList);
+  // G4VModularPhysicsList* physicsList = new FTFP_BERT;
+  // physicsList->ReplacePhysics(new G4EmStandardPhysics_option4());
+  // G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
+  // physicsList->RegisterPhysics(opticalPhysics);
+  // runManager-> SetUserInitialization(physicsList);
   //Physicslist user defined
-  //runManager->SetUserInitialization(new PhysicsList);
+  runManager->SetUserInitialization(new PhysicsList);
   runManager->SetUserAction(prim = new PrimaryGeneratorAction());
 
 
