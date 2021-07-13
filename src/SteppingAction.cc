@@ -115,11 +115,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
    }
 
   else if (outputType == "single"){
-
     if (versionType=="Pol"){
       auto VacStep1PV=fDetector->GetVacStep1PV();
       auto VacStep2PV=fDetector->GetVacStep2PV();
-
       if ( postvolume == VacStep1PV && prevolume !=VacStep1PV ) {
          // get analysis manager
          auto fAnalysisManager = G4AnalysisManager::Instance();
@@ -215,7 +213,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         auto VacStep1PV=fDetector->GetVacStep1PV();
         auto VacStep2PV=fDetector->GetVacStep2PV();
         auto VacStep3PV=fDetector->GetVacStep3PV();
-
+        // G4cout<< " THIS PART OF THE CODE IS RUNNING"  << G4endl;
         if ( postvolume == VacStep1PV && prevolume !=VacStep1PV ) {
            // get analysis manager
            auto fAnalysisManager = G4AnalysisManager::Instance();

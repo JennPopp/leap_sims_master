@@ -50,6 +50,11 @@
 
 #include "G4UIExecutive.hh"
 
+// include optical physics
+#include "FTFP_BERT.hh"
+#include "G4OpticalPhysics.hh"
+#include "G4EmStandardPhysics_option4.hh"
+
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -106,7 +111,15 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   DetectorConstruction* det;
   PrimaryGeneratorAction* prim;
   runManager->SetUserInitialization(det = new DetectorConstruction(version));
-  runManager->SetUserInitialization(new PhysicsList);
+
+  //Physicslist optical (just for testing)
+  G4VModularPhysicsList* physicsList = new FTFP_BERT;
+  physicsList->ReplacePhysics(new G4EmStandardPhysics_option4());
+  G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
+  physicsList->RegisterPhysics(opticalPhysics);
+  runManager-> SetUserInitialization(physicsList);
+  //Physicslist user defined
+  //runManager->SetUserInitialization(new PhysicsList);
   runManager->SetUserAction(prim = new PrimaryGeneratorAction());
 
 
