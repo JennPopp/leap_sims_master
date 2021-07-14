@@ -23,51 +23,51 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file polarisation/Pol01/include/PhysicsList.hh
-/// \brief Definition of the PhysicsList class
+/// \file polarisation/Pol01/include/PhysListEmPolarized.hh
+/// \brief Definition of the PhysListEmPolarized class
 //
 //
-// $Id: PhysicsList.hh 98772 2016-08-09 14:25:31Z gcosmo $
-//
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//
-// 14.10.02 (V.Ivanchenko) provide modular list on base of old PhysicsList
+// $Id: PhysListEmPolarized.hh 98772 2016-08-09 14:25:31Z gcosmo $
 //
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#ifndef PhysicsList_h
-#define PhysicsList_h 1
+#ifndef PhysListOptical_h
+#define PhysListOptical_h 1
 
-#include "G4VModularPhysicsList.hh"
+#include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
 
-class PhysicsListMessenger;
-class G4VPhysicsConstructor;
-
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+class  G4Cerenkov;
+class  G4Scintillation;
+class  G4OpAbsorption;
+class  G4OpRayleigh;
+class  G4OpBoundaryProcess;
 
-class PhysicsList: public G4VModularPhysicsList
+class PhysListOptical : public G4VPhysicsConstructor
 {
-public:
-  PhysicsList();
-  virtual ~PhysicsList();
+  public:
+    PhysListOptical(const G4String& name = "optical");
+   ~PhysListOptical();
 
-  virtual void ConstructParticle();
-  virtual void ConstructProcess();
+  public:
+    // This method is dummy for physics
+    virtual void ConstructParticle() {};
 
-  void AddPhysicsList(const G4String& name);
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type
+    virtual void ConstructProcess();
+    
+  private:
+  G4Cerenkov*          theCerenkovProcess;	     ///< Generation of Cerenkov photons.
+  G4Scintillation*     theScintillationProcess;      ///< Generation of scintillation photons
+  G4OpAbsorption*      theAbsorptionProcess;	     ///< Bulk absorption of optical photons.
+  G4OpRayleigh*        theRayleighScatteringProcess; ///< Rayleigh scattering of optical photons.
+  G4OpBoundaryProcess* theBoundaryProcess;           ///< Reflection / refraction at optical interfaces.
 
-  void AddStepMax();
 
-private:
-
-  G4VPhysicsConstructor*  fEmPhysicsList;
-  G4VPhysicsConstructor*  fOptPhysicsList;
-  G4String fEmName;
-  G4String fOptName; //not sure if we need this
-
-  PhysicsListMessenger* fMessenger;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
