@@ -51,12 +51,14 @@ public:
   virtual void EndOfEventAction(const G4Event*);
 
   void AddVals(G4double Eval, G4double Npart);
-
+  void AddEnergyCalo(G4double ECalo);
+  
 private:
   RunAction*            fRunAction;
 
   G4double fEnergySum;
   G4double fNP;
+  G4double fEnergyCalo;
   G4String outputType;
   G4String versionType;
 };
@@ -68,5 +70,8 @@ inline void EventAction::AddVals(G4double Eval, G4double Npart) {
   fNP += Npart;
 }
 
+inline void EventAction::AddEnergyCalo(G4double ECalo) { //deposited energy in the crstals
+  fEnergyCalo += ECalo;
+}
 
 #endif

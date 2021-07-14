@@ -50,6 +50,11 @@
 
 #include "G4UIExecutive.hh"
 
+// include optical physics
+#include "FTFP_BERT.hh"
+#include "G4OpticalPhysics.hh"
+#include "G4EmStandardPhysics_option4.hh"
+
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -80,9 +85,9 @@ for ( G4int i=1; i<argc; i=i+2 ) {
     return 1;
   }
 }
-  if(!outFile){outFile = "result.root";}
-  if (!outType){outType = "bunch";}
-  if (!version){version = "PolCal";}
+  if(outFile.empty()){outFile = "result.root";}
+  if (outType.empty()){outType = "bunch";}
+  if (version.empty()){version = "Pol";}
 
   // Detect interactive mode (if no macro provided) and define UI session
   //
@@ -106,6 +111,15 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   DetectorConstruction* det;
   PrimaryGeneratorAction* prim;
   runManager->SetUserInitialization(det = new DetectorConstruction(version));
+
+  // PhysicsList FTFP_BERT with optical PhysList (like in all optical physics examples for Geant4)
+  // G4VModularPhysicsList* physicsList = new FTFP_BERT;
+  // physicsList->ReplacePhysics(new G4EmStandardPhysics_option4());
+  // G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
+  // physicsList->RegisterPhysics(opticalPhysics);
+  // runManager-> SetUserInitialization(physicsList);
+
+  // Physicslist user defined
   runManager->SetUserInitialization(new PhysicsList);
   runManager->SetUserAction(prim = new PrimaryGeneratorAction());
 

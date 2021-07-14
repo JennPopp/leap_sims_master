@@ -53,11 +53,20 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event*)
 {
-  if (outputType == "bunch"){
-    // initialisation per event
-    fEnergySum = 0.; // Sum of energy of particles behind magnet
-    fNP=0; // Number of particles behind magnet
-  }
+  if (outputType == "bunch"){ // initialisation per event
+    if(versionType == "Pol"){
+      fEnergySum = 0.; // Sum of energy of particles behind magnet
+      fNP=0; // Number of particles behind magnet
+     }
+     else if(versionType=="Cal"){
+      fEnergyCalo =0.;
+     }
+     else if(versionType=="PolCal"){
+      fEnergySum = 0.; // Sum of energy of particles behind magnet
+      fNP=0; // Number of particles behind magnet
+      fEnergyCalo =0.;
+     }
+   }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -68,10 +77,24 @@ void EventAction::EndOfEventAction(const G4Event*)
     // get analysis manager
     auto analysisManager = G4AnalysisManager::Instance();
 
+    if(versionType=="Pol"){
     // fill ntuple id=0
-    analysisManager->FillNtupleDColumn(0,0, fEnergySum);
-    analysisManager->FillNtupleIColumn(0,1, fNP);
-    analysisManager->AddNtupleRow(0);
+     analysisManager->FillNtupleDColumn(0,0, fEnergySum);
+     analysisManager->FillNtupleIColumn(0,1, fNP);
+     analysisManager->AddNtupleRow(0);
+    }
+    else if(versionType=="Cal"){
+     analysisManager->FillNtupleDColumn(0,0, fEnergyCalo);
+     analysisManager->AddNtupleRow(0);
+    }
+    else if(versionType=="PolCal"){
+     analysisManager->FillNtupleDColumn(0,0, fEnergySum);
+     analysisManager->FillNtupleIColumn(0,1, fNP);
+     analysisManager->AddNtupleRow(0);
+
+     analysisManager->FillNtupleDColumn(1,0, fEnergyCalo);
+     analysisManager->AddNtupleRow(1);
+    }
   }
 
 }

@@ -41,6 +41,15 @@
 #include "G4PhysicalConstants.hh"
 #include "G4SystemOfUnits.hh"
 
+// all header files below are coppied from OpNoviceStackingAction.cc
+#include "G4VProcess.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTypes.hh"
+#include "G4Track.hh"
+// heder files below are coppied from QuaSiPMT.cc
+#include "G4OpticalPhoton.hh"
+
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 SteppingAction::SteppingAction(DetectorConstruction* det,
@@ -71,20 +80,45 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   auto prevolume = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
   //get post-step-volume of the current aStep
   auto postvolume = aStep->GetPostStepPoint()->GetTouchableHandle()->GetVolume();
-  //get vacstep volume
-  auto VacStep1PV=fDetector->GetVacStep1PV();
-  auto VacStep2PV=fDetector->GetVacStep2PV();
-  if (outputType == "bunch"){
-  if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
-         // get analysis manager
-         auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
-         fEventAction->AddVals(Eval,1);
 
-    //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
+  auto aTrack = aStep->GetTrack();
+
+  G4TouchableHistory* theTouchable = (G4TouchableHistory*)(aStep->GetPostStepPoint()->GetTouchable());
+
+  if (outputType == "bunch"){
+   // now separating the differnt versions
+   if(versionType=="Pol"){
+     auto VacStep2PV=fDetector->GetVacStep2PV();
+     if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
+            // get analysis manager
+            auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+            fEventAction->AddVals(Eval,1);}
     }
-  }
+    else if(versionType=="Cal"){
+      auto CrystalPV=fDetector->GetDetectorPV();
+      if (prevolume == CrystalPV) { // her i think we have to use prevolume???
+            auto edep = aStep->GetTotalEnergyDeposit();
+            fEventAction->AddEnergyCalo(edep);}
+    }
+    else if(versionType="PolCal"){
+      auto VacStep2PV=fDetector->GetVacStep2PV();
+      auto CrystalPV=fDetector->GetDetectorPV();
+      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
+             // get analysis manager
+             auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+             fEventAction->AddVals(Eval,1);}
+
+      else if (prevolume == CrystalPV) { // her i think we have to use prevolume???
+             auto edep = aStep->GetTotalEnergyDeposit();
+             fEventAction->AddEnergyCalo(edep);}
+     }
+   }
+
   else if (outputType == "single"){
-    if ( postvolume == VacStep1PV && prevolume !=VacStep1PV ) {
+    if (versionType=="Pol"){
+      auto VacStep1PV=fDetector->GetVacStep1PV();
+      auto VacStep2PV=fDetector->GetVacStep2PV();
+      if ( postvolume == VacStep1PV && prevolume !=VacStep1PV ) {
          // get analysis manager
          auto fAnalysisManager = G4AnalysisManager::Instance();
 
@@ -151,7 +185,121 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
       //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
          }
+    }
+    else if (versionType=="Calo"){
+      auto VacStep3PV=fDetector->GetVacStep3PV();
+
+      if ( postvolume == VacStep3PV && prevolume !=VacStep3PV ) {
+        //
+        if(aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
+          //
+          // G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
+          auto analysisManager = G4AnalysisManager::Instance();
+
+          // fill ntuple id=0
+          analysisManager->FillNtupleIColumn(0,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+
+          analysisManager->FillNtupleDColumn(0,1,aStep->GetPostStepPoint()->GetTotalEnergy()/eV );
+          analysisManager->FillNtupleDColumn(0,2,theTouchable->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
+
+          analysisManager->FillNtupleDColumn(0,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
+          analysisManager->FillNtupleDColumn(0,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
+          analysisManager->FillNtupleDColumn(0,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
+          analysisManager->AddNtupleRow(0);}
+        }
+      }
+
+      else if (versionType=="PolCal"){
+        auto VacStep1PV=fDetector->GetVacStep1PV();
+        auto VacStep2PV=fDetector->GetVacStep2PV();
+        auto VacStep3PV=fDetector->GetVacStep3PV();
+        // G4cout<< " THIS PART OF THE CODE IS RUNNING"  << G4endl;
+        if ( postvolume == VacStep1PV && prevolume !=VacStep1PV ) {
+           // get analysis manager
+           auto fAnalysisManager = G4AnalysisManager::Instance();
+
+           // fill ntuple id=0
+           fAnalysisManager->FillNtupleIColumn(0,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+
+           fAnalysisManager->FillNtupleDColumn(0,1, aStep->GetPostStepPoint()->GetKineticEnergy()/MeV);
+
+           fAnalysisManager->FillNtupleDColumn(0,2, aStep->GetPostStepPoint()->GetPosition().x());
+           fAnalysisManager->FillNtupleDColumn(0,3, aStep->GetPostStepPoint()->GetPosition().y());
+           fAnalysisManager->FillNtupleDColumn(0,4, aStep->GetPostStepPoint()->GetPosition().z());
+
+           fAnalysisManager->FillNtupleDColumn(0,5, aStep->GetTrack()->GetVertexPosition().x());
+           fAnalysisManager->FillNtupleDColumn(0,6, aStep->GetTrack()->GetVertexPosition().y());
+           fAnalysisManager->FillNtupleDColumn(0,7, aStep->GetTrack()->GetVertexPosition().z());
+
+           fAnalysisManager->FillNtupleDColumn(0,8, aStep->GetPostStepPoint()->GetMomentumDirection().x());
+           fAnalysisManager->FillNtupleDColumn(0,9, aStep->GetPostStepPoint()->GetMomentumDirection().y());
+           fAnalysisManager->FillNtupleDColumn(0,10, aStep->GetPostStepPoint()->GetMomentumDirection().z());
+
+           fAnalysisManager->FillNtupleDColumn(0,11, aStep->GetTrack()->GetPolarization().x());
+           fAnalysisManager->FillNtupleDColumn(0,12, aStep->GetTrack()->GetPolarization().y());
+           fAnalysisManager->FillNtupleDColumn(0,13, aStep->GetTrack()->GetPolarization().z());
+
+           fAnalysisManager->FillNtupleDColumn(0,14, aStep->GetTrack()->GetTrackID());
+           fAnalysisManager->FillNtupleDColumn(0,15, aStep->GetTrack()->GetParentID());
+           fAnalysisManager->FillNtupleDColumn(0,16, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+
+           fAnalysisManager->AddNtupleRow(0);
+
+      //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
+         }
+
+         if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
+
+              auto fAnalysisManager = G4AnalysisManager::Instance();
+             //~//~//~//
+             fAnalysisManager->FillNtupleIColumn(1,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+
+             fAnalysisManager->FillNtupleDColumn(1,1, aStep->GetPostStepPoint()->GetKineticEnergy()/MeV);
+
+             fAnalysisManager->FillNtupleDColumn(1,2, aStep->GetPostStepPoint()->GetPosition().x());
+             fAnalysisManager->FillNtupleDColumn(1,3, aStep->GetPostStepPoint()->GetPosition().y());
+             fAnalysisManager->FillNtupleDColumn(1,4, aStep->GetPostStepPoint()->GetPosition().z());
+
+             fAnalysisManager->FillNtupleDColumn(1,5, aStep->GetTrack()->GetVertexPosition().x());
+             fAnalysisManager->FillNtupleDColumn(1,6, aStep->GetTrack()->GetVertexPosition().y());
+             fAnalysisManager->FillNtupleDColumn(1,7, aStep->GetTrack()->GetVertexPosition().z());
+
+             fAnalysisManager->FillNtupleDColumn(1,8, aStep->GetPostStepPoint()->GetMomentumDirection().x());
+             fAnalysisManager->FillNtupleDColumn(1,9, aStep->GetPostStepPoint()->GetMomentumDirection().y());
+             fAnalysisManager->FillNtupleDColumn(1,10, aStep->GetPostStepPoint()->GetMomentumDirection().z());
+
+             fAnalysisManager->FillNtupleDColumn(1,11, aStep->GetTrack()->GetPolarization().x());
+             fAnalysisManager->FillNtupleDColumn(1,12, aStep->GetTrack()->GetPolarization().y());
+             fAnalysisManager->FillNtupleDColumn(1,13, aStep->GetTrack()->GetPolarization().z());
+
+             fAnalysisManager->FillNtupleDColumn(1,14, aStep->GetTrack()->GetTrackID());
+             fAnalysisManager->FillNtupleDColumn(1,15, aStep->GetTrack()->GetParentID());
+             fAnalysisManager->FillNtupleDColumn(1,16, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+
+             fAnalysisManager->AddNtupleRow(1);
+          }
+
+          if ( postvolume == VacStep3PV && prevolume !=VacStep3PV ) {
+            //
+            if(aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
+              //
+              // G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
+              auto analysisManager = G4AnalysisManager::Instance();
+
+              // fill ntuple id=0
+              analysisManager->FillNtupleIColumn(2,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+
+              analysisManager->FillNtupleDColumn(2,1,aStep->GetPostStepPoint()->GetTotalEnergy()/eV );
+              analysisManager->FillNtupleDColumn(2,2,theTouchable->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
+
+              analysisManager->FillNtupleDColumn(2,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
+              analysisManager->FillNtupleDColumn(2,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
+              analysisManager->FillNtupleDColumn(2,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
+              analysisManager->AddNtupleRow(2);}
+          }
+        }
+      }
   }
-}
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -9,7 +9,7 @@
   `cd build`  
 
 3. build the application:  
-  `/cvmfs/sft.cern.ch/lcg/releases/LCG_97/CMake/3.14.3/x86_64-centos7-gcc8-opt/bin/cmake ../`  
+  `cmake ../`  
   `make`  
 4. run it in batch mode with macro
   `./leap_sims  -m macfile.mac -f outFileName -t outType -v version`

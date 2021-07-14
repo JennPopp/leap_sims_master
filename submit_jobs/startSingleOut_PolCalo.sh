@@ -1,10 +1,10 @@
 #!/bin/bash
-outType=single
-versionType=PolCal
+outType=bunch
+versionType=Pol
 corethick=75
 convthick=1.75
 eKin=${2}
-NBunch=1000
+NBunch=10000
 outFile=NBunch_${NBunch}_conv_${convthick}mm_core_${corethick}mm_E_${eKin}MeV_version_${versionType}.root
 
 #set the environment
