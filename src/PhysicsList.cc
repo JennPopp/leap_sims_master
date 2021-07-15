@@ -26,7 +26,7 @@
 /// \file polarisation/Pol01/src/PhysicsList.cc
 /// \brief Implementation of the PhysicsList class
 //
-// 
+//
 // $Id: PhysicsList.cc 100257 2016-10-17 08:00:06Z gcosmo $
 //
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -34,25 +34,27 @@
 
 #include "PhysicsList.hh"
 #include "PhysicsListMessenger.hh"
- 
+
 #include "G4EmStandardPhysics.hh"
 #include "PhysListEmPolarized.hh"
+#include "PhysListOptical.hh"
 
 #include "G4EmParameters.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-PhysicsList::PhysicsList() 
+PhysicsList::PhysicsList(G4String version)
 : G4VModularPhysicsList(),
-  fEmPhysicsList(0), fEmName("polarized"), fMessenger(0)
+  fEmPhysicsList(0), fEmName("polarized"), fOptName("optical"), fMessenger(0)
 {
   fMessenger = new PhysicsListMessenger(this);
-
+  versionType = version;
   G4EmParameters::Instance();
 
   SetVerboseLevel(1);
 
   fEmPhysicsList = new PhysListEmPolarized();
+  fOptPhysicsList= new PhysListOptical();
 
 }
 
@@ -110,10 +112,15 @@ void PhysicsList::ConstructProcess()
   // Electromagnetic physics list
   //
   fEmPhysicsList->ConstructProcess();
-    
+
+  // Optical processes just active if Calorimeter is in use (have to check if this is necessary)
+  if(versionType == "Cal" || versionType == "PolCal"){
+  fOptPhysicsList->ConstructProcess();
+  }
+
   // step limitation (as a full process)
-  //  
-  AddStepMax();      
+  //
+  AddStepMax();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -123,7 +130,7 @@ void PhysicsList::AddPhysicsList(const G4String& name)
   if (verboseLevel>0) {
     G4cout << "PhysicsList::AddPhysicsList: <" << name << ">" << G4endl;
   }
-  
+
   if (name == fEmName) return;
 
   if (name == "standard") {
@@ -131,7 +138,7 @@ void PhysicsList::AddPhysicsList(const G4String& name)
     fEmName = name;
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmStandardPhysics();
-            
+
   } else if (name == "polarized") {
 
     fEmName = name;
