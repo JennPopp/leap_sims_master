@@ -29,3 +29,14 @@
   4. watch the progress
   `watch condor_q`
   5. to stop watching simply press `ctrl` `c`
+
+  ### How to run Visualization
+  1. cd into the build directory
+  2. run the user interaction mode without macro and name the version you want to see
+     `Pol`,`Cal` or `PolCal`
+  `./leap_sims -v version`   
+  2. use the OGL (default)
+  3. for HepRep type in `/vis/open HepRepFile` and `/vis/viewer/flush` to save a HepRepFile of the geometry
+  4. copy the HepRepFiles to the HepRep directory
+  5. change to HepRep directory and type `java -jar HepRApp.jar` to open the HepRep Browser
+  6. select the HepRapFile you want to see
