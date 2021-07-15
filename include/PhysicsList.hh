@@ -50,7 +50,7 @@ class G4VPhysicsConstructor;
 class PhysicsList: public G4VModularPhysicsList
 {
 public:
-  PhysicsList();
+  PhysicsList(G4String version);
   virtual ~PhysicsList();
 
   virtual void ConstructParticle();
@@ -66,8 +66,10 @@ private:
   G4VPhysicsConstructor*  fOptPhysicsList;
   G4String fEmName;
   G4String fOptName; //not sure if we need this
-
+  G4String versionType; 
   PhysicsListMessenger* fMessenger;
+
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -120,7 +120,7 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   // runManager-> SetUserInitialization(physicsList);
 
   // Physicslist user defined
-  runManager->SetUserInitialization(new PhysicsList);
+  runManager->SetUserInitialization(new PhysicsList(version));
   runManager->SetUserAction(prim = new PrimaryGeneratorAction());
 
 
