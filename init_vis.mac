@@ -10,5 +10,22 @@
 # Initialize kernel
 /run/initialize
 #
+/gps/energy 20 MeV
+/gps/number 10 #number of electrons in a bunch
+/gps/particle e-
+/gps/pos/centre 0.0 0.0 -2.0 m
+
+#---------gps-commands-------------------------------------
+#simply comment if not needed
+
+/gps/pos/type Beam
+/gps/pos/sigma_r 0.001  mm
+/gps/ang/type beam2d
+#/gps/ang/sigma_x 0.01 rad
+#/gps/ang/sigma_y 0.01 rad
+/gps/ang/rot1 0 1 0
+/gps/ang/rot2 1 0 0
+
+
 # Visualization setting
 /control/execute vis.mac
