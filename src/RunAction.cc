@@ -113,20 +113,29 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtupleDColumn("Esum");
      fAnalysisManager->CreateNtupleIColumn("NP");
      fAnalysisManager->FinishNtuple();}
+
     else if(versionType=="Cal"){
-     fAnalysisManager->CreateNtuple("calorimeter", "crystal");
+     fAnalysisManager->CreateNtuple("calorimeter", "crystal_vacstep3");
      fAnalysisManager->CreateNtupleDColumn("Ecalo");
-     fAnalysisManager->FinishNtuple();}
+     fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
+     fAnalysisManager->FinishNtuple();
+     // histrogramm id=0
+     fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 0., 6*eV);}
+
     else if(versionType=="PolCal"){
-      //id=0
+     //id=0
      fAnalysisManager->CreateNtuple("bremssim2", "vacstep2");
      fAnalysisManager->CreateNtupleDColumn("Esum");
      fAnalysisManager->CreateNtupleIColumn("NP");
      fAnalysisManager->FinishNtuple();
-      //id=1
-     fAnalysisManager->CreateNtuple("calorimeter", "crystal");
+     //id=1
+     fAnalysisManager->CreateNtuple("calorimeter", "crystal_vacstep3");
      fAnalysisManager->CreateNtupleDColumn("Ecalo");
-     fAnalysisManager->FinishNtuple();}
+     fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
+     fAnalysisManager->FinishNtuple();
+     // histrogramm id=0
+     fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 0., 6*eV);}
+
     }
 
   else if  (outputType == "single"){
@@ -244,7 +253,7 @@ void RunAction::BookHisto()
      fAnalysisManager->FinishNtuple();}
 
   }
-} 
+}
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....

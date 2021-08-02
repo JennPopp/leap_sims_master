@@ -85,6 +85,7 @@ void EventAction::EndOfEventAction(const G4Event*)
     }
     else if(versionType=="Cal"){
      analysisManager->FillNtupleDColumn(0,0, fEnergyCalo);
+     analysisManager->FillNtupleDColumn(0,1,fPhotonEnergySum);
      analysisManager->AddNtupleRow(0);
     }
     else if(versionType=="PolCal"){
@@ -93,6 +94,7 @@ void EventAction::EndOfEventAction(const G4Event*)
      analysisManager->AddNtupleRow(0);
 
      analysisManager->FillNtupleDColumn(1,0, fEnergyCalo);
+     analysisManager->FillNtupleDColumn(0,1,fPhotonEnergySum);
      analysisManager->AddNtupleRow(1);
     }
   }
