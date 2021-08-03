@@ -17,7 +17,7 @@
 
 #---------gps-commands-------------------------------------
 #simply comment if not needed
-
+#2D-Beam
 /gps/pos/type Beam
 /gps/pos/sigma_r 0.001  mm
 /gps/ang/type beam2d
@@ -26,6 +26,10 @@
 /gps/ang/rot1 0 1 0
 /gps/ang/rot2 1 0 0
 
+#Point like source
+#/gps/pos/type Point
+#/gps/direction 0 0 1
+#------------------------------------------------------
 
 # Visualization setting
 /control/execute vis.mac
