@@ -120,7 +120,7 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
      fAnalysisManager->FinishNtuple();
      // histrogramm id=0
-     fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 0., 6*eV);}
+     fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 10, 0., 6*eV);}
 
     else if(versionType=="PolCal"){
      //id=0
@@ -134,7 +134,7 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
      fAnalysisManager->FinishNtuple();
      // histrogramm id=0
-     fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 0., 6*eV);}
+     fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 10, 0., 6*eV);}
 
     }
 

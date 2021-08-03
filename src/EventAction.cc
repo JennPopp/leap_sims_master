@@ -60,11 +60,13 @@ void EventAction::BeginOfEventAction(const G4Event*)
      }
      else if(versionType=="Cal"){
       fEnergyCalo =0.;
+      fPhotonEnergySum=0.;
      }
      else if(versionType=="PolCal"){
       fEnergySum = 0.; // Sum of energy of particles behind magnet
       fNP=0; // Number of particles behind magnet
       fEnergyCalo =0.;
+      fPhotonEnergySum=0.;
      }
    }
 }
@@ -94,7 +96,7 @@ void EventAction::EndOfEventAction(const G4Event*)
      analysisManager->AddNtupleRow(0);
 
      analysisManager->FillNtupleDColumn(1,0, fEnergyCalo);
-     analysisManager->FillNtupleDColumn(0,1,fPhotonEnergySum);
+     analysisManager->FillNtupleDColumn(1,1,fPhotonEnergySum);
      analysisManager->AddNtupleRow(1);
     }
   }

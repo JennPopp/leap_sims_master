@@ -106,7 +106,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             fEventAction->AddEnergyCalo(edep);}
 
       else if (postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
-            auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
+            auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
             fEventAction->AddPhotonEnergy(ephot);   // here the Photon Energy will be added up
             fAnalysisManager->FillH1(0, ephot);}
     }
@@ -125,7 +125,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              fEventAction->AddEnergyCalo(edep);}
       //
       else if (postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
-            auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
+            auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
             fEventAction->AddPhotonEnergy(ephot);   // here the Photon Energy will be added up
             fAnalysisManager->FillH1(0, ephot);}
     }
@@ -201,7 +201,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
          }
     }
-    else if (versionType=="Calo"){
+    else if (versionType=="Cal"){
       auto VacStep3PV=fDetector->GetVacStep3PV();
 
       if ( postvolume == VacStep3PV && prevolume !=VacStep3PV ) {
@@ -293,7 +293,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             if(aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
               //
 
-              // fill ntuple id=0
+              // fill ntuple id=2
               fAnalysisManager->FillNtupleIColumn(2,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
               fAnalysisManager->FillNtupleDColumn(2,1,aStep->GetPostStepPoint()->GetTotalEnergy()/eV );
