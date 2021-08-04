@@ -97,7 +97,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             fEventAction->AddVals(Eval,1);}
     }
 
-    else if(versionType=="Cal"){
+   else if(versionType=="Cal"){
       auto CrystalPV=fDetector->GetDetectorPV();
       auto VacStep3PV=fDetector->GetVacStep3PV();
 
@@ -105,7 +105,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             auto edep = aStep->GetTotalEnergyDeposit();
             fEventAction->AddEnergyCalo(edep);}
 
-      else if (postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
+      if (postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
             auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
             fEventAction->AddPhotonEnergy(ephot);   // here the Photon Energy will be added up
             fAnalysisManager->FillH1(0, ephot);}
@@ -120,11 +120,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
              fEventAction->AddVals(Eval,1);}
 
-      else if (prevolume == CrystalPV) { // her i think we have to use prevolume???
+      if (prevolume == CrystalPV) { // her i think we have to use prevolume???
              auto edep = aStep->GetTotalEnergyDeposit();
              fEventAction->AddEnergyCalo(edep);}
       //
-      else if (postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
+      if (postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
             auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
             fEventAction->AddPhotonEnergy(ephot);   // here the Photon Energy will be added up
             fAnalysisManager->FillH1(0, ephot);}
