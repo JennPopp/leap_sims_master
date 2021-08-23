@@ -45,20 +45,20 @@ StepMax::StepMax(const G4String& processName)
 {
   fMessenger = new StepMaxMessenger(this);
 }
- 
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 StepMax::~StepMax() { delete fMessenger; }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4bool StepMax::IsApplicable(const G4ParticleDefinition& particle) 
-{ 
+G4bool StepMax::IsApplicable(const G4ParticleDefinition& particle)
+{
   return (particle.GetPDGCharge() != 0.);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-    
+
 void StepMax::SetMaxStep(G4double step) {fMaxChargedStep = step;}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -69,7 +69,7 @@ G4double StepMax::PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
 {
   // condition is set to "Not Forced"
   *condition = NotForced;
-  
+
   G4double ProposedStep = DBL_MAX;
 
   if((fMaxChargedStep > 0.) &&

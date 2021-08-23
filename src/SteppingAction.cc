@@ -85,6 +85,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   G4TouchableHistory* theTouchable = (G4TouchableHistory*)(aStep->GetPostStepPoint()->GetTouchable());
 
+  auto fAnalysisManager = G4AnalysisManager::Instance();
+
   if (outputType == "bunch"){
    // now separating the differnt versions
    if(versionType=="Pol"){
@@ -94,24 +96,40 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
             fEventAction->AddVals(Eval,1);}
     }
-    else if(versionType=="Cal"){
+
+   else if(versionType=="Cal"){
       auto CrystalPV=fDetector->GetDetectorPV();
+      auto VacStep3PV=fDetector->GetVacStep3PV();
+
       if (prevolume == CrystalPV) { // her i think we have to use prevolume???
             auto edep = aStep->GetTotalEnergyDeposit();
             fEventAction->AddEnergyCalo(edep);}
+
+      if (postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
+            auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
+            fEventAction->AddPhotonEnergy(ephot);   // here the Photon Energy will be added up
+            fAnalysisManager->FillH1(0, ephot);}
     }
     else if(versionType="PolCal"){
       auto VacStep2PV=fDetector->GetVacStep2PV();
       auto CrystalPV=fDetector->GetDetectorPV();
+      auto VacStep3PV=fDetector->GetVacStep3PV();
+
       if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
              // get analysis manager
              auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
              fEventAction->AddVals(Eval,1);}
 
-      else if (prevolume == CrystalPV) { // her i think we have to use prevolume???
+      if (prevolume == CrystalPV) { // her i think we have to use prevolume???
              auto edep = aStep->GetTotalEnergyDeposit();
              fEventAction->AddEnergyCalo(edep);}
-     }
+      //
+      if (postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
+            auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
+            fEventAction->AddPhotonEnergy(ephot);   // here the Photon Energy will be added up
+            fAnalysisManager->FillH1(0, ephot);}
+    }
+
    }
 
   else if (outputType == "single"){
@@ -119,8 +137,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       auto VacStep1PV=fDetector->GetVacStep1PV();
       auto VacStep2PV=fDetector->GetVacStep2PV();
       if ( postvolume == VacStep1PV && prevolume !=VacStep1PV ) {
-         // get analysis manager
-         auto fAnalysisManager = G4AnalysisManager::Instance();
 
          // fill ntuple id=0
          fAnalysisManager->FillNtupleIColumn(0,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
@@ -154,7 +170,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
        if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
 
-            auto fAnalysisManager = G4AnalysisManager::Instance();
            //~//~//~//
            fAnalysisManager->FillNtupleIColumn(1,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
@@ -186,26 +201,23 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
          }
     }
-    else if (versionType=="Calo"){
+    else if (versionType=="Cal"){
       auto VacStep3PV=fDetector->GetVacStep3PV();
 
       if ( postvolume == VacStep3PV && prevolume !=VacStep3PV ) {
         //
         if(aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
-          //
-          // G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
-          auto analysisManager = G4AnalysisManager::Instance();
 
           // fill ntuple id=0
-          analysisManager->FillNtupleIColumn(0,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+          fAnalysisManager->FillNtupleIColumn(0,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
-          analysisManager->FillNtupleDColumn(0,1,aStep->GetPostStepPoint()->GetTotalEnergy()/eV );
-          analysisManager->FillNtupleDColumn(0,2,theTouchable->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
+          fAnalysisManager->FillNtupleDColumn(0,1,aStep->GetPostStepPoint()->GetTotalEnergy()/eV );
+          fAnalysisManager->FillNtupleDColumn(0,2,theTouchable->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
 
-          analysisManager->FillNtupleDColumn(0,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
-          analysisManager->FillNtupleDColumn(0,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
-          analysisManager->FillNtupleDColumn(0,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
-          analysisManager->AddNtupleRow(0);}
+          fAnalysisManager->FillNtupleDColumn(0,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
+          fAnalysisManager->FillNtupleDColumn(0,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
+          fAnalysisManager->FillNtupleDColumn(0,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
+          fAnalysisManager->AddNtupleRow(0);}
         }
       }
 
@@ -215,8 +227,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         auto VacStep3PV=fDetector->GetVacStep3PV();
         // G4cout<< " THIS PART OF THE CODE IS RUNNING"  << G4endl;
         if ( postvolume == VacStep1PV && prevolume !=VacStep1PV ) {
-           // get analysis manager
-           auto fAnalysisManager = G4AnalysisManager::Instance();
 
            // fill ntuple id=0
            fAnalysisManager->FillNtupleIColumn(0,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
@@ -250,7 +260,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
          if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
 
-              auto fAnalysisManager = G4AnalysisManager::Instance();
              //~//~//~//
              fAnalysisManager->FillNtupleIColumn(1,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
@@ -283,19 +292,17 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             //
             if(aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
               //
-              // G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
-              auto analysisManager = G4AnalysisManager::Instance();
 
-              // fill ntuple id=0
-              analysisManager->FillNtupleIColumn(2,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+              // fill ntuple id=2
+              fAnalysisManager->FillNtupleIColumn(2,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
-              analysisManager->FillNtupleDColumn(2,1,aStep->GetPostStepPoint()->GetTotalEnergy()/eV );
-              analysisManager->FillNtupleDColumn(2,2,theTouchable->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
+              fAnalysisManager->FillNtupleDColumn(2,1,aStep->GetPostStepPoint()->GetTotalEnergy()/eV );
+              fAnalysisManager->FillNtupleDColumn(2,2,theTouchable->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
 
-              analysisManager->FillNtupleDColumn(2,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
-              analysisManager->FillNtupleDColumn(2,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
-              analysisManager->FillNtupleDColumn(2,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
-              analysisManager->AddNtupleRow(2);}
+              fAnalysisManager->FillNtupleDColumn(2,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
+              fAnalysisManager->FillNtupleDColumn(2,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
+              fAnalysisManager->FillNtupleDColumn(2,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
+              fAnalysisManager->AddNtupleRow(2);}
           }
         }
       }

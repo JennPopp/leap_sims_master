@@ -21,18 +21,23 @@
 /gps/energy eKin MeV
 /gps/number NBunch
 /gps/particle e-
+#/gps/particle gamma
 /gps/pos/centre 0.0 0.0 -2.0 m
 
 #---------gps-commands-------------------------------------
 #simply comment if not needed
+#2D-Beam
+#/gps/pos/type Beam
+#/gps/pos/sigma_r 0.001  mm
+#/gps/ang/type beam2d
+#/gps/ang/sigma_x 0.01 rad
+#/gps/ang/sigma_y 0.01 rad
+#/gps/ang/rot1 0 1 0
+#/gps/ang/rot2 1 0 0
 
-/gps/pos/type Beam
-/gps/pos/sigma_r 0.001  mm
-/gps/ang/type beam2d
-/gps/ang/sigma_x 0.01 rad
-/gps/ang/sigma_y 0.01 rad
-/gps/ang/rot1 0 1 0
-/gps/ang/rot2 1 0 0
+#Point like source
+/gps/pos/type Point
+/gps/direction 0 0 1
 
 #------------------------------------------------------
 #run in both polarization directions

@@ -52,13 +52,15 @@ public:
 
   void AddVals(G4double Eval, G4double Npart);
   void AddEnergyCalo(G4double ECalo);
-  
+  void AddPhotonEnergy(G4double EPhoton);
+
 private:
-  RunAction*            fRunAction;
+  RunAction* fRunAction;
 
   G4double fEnergySum;
   G4double fNP;
   G4double fEnergyCalo;
+  G4double fPhotonEnergySum;
   G4String outputType;
   G4String versionType;
 };
@@ -72,6 +74,10 @@ inline void EventAction::AddVals(G4double Eval, G4double Npart) {
 
 inline void EventAction::AddEnergyCalo(G4double ECalo) { //deposited energy in the crstals
   fEnergyCalo += ECalo;
+}
+
+inline void EventAction::AddPhotonEnergy(G4double EPhoton) { //deposited energy in the crstals
+  fPhotonEnergySum += EPhoton;
 }
 
 #endif
