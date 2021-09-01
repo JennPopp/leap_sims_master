@@ -37,7 +37,7 @@ ePol=1
 #-------------------------------------------------------------------------------
 
 #Name of root output file
-outFile=${SetUp}_${outType}_NBunch_${NBunch}_E_${eKin}_pm${sigmaE}MeV_sz_${spotSize}_mm_div_${div}_rad_ePol_${ePol}_conv_${convthick}mm_core_${corethick}mm_PrId${1}.root
+outFile=${SetUp}_${outType}_NBunch_${NBunch}_E_${eKin}_pm_${sigmaE}MeV_sz_${spotSize}_mm_div_${div}_rad_ePol_${ePol}_conv_${convthick}mm_core_${corethick}mm_PrId${1}.root
 
 #set the environment
 source /cvmfs/sft.cern.ch/lcg/views/LCG_98python3/x86_64-centos7-gcc10-opt/setup.sh
