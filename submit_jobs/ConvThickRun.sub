@@ -1,8 +1,8 @@
 executable = ./startConvThickRun.sh
 arguments = $(ProcID) $(convthick)
 
-log = ../log/job_$(ProcID).log
-output = ../out/job_$(ProcID).out
-error = ../err/job_$(ProcID).err
+log = /nfs/dust/ilc/user/jenpopp/leap_sims/log/job_$(ProcID).log
+output = /nfs/dust/ilc/user/jenpopp/leap_sims/out/job_$(ProcID).out
+error = /nfs/dust/ilc/user/jenpopp/leap_sims/err/job_$(ProcID).err
 
 queue 100 convthick in 0.5,1,1.5,2,2.5,3,3.5,4,4.5
