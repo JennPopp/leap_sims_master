@@ -141,9 +141,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //defining the size of the Calorimeterzell and the virtual calorimeter (mother volume of the calorimetercells)
   G4int NbofCalor = 9; //here later free paramter to select numer of crystals
   G4double calorcellxy = aluwrapx;
-  G4double calorcelllength = aluwraplength;
+  G4double calorcelllength = aluwraplength + vacthick;
   G4double virtcalorxy = NbofCalor*calorcellxy/3;
-  G4double virtcalorlength = aluwraplength;
+  G4double virtcalorlength = calorcelllength;
   G4double spacePolCal = 50. *mm;
   G4double caloZposition = (magthick+virtcalorlength)/2+spacePolCal;
 
@@ -485,7 +485,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                          "AluWrapping");       //its name
 
   fAluwrapPV = new G4PVPlacement(0,                   //no rotation
-                         G4ThreeVector(0.,0.,0),    //its position // old 0.,0.,-vacthick/2
+                         G4ThreeVector(0.,0.,vacthick/2),    //its position // old 0.,0.,-vacthick/2
                                  fAluwrapLV,            //its logical volume
                                  "AluWrapping",                 //its name
                                  fCaloCellLV,               //its mother
@@ -562,6 +562,33 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                 0);                        //copy number
 
   fVacStepLV3->SetVisAttributes(VacStep3Vis);
+
+  //
+  // vacuum step 4
+  // all in front of the crystall
+
+  auto fVacStepS4 = new G4Box("VacStep4",  //Name
+                               calorcellxy/2.,
+                               calorcellxy/2,
+                               vacthick/2.);
+
+  auto fVacStepLV4 = new G4LogicalVolume(fVacStepS3,    //its solid
+                                        Vacuum,    //its material
+                                        "VacStep4");       //its name
+
+  fVacStepPV4 = new G4PVPlacement(0,                   //no rotation
+                        G4ThreeVector(0.,0.,-aluwraplength/2),    //its position //old 0.,0.,aluwraplength/2
+                                fVacStepLV4,            //its logical volume
+                                "VacStep4",                 //its name
+                                fCaloCellLV,               //its mother //old fCaloCellLV
+                                false,                     //no boolean operat
+                                0);                        //copy number
+
+  fVacStepLV4->SetVisAttributes(VacStep3Vis);
+
+
+
+
 
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  // Optical boundary surfaces

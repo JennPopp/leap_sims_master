@@ -118,6 +118,7 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtuple("calorimeter", "crystal_vacstep3");
      fAnalysisManager->CreateNtupleDColumn("Ecalo");
      fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
+     fAnalysisManager->CreateNtupleDColumn("EIn");
      fAnalysisManager->FinishNtuple();
      // histrogramm id=0
      fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 1.3, 3.3);}
@@ -132,6 +133,7 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtuple("calorimeter", "crystal_vacstep3");
      fAnalysisManager->CreateNtupleDColumn("Ecalo");
      fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
+     fAnalysisManager->CreateNtupleDColumn("EIn");
      fAnalysisManager->FinishNtuple();
      // histrogramm id=0
      fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 1.3, 3.3);}
@@ -194,7 +196,18 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtupleDColumn("x");
      fAnalysisManager->CreateNtupleDColumn("y");
      fAnalysisManager->CreateNtupleDColumn("z");
+     fAnalysisManager->FinishNtuple();
+
+     //id=1
+     fAnalysisManager->CreateNtuple("calorimeterIn", "vacstep4");
+     fAnalysisManager->CreateNtupleIColumn("pdg");
+     fAnalysisManager->CreateNtupleDColumn("E");
+     fAnalysisManager->CreateNtupleDColumn("CopyNumber");
+     fAnalysisManager->CreateNtupleDColumn("x");
+     fAnalysisManager->CreateNtupleDColumn("y");
+     fAnalysisManager->CreateNtupleDColumn("z");
      fAnalysisManager->FinishNtuple();}
+
 
     else if(versionType=="PolCal"){
     // Creating ntuple vacstep1 , id=0
@@ -244,6 +257,17 @@ void RunAction::BookHisto()
     // Creating ntuple vacstep3 (Calorimeter) , id=2
     //
      fAnalysisManager->CreateNtuple("calorimeter", "vacstep3");
+     fAnalysisManager->CreateNtupleIColumn("pdg");
+     fAnalysisManager->CreateNtupleDColumn("E");
+     fAnalysisManager->CreateNtupleDColumn("CopyNumber");
+     fAnalysisManager->CreateNtupleDColumn("x");
+     fAnalysisManager->CreateNtupleDColumn("y");
+     fAnalysisManager->CreateNtupleDColumn("z");
+     fAnalysisManager->FinishNtuple();
+
+    // Creating ntuple vacstep3 (Calorimeter) , id=3
+    //
+     fAnalysisManager->CreateNtuple("calorimeterIn", "vacstep4");
      fAnalysisManager->CreateNtupleIColumn("pdg");
      fAnalysisManager->CreateNtupleDColumn("E");
      fAnalysisManager->CreateNtupleDColumn("CopyNumber");

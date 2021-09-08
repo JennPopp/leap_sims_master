@@ -53,6 +53,7 @@ public:
   void AddVals(G4double Eval, G4double Npart);
   void AddEnergyCalo(G4double ECalo);
   void AddPhotonEnergy(G4double EPhoton);
+  void AddGammaEnergy(G4double EGamma);
 
 private:
   RunAction* fRunAction;
@@ -61,6 +62,7 @@ private:
   G4double fNP;
   G4double fEnergyCalo;
   G4double fPhotonEnergySum;
+  G4double fGammaEnergyIn;
   G4String outputType;
   G4String versionType;
 };
@@ -76,8 +78,11 @@ inline void EventAction::AddEnergyCalo(G4double ECalo) { //deposited energy in t
   fEnergyCalo += ECalo;
 }
 
-inline void EventAction::AddPhotonEnergy(G4double EPhoton) { //deposited energy in the crstals
+inline void EventAction::AddPhotonEnergy(G4double EPhoton) { //Photon Energy which comes out of the crystal
   fPhotonEnergySum += EPhoton;
 }
 
+inline void EventAction::AddGammaEnergy(G4double EGamma) { //Gamma Energy on the entrace of the crystals
+  fGammaEnergyIn+= EGamma;
+}
 #endif
