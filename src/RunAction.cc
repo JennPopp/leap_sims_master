@@ -112,6 +112,8 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtuple("bremssim2", "vacstep2");
      fAnalysisManager->CreateNtupleDColumn("Esum");
      fAnalysisManager->CreateNtupleIColumn("NP");
+     fAnalysisManager->CreateNtupleDColumn("EGammaSum");
+     fAnalysisManager->CreateNtupleIColumn("NGamma");
      fAnalysisManager->FinishNtuple();}
 
     else if(versionType=="Cal"){
@@ -128,6 +130,8 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtuple("bremssim2", "vacstep2");
      fAnalysisManager->CreateNtupleDColumn("Esum");
      fAnalysisManager->CreateNtupleIColumn("NP");
+     fAnalysisManager->CreateNtupleDColumn("EGammaSum");
+     fAnalysisManager->CreateNtupleIColumn("NGamma");
      fAnalysisManager->FinishNtuple();
      //id=1
      fAnalysisManager->CreateNtuple("calorimeter", "crystal_vacstep3");
