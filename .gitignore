@@ -15,4 +15,4 @@
 *.root
 *.orig
 *leap_sims
-**/analyse
+/analyse
