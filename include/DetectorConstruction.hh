@@ -61,6 +61,7 @@ public:
   void SetConvMaterial (G4String);
   void SetWorldMaterial (G4String);
   void SetCaloMaterial (G4String);
+  void SetCrystalnumber (G4String);
 
   void UpdateGeometry();
 
@@ -81,6 +82,7 @@ public:
   G4double           GetCoreZ()   {return fCoreThick;};
   G4double           GetConvZ()   {return fConvThick;};
   G4Material*        GetMaterial()   {return fConvMaterial;};
+  G4String           GetCrystalNumber(){return CrystalNumber;};
 
   void               PrintParameters();
 
@@ -112,6 +114,7 @@ private:
   DetectorMessenger* fMessenger;
 
   G4String versionType;
+  G4String CrystalNumber;
 
 };
 

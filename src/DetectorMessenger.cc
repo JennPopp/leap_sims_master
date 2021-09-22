@@ -83,6 +83,13 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fUpdateCmd->SetGuidance("This command MUST be applied before \"beamOn\" ");
   fUpdateCmd->SetGuidance("if you changed geometrical value(s).");
   fUpdateCmd->AvailableForStates(G4State_Idle);
+
+
+  fCrystalnumberCmd = new G4UIcmdWithAString("/leap/det/Setnumberofcrystals",this);
+  fCrystalnumberCmd->SetGuidance("Set the Number of the Crystals one or nine");
+  fCrystalnumberCmd->SetParameterName("choice",false);
+  fCrystalnumberCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -96,6 +103,7 @@ DetectorMessenger::~DetectorMessenger()
   delete fUpdateCmd;
   delete fDetDir;
   delete fLeapDir;
+  delete fCrystalnumberCmd;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -116,6 +124,11 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 
   if( command == fUpdateCmd )
    { fDetector->UpdateGeometry(); }
+
+ if( command == fCrystalnumberCmd )
+   { fDetector->SetCrystalnumber(newValue);}
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
