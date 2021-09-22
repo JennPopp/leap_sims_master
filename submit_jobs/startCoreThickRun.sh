@@ -12,18 +12,19 @@ convthick=1.75 # thickness of converter target in mm
 
 # energy of e-beam
 eKin=60 #Energy in MeV
+Espread=0.1 #FWHM Energy spread
 eneType=Gauss # Gauss for Gaussian energy distribution, Mono for mono-energetic
-if eneType==Mono
+if [ "$eneType" = "Mono" ]
 then
-sigmaE=0
+  sigmaE=0
 else
-sigmaE=eKin*0.1
+  sigmaE= bc <<< "${eKin}*${Espread}"
 fi
 
 # beam geometry
 NBunch=100000
 sourceType=Beam #Beam or Point
-if sourceType==Beam
+if [ "$sourceType" = "Beam" ]
 then
   spotSize=0.001 # mm
   div=0.01 # radian
