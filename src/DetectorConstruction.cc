@@ -75,6 +75,7 @@ DetectorConstruction::DetectorConstruction(G4String version)
   fCoreThick = 75*mm;
   fConvThick = 1.75*mm;
   fWorldSize = 4.1*m;
+  CrystalNumber= "one";
 
   SetConvMaterial("G4_W");
   SetWorldMaterial("Galactic");
@@ -139,10 +140,24 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double aluwraplength = alairgaplength + aluwrapthick + vacthick;
 
   //defining the size of the Calorimeterzell and the virtual calorimeter (mother volume of the calorimetercells)
-  G4int NbofCalor = 9; //here later free paramter to select numer of crystals
+  //G4int NbofCalor = 9; //here later free paramter to select numer of crystals
   G4double calorcellxy = aluwrapx;
   G4double calorcelllength = aluwraplength + vacthick;
-  G4double virtcalorxy = NbofCalor*calorcellxy/3;
+  G4double virtcalorxy;
+
+  if (CrystalNumber == "one"){
+    virtcalorxy = calorcellxy;
+  }
+  else if (CrystalNumber == "nine"){
+    virtcalorxy = 3*calorcellxy;
+  }
+  else {
+    virtcalorxy = calorcellxy;
+    SetCrystalnumber("one");
+    G4cout << "NO VALID IMPUT FOR CRYSTALNUMBER: Crystalnumber set to one!" << fCaloMaterial->GetName() << G4endl;
+  }
+
+
   G4double virtcalorlength = calorcelllength;
   G4double spacePolCal = 50. *mm;
   G4double caloZposition = (magthick+virtcalorlength)/2+spacePolCal;
@@ -198,6 +213,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   //Calorimeter
   //
+
+
+    G4VisAttributes * AirVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
+    AirVis->SetVisibility(true);
+    AirVis->SetLineWidth(2);
+    AirVis->SetForceWireframe( true );
+    // AirVis->SetForceSolid(false);
 
 
     G4VisAttributes * AluVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
@@ -456,6 +478,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                         fWorldMaterial,    //its material
                                         "physicalcalorimeter");       //its name
 
+  if(CrystalNumber=="nine"){
   //the array for the placement of the 9 calorimetercells in the virtual calorimeter
   G4double CalorRX[9]={0,0,calorcellxy,calorcellxy,calorcellxy,0,-calorcellxy,-calorcellxy,-calorcellxy};
   G4double CalorRY[9]={0,calorcellxy,calorcellxy,0,-calorcellxy,-calorcellxy,-calorcellxy,0,calorcellxy};
@@ -469,6 +492,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                false,                     //no boolean operat
                i);                        //copy number       //copy number
   }
+  }
+
+  else if (CrystalNumber == "one"){
+  fCaloCellPV = new G4PVPlacement(0,		       //no rotation
+               G4ThreeVector(0,0,0),  //its position
+               fCaloCellLV,            //its logical volume
+              "physicalcalorimeter",    //its name
+               fVirtCaloLV,               //its mother
+               false,                     //no boolean operat
+               0);                        //copy number       //copy number
+  }
+
 
   fCaloCellLV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
@@ -515,8 +550,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                 false,                     //no boolean operat
                                 0);                        //copy number
 
-   fAlAirGapLV->SetVisAttributes(G4VisAttributes::GetInvisible());
-
+  fAlAirGapLV->SetVisAttributes(G4VisAttributes::GetInvisible());
+  // fAlAirGapLV->SetVisAttributes(AirVis);
   //
   // Detector(in this case a crystal)
   //
@@ -765,6 +800,13 @@ void DetectorConstruction::SetConvThick(G4double value)
   fConvThick = value;
   UpdateGeometry();
 }
+
+void DetectorConstruction::SetCrystalnumber(G4String value)
+{
+  CrystalNumber=value;
+  UpdateGeometry();
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4RunManager.hh"

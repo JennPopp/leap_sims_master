@@ -64,7 +64,7 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithADoubleAndUnit* fConvZCmd;
     G4UIcmdWithADoubleAndUnit* fCoreZCmd;
     G4UIcmdWithADoubleAndUnit* fSizeXYCmd;
-
+    G4UIcmdWithAString* fCrystalnumberCmd;
     G4UIcmdWithoutParameter*   fUpdateCmd;
 };
 

@@ -123,8 +123,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             fEventAction->AddGammaEnergy(egamma);}
 
       // here I kill the eletrons
-      if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)){
-                      aTrack->SetTrackStatus(fStopAndKill);}
+      // if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)){
+      //                 aTrack->SetTrackStatus(fStopAndKill);}
       // else if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == -11){
       //                 aTrack->SetTrackStatus(fStopAndKill);}
 
@@ -159,9 +159,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             auto egamma = aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
             fEventAction->AddGammaEnergy(egamma);}
 
-      // here I kill the eletrons
-      if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)){
-                      aTrack->SetTrackStatus(fStopAndKill);}
+      // // here I kill the eletrons
+      // if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)){
+      //                 aTrack->SetTrackStatus(fStopAndKill);}
 
     }
 
@@ -266,9 +266,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           fAnalysisManager->FillNtupleDColumn(1,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
           fAnalysisManager->FillNtupleDColumn(1,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
           fAnalysisManager->AddNtupleRow(1);}
-
-      if(postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)) {
-                  aTrack->SetTrackStatus(fStopAndKill);}
+      //
+      // if(postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)) {
+      //             aTrack->SetTrackStatus(fStopAndKill);}
 
 
       }
@@ -370,8 +370,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
               fAnalysisManager->FillNtupleDColumn(3,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
               fAnalysisManager->AddNtupleRow(3);}
 
-            if(postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)) {
-                  aTrack->SetTrackStatus(fStopAndKill);}
+            // if(postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)) {
+            //       aTrack->SetTrackStatus(fStopAndKill);}
 
 
         }
