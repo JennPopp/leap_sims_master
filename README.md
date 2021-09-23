@@ -43,3 +43,7 @@
   4. copy the HepRepFiles to the HepRep directory
   5. change to HepRep directory and type `java -jar HepRApp.jar` to open the HepRep Browser
   6. select the HepRapFile you want to see
+
+  ### Some useful detector commands 
+  1. To set the number of calorimeter crystals use `/leap/det/Setnumberofcrystals`.
+     choose either `one` for one centered crystals of `nine` for a matrix of nine crystals. The default is `one`!

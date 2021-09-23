@@ -23,6 +23,10 @@
 /gps/particle e-
 /gps/pos/centre 0.0 0.0 -2.0 m
 
+#-----------set number of crystals--------------------------
+/leap/det/Setnumberofcrystals nine
+#/leap/det/Setnumberofcrystals one
+
 #---------gps-commands-------------------------------------
 #simply comment if not needed
 #2D-Beam
