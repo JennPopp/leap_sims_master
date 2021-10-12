@@ -115,8 +115,10 @@ void plot_Esum(vector<double> Esum0, vector<double> Esum1){
    legend->AddEntry(h0,"Parallel Polarization","l");
    legend->AddEntry(h1,"Antiparallel Polarization","l");
    legend->Draw();
-c1->SaveAs("./plots/Esum_distr.eps");
-c1->SaveAs("./plots/Esum_distr.pdf");
+// c1->SaveAs("./plots/Esum_distr.eps");
+// c1->SaveAs("./plots/Esum_distr.pdf");
+c1->SaveAs("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/Esum_distr.eps");
+c1->SaveAs("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/Esum_distr.pdf");
 }
 
 auto StringVec2DoubleVec(const vector<string>& stringVec){
@@ -207,9 +209,10 @@ void plot_corerun( vector<string> E,  vector<string> core,
   axis->SetTitle("N_{#gamma}/Bunch");
   axis->SetTitleSize(0.04);
 
-  c1->SaveAs("./plots/core_run_Asy_rate.svg");
-  c1->SaveAs("./plots/core_run_Asy_rate.pdf");
-
+  // c1->SaveAs("./plots/core_run_Asy_rate.svg");
+  // c1->SaveAs("./plots/core_run_Asy_rate.pdf");
+  c1->SaveAs("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/core_run_Asy_rate.svg");
+  c1->SaveAs("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/core_run_Asy_rate.pdf");
   //------ooooooo-------0000000--------oooooo-------0000000------oooooo---------
   //          Draw mean Energies
   //------ooooooo-------0000000--------oooooo-------0000000------oooooo---------
@@ -254,9 +257,11 @@ for (int i=0; i<=size(meanEsum1); i++)
   legend->AddEntry(gr3,"Parallel Polarization","l");
   legend->AddEntry(gr4,"Antiparallel Polarization","l");
   legend->Draw();
-
-  c2->SaveAs("./plots/core_run_BunchE.svg");
-  c2->SaveAs("./plots/core_run_BunchE.pdf");
+  //
+  // c2->SaveAs("./plots/core_run_BunchE.svg");
+  // c2->SaveAs("./plots/core_run_BunchE.pdf");
+  c2->SaveAs("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/core_run_BunchE.svg");
+  c2->SaveAs("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/core_run_BunchE.pdf");
 }
 
 void plot_Erun(const vector<string> &E,const  vector<string> &core,
@@ -301,8 +306,12 @@ void plot_Erun(const vector<string> &E,const  vector<string> &core,
 	gr->SetMarkerColor(4);
 	gr->SetMarkerStyle(21);
 	gr->Draw("LP");
-  TString fname1=string("./plots/E_run_Asy_core_"+core[0]+"mm.pdf");
-  TString fname2=string("./plots/E_run_Asy_core_"+core[0]+"mm.svg");
+  // TString fname1=string("./plots/E_run_Asy_core_"+core[0]+"mm.pdf");
+  // TString fname2=string("./plots/E_run_Asy_core_"+core[0]+"mm.svg");
+  TString fname1=string("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/E_run_Asy_core_"+core[0]+"mm.pdf");
+  TString fname2=string("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/E_run_Asy_core_"+core[0]+"mm.svg");
+
+
   c1->SaveAs(fname1);
   c1->SaveAs(fname2);
 }
@@ -334,9 +343,10 @@ void plot_convRun(const vector<string> &E,const  vector<string> &core,
 	gr->SetMarkerStyle(25);
 	gr->Draw("ALP");
 
-  c1->SaveAs("./plots/conv_run_Asy.eps");
-  c1->SaveAs("./plots/conv_run_Asy.pdf");
-
+  // c1->SaveAs("./plots/conv_run_Asy.eps");
+  // c1->SaveAs("./plots/conv_run_Asy.pdf");
+  c1->SaveAs("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/conv_run_Asy.eps");
+  c1->SaveAs("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/conv_run_Asy.pdf");
   //create canvas
   auto c2 = new TCanvas("c1","gerrors2",200,10,700,500);
   TPad *pad2 = new TPad("pad","",0,0,1,1);
@@ -352,20 +362,44 @@ void plot_convRun(const vector<string> &E,const  vector<string> &core,
 	gr2->SetMarkerStyle(25);
 	gr2->Draw("ALP");
 
-  c2->SaveAs("./plots/conv_run_rate.eps");
-  c2->SaveAs("./plots/conv_run_rate.pdf");
-
+  // c2->SaveAs("./plots/conv_run_rate.eps");
+  // c2->SaveAs("./plots/conv_run_rate.pdf");
+  c2->SaveAs("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/conv_run_rate.eps");
+  c2->SaveAs("/nfs/dust/ilc/user/jenpopp/leap_sims/plots/conv_run_rate.pdf");
 }
 
 int asy_ana2(){
+  //----------------------------------------------------------------------------
+  //Fill in all parameters of the filename
+  //file name exampple: run1_PolCal_bunch_NBunch_100000_E_80_pm_0MeV_sz_0.001_mm_div_0.01_rad_ePol_1_conv_1.75mm_core_75mm_PrId4999.root
+  //----------------------------------------------------------------------------
+  string Simulation="simulation_5";
+  string dirName="/nfs/dust/ilc/user/jenpopp/leap_sims/results/"+Simulation+"/";
+  string version ="PolCal";
+  string outtype ="bunch";
+  string NBunch = "100000";
+  string pm ="0";
+  string sz ="0.0";
+  string divergenz ="0.0";
+  string ePol ="1";
+
+
+  //----------------------------------------------------------------------------
+  //Define your analysis
+  //----------------------------------------------------------------------------
+
   //vector<string> E={"1","2","3","5","7","10","15","20","30","40","50","60","80","100","120"};
-  vector<string> E={"5","7","10","15","20","30","40","50","60","80","100","120"};
+  // vector<string> E={"5","7","10","15","20","30","40","50","60","80","100","120"};
+  vector<string> E={"5","7","10","15","20","25","30","40","50","60","80","100","120"};
   //vector<string> E={"60"};
+  //vector<string> E={"25"};
   //vector<string> core={"50","75","100","125","150","175","200","225","250","275","300"};
   vector<string> core={"75"};
   //vector<string> conv={"0.5","1","1.5","1.75","2","2.5","3","3.5","4","4.5"};
   vector<string> conv={"1.75"};
-  string NBunch = "100000";
+
+  //----------------------------------------------------------------------------
+
 
   // Declare vectors needed for each iteration
   vector<double> Esum0;
@@ -385,8 +419,7 @@ int asy_ana2(){
 
 
 //pair<double, int> p;
-
-  string dirName="./results/";
+//string dirName="./results/";
 string s0;
 string s1;
 double StdDevE0,StdDevE1;
@@ -407,36 +440,71 @@ else {
 loopvar=core;
 cout<<"Start Core Thickness  Run:"<<endl;
 }
+
+
 for(int i=0;i<size(loopvar);i++){
 //for(int i=1;i<2;i++){
     if(size(E)>1 &&  size(core)==1 && size(conv)==1){
-       s0 = string("run0_")+"NBunch_"+NBunch+"_conv_"+conv[0]
-                      +"mm_core_"+core[0]+"mm_E_" + E[i] + "MeV_PrId";
+       s0 = string("run0_")+version+"_"+outtype+"_NBunch_"+NBunch+"_E_"+E[i]+"_"+"pm"+"_"+pm+"MeV_"+"sz_"+sz
+            +"_"+"mm_div_"+divergenz+"_rad_ePol_"+ePol+"_conv_"+conv[0]+"mm_core_"+core[0]+"mm_PrId";
 
-       s1 = string("run1_")+"NBunch_"+NBunch+"_conv_"+conv[0]
-                     +"mm_core_"+core[0]+"mm_E_" + E[i] + "MeV_PrId";
+       s1 = string("run1_")+version+"_"+outtype+"_NBunch_"+NBunch+"_E_" + E[i]+"_"+"pm"+"_"+pm+"MeV_"+"sz_"+sz
+            +"_"+"mm_div_"+divergenz+"_rad_ePol_"+ePol+"_conv_"+conv[0]+"mm_core_"+core[0]+"mm_PrId";
     }
-    else if(size(E)==1 &&  size(core)>1 && size(conv)==1){
-       s0 = string("run0_")+"NBunch_"+NBunch+"_conv_"+conv[0]
-                      +"mm_core_"+core[i]+"mm_E_" + E[0] + "MeV_PrId";
 
-       s1 = string("run1_")+"NBunch_"+NBunch+"_conv_"+conv[0]
-                     +"mm_core_"+core[i]+"mm_E_" + E[0] + "MeV_PrId";
+    else if(size(E)==1 &&  size(core)>1 && size(conv)==1){
+       s0 = string("run0_")+version+"_"+outtype+"_NBunch_"+NBunch+"_E_" + E[0]+"_"+"pm"+"_"+pm+"MeV_"+"sz_"+sz
+            +"_"+"mm_div_"+divergenz+"_rad_ePol_"+ePol+"_conv_"+conv[0]+"mm_core_"+core[i]+"mm_PrId";
+
+       s1 = string("run1_")+version+"_"+outtype+"_NBunch_"+NBunch+"_E_" + E[0]+"_"+"pm"+"_"+pm+"MeV_"+"sz_"+sz
+            +"_"+"mm_div_"+divergenz+"_rad_ePol_"+ePol+"_conv_"+conv[0]+"mm_core_"+core[i]+"mm_PrId";
     }
     else if(size(E)==1 &&  size(core)==1 && size(conv)>1){
-       s0 = string("run0_")+"NBunch_"+NBunch+"_conv_"+conv[i]
-                      +"mm_core_"+core[0]+"mm_E_" + E[0] + "MeV_PrId";
+       s0 = string("run0_")+version+"_"+outtype+"_NBunch_"+NBunch+"_E_" + E[0]+"_"+"pm"+"_"+pm+"MeV_"+"sz_"+sz
+            +"_"+"mm_div_"+divergenz+"_rad_ePol_"+ePol+"_conv_"+conv[i]+"mm_core_"+core[0]+"mm_PrId";
 
-       s1 = string("run1_")+"NBunch_"+NBunch+"_conv_"+conv[i]
-                     +"mm_core_"+core[0]+"mm_E_" + E[0] + "MeV_PrId";
+       s1 = string("run1_")+version+"_"+outtype+"_NBunch_"+NBunch+"_E_" + E[0]+"_"+"pm"+"_"+pm+"MeV_"+"sz_"+sz
+            +"_"+"mm_div_"+divergenz+"_rad_ePol_"+ePol+"_conv_"+conv[i]+"mm_core_"+core[0]+"mm_PrId";
     }
     else if(size(E)==1 &&  size(core)==1 && size(conv)==1){
-       s0 = string("run0_")+"NBunch_"+NBunch+"_conv_"+conv[0]
-                      +"mm_core_"+core[0]+"mm_E_" + E[0] + "MeV_PrId";
+       s0 = string("run0_")+version+"_"+outtype+"_NBunch_"+NBunch+"_E_" + E[0]+"_"+"pm"+"_"+pm+"MeV_"+"sz_"+sz
+            +"_"+"mm_div_"+divergenz+"_rad_ePol_"+ePol+"_conv_"+conv[0]+"mm_core_"+core[0]+"mm_PrId";
 
-       s1 = string("run1_")+"NBunch_"+NBunch+"_conv_"+conv[0]
-                     +"mm_core_"+core[0]+"mm_E_" + E[0] + "MeV_PrId";
+       s1 = string("run1_")+version+"_"+outtype+"_NBunch_"+NBunch+"_E_" + E[0]+"_"+"pm"+"_"+pm+"MeV_"+"sz_"+sz
+            +"_"+"mm_div_"+divergenz+"_rad_ePol_"+ePol+"_conv_"+conv[0]+"mm_core_"+core[0]+"mm_PrId";
     }
+
+
+// for(int i=0;i<size(loopvar);i++){
+// //for(int i=1;i<2;i++){
+//     if(size(E)>1 &&  size(core)==1 && size(conv)==1){
+//        s0 = string("run0_")+"NBunch_"+NBunch+"_conv_"+conv[0]
+//                       +"mm_core_"+core[0]+"mm_E_" + E[i] + "MeV_PrId";
+//
+//        s1 = string("run1_")+"NBunch_"+NBunch+"_conv_"+conv[0]
+//                      +"mm_core_"+core[0]+"mm_E_" + E[i] + "MeV_PrId";
+//     }
+//     else if(size(E)==1 &&  size(core)>1 && size(conv)==1){
+//        s0 = string("run0_")+"NBunch_"+NBunch+"_conv_"+conv[0]
+//                       +"mm_core_"+core[i]+"mm_E_" + E[0] + "MeV_PrId";
+//
+//        s1 = string("run1_")+"NBunch_"+NBunch+"_conv_"+conv[0]
+//                      +"mm_core_"+core[i]+"mm_E_" + E[0] + "MeV_PrId";
+//     }
+//     else if(size(E)==1 &&  size(core)==1 && size(conv)>1){
+//        s0 = string("run0_")+"NBunch_"+NBunch+"_conv_"+conv[i]
+//                       +"mm_core_"+core[0]+"mm_E_" + E[0] + "MeV_PrId";
+//
+//        s1 = string("run1_")+"NBunch_"+NBunch+"_conv_"+conv[i]
+//                      +"mm_core_"+core[0]+"mm_E_" + E[0] + "MeV_PrId";
+//     }
+//     else if(size(E)==1 &&  size(core)==1 && size(conv)==1){
+//        s0 = string("run0_")+"NBunch_"+NBunch+"_conv_"+conv[0]
+//                       +"mm_core_"+core[0]+"mm_E_" + E[0] + "MeV_PrId";
+//
+//        s1 = string("run1_")+"NBunch_"+NBunch+"_conv_"+conv[0]
+//                      +"mm_core_"+core[0]+"mm_E_" + E[0] + "MeV_PrId";
+//     }
 
     auto flist0 = get_fnames(dirName.c_str(),s0);
     auto flist1 = get_fnames(dirName.c_str(),s1);
