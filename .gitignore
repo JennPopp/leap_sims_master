@@ -14,5 +14,6 @@
 **/submit_jobs/singleout.mac
 *.root
 *.orig
+*.h5
 *leap_sims
 /analyse
