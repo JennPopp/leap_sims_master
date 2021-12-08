@@ -10,6 +10,8 @@
 **/results
 **/results_single/*.root
 **/macros
+**/Root_Files
+**/submit_jobs
 **/plots
 **/submit_jobs/singleout.mac
 *.root
