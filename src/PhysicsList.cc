@@ -101,7 +101,7 @@ void PhysicsList::ConstructParticle()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "G4EmProcessOptions.hh"
+#include "G4EmParameters.hh"
 
 void PhysicsList::ConstructProcess()
 {
