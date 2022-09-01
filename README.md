@@ -2,7 +2,7 @@
 
 ### How to run leap_sims_detector_test
 1.  set the environment:  
-  `source /cvmfs/sft.cern.ch/lcg/views/LCG_98python3/x86_64-centos7-gcc10-opt/setup.sh`  
+  `source /cvmfs/sft.cern.ch/lcg/views/LCG_102/x86_64-centos7-gcc11-opt/setup.sh`  
 
 2.  make a build directory and change to the build directory:  
   `mkdir build`  
