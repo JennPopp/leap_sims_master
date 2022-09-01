@@ -88,7 +88,10 @@ void PhysListOptical::ConstructProcess()
    */
   theCerenkovProcess->SetTrackSecondariesFirst(false);
 
-  theScintillationProcess->SetScintillationYieldFactor(1.);
+  //theScintillationProcess->SetScintillationYieldFactor(1.);
+  // in G4 v.11 there are particle specific scintillation yields
+  // and can be set using material properties, see example OpNovice2 
+
   theScintillationProcess->SetTrackSecondariesFirst(false);
 
   auto particleIterator=GetParticleIterator();
