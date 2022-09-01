@@ -32,7 +32,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "RunAction.hh"
-#include "Analysis.hh"
+#include "G4AnalysisManager.hh"
 
 #include "DetectorConstruction.hh"
 #include "PrimaryGeneratorAction.hh"
@@ -74,6 +74,7 @@ void RunAction::BeginOfRunAction(const G4Run* aRun)
 {
   // Always creating analysis manager
   fAnalysisManager = G4AnalysisManager::Instance();
+  fAnalysisManager->SetDefaultFileType("root");
   fAnalysisManager->SetActivation(true);
   fAnalysisManager->SetVerboseLevel(1);
 
