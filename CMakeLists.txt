@@ -46,6 +46,7 @@ set(LEAP_SIMS_SCRIPTS
     vis.mac
     init_vis.mac
     gui.mac
+    test_changes.mac
   )
 
 foreach(_script ${LEAP_SIMS_SCRIPTS})
