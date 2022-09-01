@@ -43,9 +43,6 @@ target_link_libraries(leap_sims ${Geant4_LIBRARIES} )
 #
 set(LEAP_SIMS_SCRIPTS
     heprep2.mac
-    histos.mac
-    pol01.in
-    pol01.out
     vis.mac
     init_vis.mac
     gui.mac
