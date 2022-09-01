@@ -129,7 +129,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       //                 aTrack->SetTrackStatus(fStopAndKill);}
 
     }
-    else if(versionType="PolCal"){
+    else if(versionType=="PolCal"){
       auto VacStep2PV=fDetector->GetVacStep2PV();
       auto CrystalPV=fDetector->GetDetectorPV();
       auto VacStep3PV=fDetector->GetVacStep3PV();
