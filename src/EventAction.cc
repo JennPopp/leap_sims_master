@@ -60,6 +60,8 @@ void EventAction::BeginOfEventAction(const G4Event*)
       fNP=0; // Number of particles behind magnet
       fGammaEnergySum=0;
       fNGamma=0;// Number of gammas behind magent
+      fElectronEnergySum=0;
+      fNElectron=0;
      }
 
      else if(versionType=="Cal"){
@@ -75,6 +77,8 @@ void EventAction::BeginOfEventAction(const G4Event*)
       fEnergyCalo =0.;
       fPhotonEnergySum=0.;
       fGammaEnergyIn=0.;
+      fElectronEnergySum=0;
+      fNElectron=0;
      }
    }
 }
@@ -93,6 +97,8 @@ void EventAction::EndOfEventAction(const G4Event*)
      analysisManager->FillNtupleIColumn(0,1, fNP);
      analysisManager->FillNtupleDColumn(0,2, fGammaEnergySum);
      analysisManager->FillNtupleIColumn(0,3, fNGamma);
+     analysisManager->FillNtupleDColumn(0,4, fElectronEnergySum);
+     analysisManager->FillNtupleIColumn(0,5, fNElectron);
      analysisManager->AddNtupleRow(0);
     }
     else if(versionType=="Cal"){
@@ -106,6 +112,8 @@ void EventAction::EndOfEventAction(const G4Event*)
      analysisManager->FillNtupleIColumn(0,1, fNP);
      analysisManager->FillNtupleDColumn(0,2, fGammaEnergySum);
      analysisManager->FillNtupleIColumn(0,3, fNGamma);
+     analysisManager->FillNtupleDColumn(0,4, fElectronEnergySum);
+     analysisManager->FillNtupleIColumn(0,5, fNElectron);
      analysisManager->AddNtupleRow(0);
 
      analysisManager->FillNtupleDColumn(1,0, fEnergyCalo);
