@@ -311,7 +311,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   G4int  prec = G4cout.precision(5);
 
   G4Material* material = fDetector->GetMaterial();
-  G4double density = material->GetDensity();
+//  G4double density = material->GetDensity();
 /*
   G4ParticleDefinition* particle =
                             fPrimary->GetParticleGun()->GetParticleDefinition();
