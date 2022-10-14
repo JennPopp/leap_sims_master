@@ -40,8 +40,8 @@
 
 /gps/polarization 0. 0. 1
 
-/run/beamOn 1
+/run/beamOn 100
 
 /gps/polarization 0. 0. -1
 
-/run/beamOn 1
+/run/beamOn 100

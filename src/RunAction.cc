@@ -115,6 +115,8 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtupleIColumn("NP");
      fAnalysisManager->CreateNtupleDColumn("EGammaSum");
      fAnalysisManager->CreateNtupleIColumn("NGamma");
+     fAnalysisManager->CreateNtupleDColumn("EeSum");
+     fAnalysisManager->CreateNtupleIColumn("Ne");
      fAnalysisManager->FinishNtuple();}
 
     else if(versionType=="Cal"){
@@ -133,6 +135,9 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtupleIColumn("NP");
      fAnalysisManager->CreateNtupleDColumn("EGammaSum");
      fAnalysisManager->CreateNtupleIColumn("NGamma");
+     fAnalysisManager->CreateNtupleDColumn("EeSum");
+     fAnalysisManager->CreateNtupleIColumn("Ne");
+
      fAnalysisManager->FinishNtuple();
      //id=1
      fAnalysisManager->CreateNtuple("calorimeter", "crystal_vacstep3");
