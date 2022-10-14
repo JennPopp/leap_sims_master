@@ -283,7 +283,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                    "Magnet" ,		 //its name
                    0,0,0);
 
-  G4VPhysicalVolume *  PhysicalMagnet= new G4PVPlacement(0,	//rotation
+  new G4PVPlacement(0,	//rotation
   								 G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm),// translation position
   								 LogicalMagnet,      //its logical volume
   						       "PhysicalMagnet",   //its name  (2nd constructor)
