@@ -307,7 +307,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
              "CuTube" ,		         //its name
              0,0,0);
 
-  G4VPhysicalVolume *PhysicalCuTube= new G4PVPlacement(0,	//rotation
+   new G4PVPlacement(0,	//rotation
          G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm), // translation position
            LogicalCuTube,      // its logical volume
            "PhysicalCuTube",   // its name  (2nd constructor)
@@ -331,7 +331,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   						"Pbtube" ,		 //its name
   						0,0,0);
 
-  G4VPhysicalVolume *PhysicalPbTube= new G4PVPlacement(0,	//rotation
+  new G4PVPlacement(0,	//rotation
   				G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm),
   				LogicalPbtube,      //its logical volume
   			    "PhysicalPbTube",   //its name  (2nd constructor)
@@ -355,7 +355,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
               "solidReconversion" ,	 //its name
               0,0,0);
 
-  auto PhysicalReconversion= new G4PVPlacement(0,	//rotation
+  new G4PVPlacement(0,	//rotation
               G4ThreeVector(0.0*mm, 0.0*mm, -maggap2-convthick/2-corethick/2),
             LogicalReconversion,         //its logical volume
             "PhysicalReconversion",   //its name  (2nd constructor)
@@ -607,7 +607,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                calorcellxy/2,
                                vacthick/2.);
 
-  auto fVacStepLV4 = new G4LogicalVolume(fVacStepS3,    //its solid
+  auto fVacStepLV4 = new G4LogicalVolume(fVacStepS4,    //its solid
                                         Vacuum,    //its material
                                         "VacStep4");       //its name
 
