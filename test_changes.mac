@@ -29,10 +29,9 @@
 
 #---------gps-commands-------------------------------------
 #simply comment if not needed
-#2D-Beam
 /gps/ene/type Mono
 /gps/pos/type Point
-/gps/direction 0 0 1 
+/gps/direction 0 0 1
 
 #------------------------------------------------------
 #run in both polarization directions
