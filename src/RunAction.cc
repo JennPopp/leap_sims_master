@@ -116,7 +116,7 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtupleIColumn("pol-conv");
      fAnalysisManager->CreateNtupleIColumn("pol-annihil");
      fAnalysisManager->FinishNtuple();
-  }
+  
 
   if (outputType == "bunch"){
     // Creating ntuple
