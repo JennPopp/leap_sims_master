@@ -348,6 +348,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
      G4String procName = (*fProcCounter)[i]->GetName();
      G4int    count    = (*fProcCounter)[i]->GetCounter();
      G4cout << "\t" << procName << " = " << count<<"\n";
+     fAnalysisManager->FillNtupleIColumn(0,i, count);
   }
 
   //cross check from G4EmCalculator
