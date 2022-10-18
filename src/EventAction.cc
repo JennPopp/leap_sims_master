@@ -93,33 +93,33 @@ void EventAction::EndOfEventAction(const G4Event*)
 
     if(versionType=="Pol"){
     // fill ntuple id=0
-     analysisManager->FillNtupleDColumn(0,0, fEnergySum);
-     analysisManager->FillNtupleIColumn(0,1, fNP);
-     analysisManager->FillNtupleDColumn(0,2, fGammaEnergySum);
-     analysisManager->FillNtupleIColumn(0,3, fNGamma);
-     analysisManager->FillNtupleDColumn(0,4, fElectronEnergySum);
-     analysisManager->FillNtupleIColumn(0,5, fNElectron);
-     analysisManager->AddNtupleRow(0);
+     analysisManager->FillNtupleDColumn(1,0, fEnergySum);
+     analysisManager->FillNtupleIColumn(1,1, fNP);
+     analysisManager->FillNtupleDColumn(1,2, fGammaEnergySum);
+     analysisManager->FillNtupleIColumn(1,3, fNGamma);
+     analysisManager->FillNtupleDColumn(1,4, fElectronEnergySum);
+     analysisManager->FillNtupleIColumn(1,5, fNElectron);
+     analysisManager->AddNtupleRow(1);
     }
     else if(versionType=="Cal"){
-     analysisManager->FillNtupleDColumn(0,0, fEnergyCalo);
-     analysisManager->FillNtupleDColumn(0,1,fPhotonEnergySum);
-     analysisManager->FillNtupleDColumn(0,2,fGammaEnergyIn);
-     analysisManager->AddNtupleRow(0);
-    }
-    else if(versionType=="PolCal"){
-     analysisManager->FillNtupleDColumn(0,0, fEnergySum);
-     analysisManager->FillNtupleIColumn(0,1, fNP);
-     analysisManager->FillNtupleDColumn(0,2, fGammaEnergySum);
-     analysisManager->FillNtupleIColumn(0,3, fNGamma);
-     analysisManager->FillNtupleDColumn(0,4, fElectronEnergySum);
-     analysisManager->FillNtupleIColumn(0,5, fNElectron);
-     analysisManager->AddNtupleRow(0);
-
      analysisManager->FillNtupleDColumn(1,0, fEnergyCalo);
      analysisManager->FillNtupleDColumn(1,1,fPhotonEnergySum);
      analysisManager->FillNtupleDColumn(1,2,fGammaEnergyIn);
      analysisManager->AddNtupleRow(1);
+    }
+    else if(versionType=="PolCal"){
+     analysisManager->FillNtupleDColumn(1,0, fEnergySum);
+     analysisManager->FillNtupleIColumn(1,1, fNP);
+     analysisManager->FillNtupleDColumn(1,2, fGammaEnergySum);
+     analysisManager->FillNtupleIColumn(1,3, fNGamma);
+     analysisManager->FillNtupleDColumn(1,4, fElectronEnergySum);
+     analysisManager->FillNtupleIColumn(1,5, fNElectron);
+     analysisManager->AddNtupleRow(1);
+
+     analysisManager->FillNtupleDColumn(2,0, fEnergyCalo);
+     analysisManager->FillNtupleDColumn(2,1,fPhotonEnergySum);
+     analysisManager->FillNtupleDColumn(2,2,fGammaEnergyIn);
+     analysisManager->AddNtupleRow(2);
     }
   }
 
