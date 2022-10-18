@@ -115,7 +115,7 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtupleIColumn("pol-phot");
      fAnalysisManager->CreateNtupleIColumn("pol-conv");
      fAnalysisManager->CreateNtupleIColumn("pol-annihil");
-
+     fAnalysisManager->FinishNtuple();
   }
 
   if (outputType == "bunch"){
