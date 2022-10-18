@@ -32,16 +32,15 @@
 #2D-Beam
 /gps/ene/type Mono
 /gps/pos/type Point
-/gps/ang/rot1 0 1 0
-/gps/ang/rot2 1 0 0
+/gps/direction 0 0 1
 
 #------------------------------------------------------
 #run in both polarization directions
 
 /gps/polarization 0. 0. 1
 
-/run/beamOn 100
+/run/beamOn 1
 
 /gps/polarization 0. 0. -1
 
-/run/beamOn 100
+/run/beamOn 1
