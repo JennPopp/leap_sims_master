@@ -106,6 +106,12 @@ oss << "run"<< aRun->GetRunID()<< "_"<< outFileName ;
 
 void RunAction::BookHisto()
 {
+  fAnalysisManager->CreateNtuple("procCount", "physProcesses");
+  for (size_t i=0; i< fProcCounter->size();i++) {
+     G4String procName = (*fProcCounter)[i]->GetName();
+     fAnalysisManager->CreateNtupleIColumn(procName);
+  }
+
   if (outputType == "bunch"){
     // Creating ntuple
     //
