@@ -100,7 +100,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             // get analysis manager
             auto EGamma=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
             fEventAction->AddGammaVals(EGamma,1);}
+     if ( postvolume == VacStep2PV && prevolume !=VacStep2PV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 11) {
+           // get analysis manager
+           auto Ee=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+           fEventAction->AddeVals(Ee,1);}
     }
+
 
    else if(versionType=="Cal"){
       auto CrystalPV=fDetector->GetDetectorPV();
@@ -145,6 +150,10 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              // get analysis manager
              auto EGamma=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
              fEventAction->AddGammaVals(EGamma,1);}
+      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 11) {
+            // get analysis manager
+            auto Ee=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+            fEventAction->AddeVals(Ee,1);}
 
       if (prevolume == CrystalPV) { // her i think we have to use prevolume???
              auto edep = aStep->GetTotalEnergyDeposit();

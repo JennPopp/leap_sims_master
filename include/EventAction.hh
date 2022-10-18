@@ -52,9 +52,11 @@ public:
 
   void AddVals(G4double Eval, G4double Npart);
   void AddGammaVals(G4double EGammapol, G4double Ngamma);
+  void AddeVals(G4double Ee,G4double Ne);
   void AddEnergyCalo(G4double ECalo);
   void AddPhotonEnergy(G4double EPhoton);
   void AddGammaEnergy(G4double EGamma);
+
 
 private:
   RunAction* fRunAction;
@@ -63,6 +65,8 @@ private:
   G4double fNP;
   G4double fGammaEnergySum;
   G4double fNGamma;
+  G4double fElectronEnergySum;
+  G4double fNElectron;
   G4double fEnergyCalo;
   G4double fPhotonEnergySum;
   G4double fGammaEnergyIn;
@@ -79,6 +83,10 @@ inline void EventAction::AddVals(G4double Eval, G4double Npart) {
 inline void EventAction::AddGammaVals(G4double EGammapol, G4double Ngamma) {
   fGammaEnergySum += EGammapol;
   fNGamma += Ngamma;
+}
+inline void EventAction::AddeVals(G4double Ee, G4double Ne) {
+  fElectronEnergySum += Ee;
+  fNElectron += Ne;
 }
 inline void EventAction::AddEnergyCalo(G4double ECalo) { //deposited energy in the crstals
   fEnergyCalo += ECalo;
