@@ -34,6 +34,7 @@
 #include "SteppingAction.hh"
 #include "DetectorConstruction.hh"
 #include "EventAction.hh"
+#include "TupleFunctions.hh"
 
 #include "G4RunManager.hh"
 #include "G4PolarizationHelper.hh"
@@ -134,7 +135,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       //                 aTrack->SetTrackStatus(fStopAndKill);}
 
     }
-    
+
 
    }
 

@@ -1,8 +1,9 @@
 #ifndef TupleFunctions_h
 #define TupleFunctions_h
 
-void WriteSingleEntry(int tupleID);
+#include "globals.hh"
+#include "G4Step.hh"
 
-
+void WriteSingleEntry(int tupleID, G4Step* aStep);
 
 #endif
