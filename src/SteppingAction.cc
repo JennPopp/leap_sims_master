@@ -89,7 +89,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   if (outputType == "bunch"){
    // now separating the differnt versions
-   if(versionType=="Pol"){
+   if(versionType=="Pol" || versionType=="PolCal"){
      auto VacStep2PV=fDetector->GetVacStep2PV();
      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
             // get analysis manager
@@ -107,7 +107,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     }
 
 
-   else if(versionType=="Cal"){
+   else if(versionType=="Cal" || versionType=="PolCal"){
       auto CrystalPV=fDetector->GetDetectorPV();
       auto VacStep3PV=fDetector->GetVacStep3PV();
       auto VacStep4PV=fDetector->GetVacStep4PV();
@@ -134,45 +134,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       //                 aTrack->SetTrackStatus(fStopAndKill);}
 
     }
-    else if(versionType=="PolCal"){
-      auto VacStep2PV=fDetector->GetVacStep2PV();
-      auto CrystalPV=fDetector->GetDetectorPV();
-      auto VacStep3PV=fDetector->GetVacStep3PV();
-      auto VacStep4PV=fDetector->GetVacStep4PV();
-      auto AluwrapPV =fDetector->GetAluwrapPV();
-
-      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
-             // get analysis manager
-             auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
-             fEventAction->AddVals(Eval,1);}
-
-      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
-             // get analysis manager
-             auto EGamma=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
-             fEventAction->AddGammaVals(EGamma,1);}
-      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 11) {
-            // get analysis manager
-            auto Ee=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
-            fEventAction->AddeVals(Ee,1);}
-
-      if (prevolume == CrystalPV) { // her i think we have to use prevolume???
-             auto edep = aStep->GetTotalEnergyDeposit();
-             fEventAction->AddEnergyCalo(edep);}
-      //
-      if (postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
-            auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
-            fEventAction->AddPhotonEnergy(ephot);   // here the Photon Energy will be added up
-            fAnalysisManager->FillH1(0, ephot);}
-      //
-      if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22){
-            auto egamma = aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
-            fEventAction->AddGammaEnergy(egamma);}
-
-      // // here I kill the eletrons
-      if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)){
-                      aTrack->SetTrackStatus(fStopAndKill);}
-
-    }
+    
 
    }
 
