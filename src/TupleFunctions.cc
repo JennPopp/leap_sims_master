@@ -37,11 +37,11 @@ void WriteSingleCalEntry(int tupleID,const G4Step* aStep){
   auto fAnalysisManager = G4AnalysisManager::Instance();
   fAnalysisManager->FillNtupleIColumn(tupleID,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
-  fAnalysisManager->FillNtupleDColumn(tupleID,1,aStep->GetPostStepPoint()->GetTotalEnergy()/eV );
-  fAnalysisManager->FillNtupleDColumn(tupleID,2,theTouchable->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
+  fAnalysisManager->FillNtupleDColumn(tupleID,1,aStep->GetPostStepPoint()->GetTotalEnergy()/CLHEP::eV );
+  fAnalysisManager->FillNtupleDColumn(tupleID,2,aStep->GetPostStepPoint()->GetTouchable()->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
 
-  fAnalysisManager->FillNtupleDColumn(tupleID,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
-  fAnalysisManager->FillNtupleDColumn(tupleID,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
-  fAnalysisManager->FillNtupleDColumn(tupleID,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
+  fAnalysisManager->FillNtupleDColumn(tupleID,3, aStep->GetPostStepPoint()->GetPosition().x()/CLHEP::mm);
+  fAnalysisManager->FillNtupleDColumn(tupleID,4, aStep->GetPostStepPoint()->GetPosition().y()/CLHEP::mm);
+  fAnalysisManager->FillNtupleDColumn(tupleID,5, aStep->GetPostStepPoint()->GetPosition().z()/CLHEP::mm);
   fAnalysisManager->AddNtupleRow(tupleID);
 }

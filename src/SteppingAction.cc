@@ -84,7 +84,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   auto aTrack = aStep->GetTrack();
 
-  G4TouchableHistory* theTouchable = (G4TouchableHistory*)(aStep->GetPostStepPoint()->GetTouchable());
+  //G4TouchableHistory* theTouchable = (G4TouchableHistory*)(aStep->GetPostStepPoint()->GetTouchable());
 
   auto fAnalysisManager = G4AnalysisManager::Instance();
 
