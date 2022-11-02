@@ -95,27 +95,13 @@ DetectorConstruction::~DetectorConstruction()
 
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Cleanup old geometry
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
   G4GeometryManager::GetInstance()->OpenGeometry();
   G4PhysicalVolumeStore::GetInstance()->Clean();
   G4LogicalVolumeStore::GetInstance()->Clean();
   G4SolidStore::GetInstance()->Clean();
+
   G4PolarizationManager::GetInstance()->Clean();
-
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //Get materials
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  G4Material* absMat    = allMaterials->GetMat("G4_W");
-  G4Material* magMat    = allMaterials->GetMat("G4_Fe");
-  G4Material* coilMat   = allMaterials->GetMat("G4_Cu");
-  G4Material* shieldMat = allMaterials->GetMat("G4_Pb");
-  G4Material* Air       = allMaterials->GetMat("Air");
-  G4Material* Al        = allMaterials->GetMat("Aluminium");
-  G4Material* Vacuum    = allMaterials->GetMat("Galactic");
-
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Geometry parameters
@@ -179,9 +165,77 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double vac3x = alairgapx;// this version is to place the vacstep in the aluwrapping
   G4double vac3y = alairgapy; // this version is to place the vacstep in the aluwrapping
 
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //Get materials
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  G4Material* absMat    = allMaterials->GetMat("G4_W");
+  G4Material* magMat    = allMaterials->GetMat("G4_Fe");
+  G4Material* coilMat   = allMaterials->GetMat("G4_Cu");
+  G4Material* shieldMat = allMaterials->GetMat("G4_Pb");
+  G4Material* Air       = allMaterials->GetMat("Air");
+  G4Material* Al        = allMaterials->GetMat("Aluminium");
+  G4Material* Vacuum    = allMaterials->GetMat("Galactic");
+
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //VisAttributes
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  //Polarimeter
+  //
+
+    G4VisAttributes * MagnetVis= new G4VisAttributes( G4Colour(255/255. ,102/255. ,102/255. ));
+    MagnetVis->SetVisibility(true);
+    MagnetVis->SetLineWidth(1);
+
+    G4VisAttributes * CopperCoilVis= new G4VisAttributes( G4Colour(255/255. ,0/255. ,255/255. ));
+    CopperCoilVis->SetVisibility(true);
+    CopperCoilVis->SetLineWidth(1);
+
+    G4VisAttributes * LeadTubeVis= new G4VisAttributes( G4Colour(0/255. ,102/255. ,204/255. ));
+    LeadTubeVis->SetVisibility(true);
+    LeadTubeVis->SetLineWidth(1);
+
+    G4VisAttributes * ConversionTargetVis= new G4VisAttributes( G4Colour(105/255. ,105/255. ,105/255. ));
+    ConversionTargetVis->SetVisibility(true);
+    ConversionTargetVis->SetLineWidth(2);
+    ConversionTargetVis->SetForceSolid(true);
+
+    G4VisAttributes * IronCoreVis= new G4VisAttributes( G4Colour(51/255. ,51/255. ,255/255. ));
+    IronCoreVis->SetVisibility(true);
+    IronCoreVis->SetLineWidth(2);
+    IronCoreVis->SetForceSolid(true);
+
+    G4VisAttributes * VacStepVis= new G4VisAttributes( G4Colour(255/255. ,165/255. ,0/255. ));
+    VacStepVis->SetVisibility(true);
+    VacStepVis->SetLineWidth(1);
+    VacStepVis->SetForceSolid(true);
 
 
+  //Calorimeter
+  //
 
+
+    G4VisAttributes * AirVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
+    AirVis->SetVisibility(true);
+    AirVis->SetLineWidth(2);
+    AirVis->SetForceWireframe( true );
+    // AirVis->SetForceSolid(false);
+
+
+    G4VisAttributes * AluVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
+    AluVis->SetVisibility(true);
+    AluVis->SetLineWidth(2);
+    AluVis->SetForceSolid(false);
+
+    G4VisAttributes * CrystalVis= new G4VisAttributes( G4Colour(224/255. ,255/255. ,255/255. ));
+    CrystalVis->SetVisibility(true);
+    CrystalVis->SetLineWidth(2);
+    CrystalVis->SetForceSolid(true);
+
+    G4VisAttributes * VacStep3Vis= new G4VisAttributes( G4Colour(255/255. ,165/255. ,0/255. ));
+    VacStep3Vis->SetVisibility(true);
+    VacStep3Vis->SetLineWidth(1);
+    VacStep3Vis->SetForceSolid(true);
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // World
@@ -204,7 +258,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                              0);                         //copy number
 
 
-
+  LogicalWorld->SetVisAttributes (G4VisAttributes::GetInvisible());
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Polarimeter geometry
@@ -237,7 +291,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   						       false,              //no boolean operation
   						       0);                 //copy number
 
-
+  LogicalMagnet->SetVisAttributes(MagnetVis);
 
   //Copper Coils
   //
@@ -261,7 +315,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
            false,              // no boolean operation
            0);
 
-
+  LogicalCuTube->SetVisAttributes(CopperCoilVis);
 
   // Lead Tube
   //
@@ -285,7 +339,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   			    false,              //no boolean operation
   			    0);                 //copy number
 
-
+  LogicalPbtube->SetVisAttributes(LeadTubeVis);
 
   // Reconversion Target
   //
@@ -309,7 +363,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
             false,                 //no boolean operation
             0);                       //copy number
 
-
+  LogicalReconversion->SetVisAttributes(ConversionTargetVis);
 
   // Iron Core
   //
@@ -333,7 +387,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4PolarizationManager * polMgr = G4PolarizationManager::GetInstance();
   polMgr->SetVolumePolarization(LogicalCore,G4ThreeVector(0.,0.,1.));
 
-
+  LogicalCore->SetVisAttributes(IronCoreVis);
 
   //
   //vacuum step 1
@@ -358,7 +412,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                false,                     //no boolean operat
                                0);                        //copy number
 
-
+  VacStepLV1->SetVisAttributes(VacStepVis);
 
   // vacuum step 2
   //
@@ -380,6 +434,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                 LogicalWorld,               //its mother
                                 false,                     //no boolean operat
                                 0);                       //copy number
+
+  VacStepLV2->SetVisAttributes(VacStepVis);
 
   } //end if-statement polarimeter
 
@@ -408,7 +464,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  false,                     //no boolean operat
                                  0);                        //copy number
 
-
+  fVirtCaloLV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   //
   // Calorimeter cells (placing (for now) 9 calorimeter cells in the virtual calorimeter)
@@ -449,7 +505,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   }
 
 
-
+  fCaloCellLV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // Alu-wrapping
   //
@@ -471,7 +527,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  false,                     //no boolean operat
                                  0);                        //copy number
 
-
+  fAluwrapLV->SetVisAttributes(AluVis);
 
   //
   // AirGap
@@ -494,8 +550,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                 false,                     //no boolean operat
                                 0);                        //copy number
 
-
-
+  fAlAirGapLV->SetVisAttributes(G4VisAttributes::GetInvisible());
+  // fAlAirGapLV->SetVisAttributes(AirVis);
   //
   // Detector(in this case a crystal)
   //
@@ -518,7 +574,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                 false,                     //no boolean operat
                                 0);                        //copy number
 
-
+  fDetectorLV->SetVisAttributes(CrystalVis);
 
   //
   //vacuum step 3
@@ -540,7 +596,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                 false,                     //no boolean operat
                                 0);                        //copy number
 
-
+  fVacStepLV3->SetVisAttributes(VacStep3Vis);
 
   //
   // vacuum step 4
@@ -563,7 +619,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                 false,                     //no boolean operat
                                 0);                        //copy number
 
-
+  fVacStepLV4->SetVisAttributes(VacStep3Vis);
 
 
 
@@ -640,80 +696,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
   } //end if-statement for the calorimeter geometry
-
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //VisAttributes
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  //Polarimeter
-  //
-    LogicalWorld->SetVisAttributes (G4VisAttributes::GetInvisible());
-
-    G4VisAttributes * MagnetVis= new G4VisAttributes( G4Colour(255/255. ,102/255. ,102/255. ));
-    MagnetVis->SetVisibility(true);
-    MagnetVis->SetLineWidth(1);
-    LogicalMagnet->SetVisAttributes(MagnetVis);
-
-    G4VisAttributes * CopperCoilVis= new G4VisAttributes( G4Colour(255/255. ,0/255. ,255/255. ));
-    CopperCoilVis->SetVisibility(true);
-    CopperCoilVis->SetLineWidth(1);
-    LogicalCuTube->SetVisAttributes(CopperCoilVis);
-
-    G4VisAttributes * LeadTubeVis= new G4VisAttributes( G4Colour(0/255. ,102/255. ,204/255. ));
-    LeadTubeVis->SetVisibility(true);
-    LeadTubeVis->SetLineWidth(1);
-    LogicalPbtube->SetVisAttributes(LeadTubeVis);
-
-    G4VisAttributes * ConversionTargetVis= new G4VisAttributes( G4Colour(105/255. ,105/255. ,105/255. ));
-    ConversionTargetVis->SetVisibility(true);
-    ConversionTargetVis->SetLineWidth(2);
-    ConversionTargetVis->SetForceSolid(true);
-    LogicalReconversion->SetVisAttributes(ConversionTargetVis);
-
-    G4VisAttributes * IronCoreVis= new G4VisAttributes( G4Colour(51/255. ,51/255. ,255/255. ));
-    IronCoreVis->SetVisibility(true);
-    IronCoreVis->SetLineWidth(2);
-    IronCoreVis->SetForceSolid(true);
-    LogicalCore->SetVisAttributes(IronCoreVis);
-
-    G4VisAttributes * VacStepVis= new G4VisAttributes( G4Colour(255/255. ,165/255. ,0/255. ));
-    VacStepVis->SetVisibility(true);
-    VacStepVis->SetLineWidth(1);
-    VacStepVis->SetForceSolid(true);
-    VacStepLV1->SetVisAttributes(VacStepVis);
-    VacStepLV2->SetVisAttributes(VacStepVis);
-    VacStepLV3->SetVisAttributes(VacStepVis);
-    VacStepLV4->SetVisAttributes(VacStepVis);
-
-
-
-  //Calorimeter
-  //
-    fVirtCaloLV->SetVisAttributes(G4VisAttributes::GetInvisible());
-    fAlAirGapLV->SetVisAttributes(G4VisAttributes::GetInvisible());
-    fCaloCellLV->SetVisAttributes(G4VisAttributes::GetInvisible());
-
-
-    G4VisAttributes * AirVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
-    AirVis->SetVisibility(true);
-    AirVis->SetLineWidth(2);
-    AirVis->SetForceWireframe( true );
-    // AirVis->SetForceSolid(false);
-
-
-    G4VisAttributes * AluVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
-    AluVis->SetVisibility(true);
-    AluVis->SetLineWidth(2);
-    AluVis->SetForceSolid(false);
-    fAluwrapLV->SetVisAttributes(AluVis);
-
-    G4VisAttributes * CrystalVis= new G4VisAttributes( G4Colour(224/255. ,255/255. ,255/255. ));
-    CrystalVis->SetVisibility(true);
-    CrystalVis->SetLineWidth(2);
-    CrystalVis->SetForceSolid(true);
-    fDetectorLV->SetVisAttributes(CrystalVis);
-
-
 
   PrintParameters();
 
