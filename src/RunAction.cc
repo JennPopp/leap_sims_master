@@ -36,12 +36,13 @@
 
 #include "DetectorConstruction.hh"
 #include "PrimaryGeneratorAction.hh"
-#include "G4ParticleDefinition.hh"
+#include "TupleFunctions.hh"
 
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4UnitsTable.hh"
 #include "G4EmCalculator.hh"
+#include "G4ParticleDefinition.hh"
 
 #include "G4Gamma.hh"
 #include "G4Electron.hh"
@@ -154,12 +155,13 @@ void RunAction::BookHisto()
 
     if(versionType=="Pol" || versionType=="PolCal"){
       // Creating ntuple vacstep1 , id=0
-      //
+      //detector between converter and iron core
        BookSingleTuple("bremssim1","vacstep1");
 
       // Creating ntuple vacstep2 , id=1
-      //
+      // detector behind iron core 
        BookSingleTuple("bremssim2","vacstep2");
+    }// end of if version
 
     else if(versionType=="Cal" || versionType=="PolCal"){
        //id=0 if Cal else 2
@@ -167,9 +169,9 @@ void RunAction::BookHisto()
 
        //id=1 if Cal else 3
        BookSingleCalTuple("calorimeterIn", "vacstep4");
-     }
-   }
-
+    } // end of if version
+   } // end of if single
+  } // end of BookHisto
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
