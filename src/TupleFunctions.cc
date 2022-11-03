@@ -45,3 +45,38 @@ void WriteSingleCalEntry(int tupleID,const G4Step* aStep){
   fAnalysisManager->FillNtupleDColumn(tupleID,5, aStep->GetPostStepPoint()->GetPosition().z()/CLHEP::mm);
   fAnalysisManager->AddNtupleRow(tupleID);
 }
+
+void BookSingleTuple(G4String name, G4String title){
+  auto fAnalysisManager = G4AnalysisManager::Instance();
+  fAnalysisManager->CreateNtuple(name, title);
+  fAnalysisManager->CreateNtupleIColumn("pdg");
+  fAnalysisManager->CreateNtupleDColumn("E");
+  fAnalysisManager->CreateNtupleDColumn("x");
+  fAnalysisManager->CreateNtupleDColumn("y");
+  fAnalysisManager->CreateNtupleDColumn("z");
+  fAnalysisManager->CreateNtupleDColumn("startx");
+  fAnalysisManager->CreateNtupleDColumn("starty");
+  fAnalysisManager->CreateNtupleDColumn("startz");
+  fAnalysisManager->CreateNtupleDColumn("px");
+  fAnalysisManager->CreateNtupleDColumn("py");
+  fAnalysisManager->CreateNtupleDColumn("pz");
+  fAnalysisManager->CreateNtupleDColumn("Polx");
+  fAnalysisManager->CreateNtupleDColumn("Poly");
+  fAnalysisManager->CreateNtupleDColumn("Polz");
+  fAnalysisManager->CreateNtupleDColumn("TrackID");
+  fAnalysisManager->CreateNtupleDColumn("ParentID");
+  fAnalysisManager->CreateNtupleDColumn("EventID");
+  fAnalysisManager->FinishNtuple();
+}
+
+void BookSingleCalTuple(G4String name, G4String title){
+  auto fAnalysisManager = G4AnalysisManager::Instance();
+  fAnalysisManager->CreateNtuple(name,title);
+  fAnalysisManager->CreateNtupleIColumn("pdg");
+  fAnalysisManager->CreateNtupleDColumn("E");
+  fAnalysisManager->CreateNtupleDColumn("CopyNumber");
+  fAnalysisManager->CreateNtupleDColumn("x");
+  fAnalysisManager->CreateNtupleDColumn("y");
+  fAnalysisManager->CreateNtupleDColumn("z");
+  fAnalysisManager->FinishNtuple();
+}

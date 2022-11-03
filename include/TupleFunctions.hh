@@ -8,4 +8,8 @@ void WriteSingleEntry(int tupleID, const G4Step* aStep);
 
 void WriteSingleCalEntry(int tupleID, const G4Step* aStep);
 
+void BookSingleTuple(G4String name, G4String title);
+
+void BookSingleCalTuple(G4String name, G4String title);
+
 #endif
