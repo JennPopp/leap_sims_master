@@ -108,58 +108,26 @@ oss << "run"<< aRun->GetRunID()<< "_"<< outFileName ;
 void RunAction::BookHisto()
 {
   if (outputType == "bunch"){
-    // Creating ntuple
-    //
-    if(versionType=="Pol"){
-     fAnalysisManager->CreateNtuple("bremssim2", "vacstep2");
-     fAnalysisManager->CreateNtupleDColumn("Esum");
-     fAnalysisManager->CreateNtupleIColumn("NP");
-     fAnalysisManager->CreateNtupleDColumn("EGammaSum");
-     fAnalysisManager->CreateNtupleIColumn("NGamma");
-     fAnalysisManager->CreateNtupleDColumn("EeSum");
-     fAnalysisManager->CreateNtupleIColumn("Ne");
-     fAnalysisManager->FinishNtuple();}
-
-    else if(versionType=="Cal"){
-     fAnalysisManager->CreateNtuple("calorimeter", "crystal_vacstep3");
-     fAnalysisManager->CreateNtupleDColumn("Ecalo");
-     fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
-     fAnalysisManager->CreateNtupleDColumn("EIn");
-     fAnalysisManager->FinishNtuple();
+    if(versionType=="Pol" || versionType=="PolCal"){
+     // book ntuple with id=0
+     // detector behind iron absorber
+     BookBunchTuple("bremssim2", "vacstep2");
+     }
+    else if(versionType=="Cal" || versionType=="PolCal"){
+      // ntuple with id 0 if Cal else 1
+     BookBunchCalTuple("calorimeter", "crystal_vacstep3");
      // histrogramm id=0
-     fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 1.3, 3.3);}
-
-    else if(versionType=="PolCal"){
-     //id=0
-     fAnalysisManager->CreateNtuple("bremssim2", "vacstep2");
-     fAnalysisManager->CreateNtupleDColumn("Esum");
-     fAnalysisManager->CreateNtupleIColumn("NP");
-     fAnalysisManager->CreateNtupleDColumn("EGammaSum");
-     fAnalysisManager->CreateNtupleIColumn("NGamma");
-     fAnalysisManager->CreateNtupleDColumn("EeSum");
-     fAnalysisManager->CreateNtupleIColumn("Ne");
-
-     fAnalysisManager->FinishNtuple();
-     //id=1
-     fAnalysisManager->CreateNtuple("calorimeter", "crystal_vacstep3");
-     fAnalysisManager->CreateNtupleDColumn("Ecalo");
-     fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
-     fAnalysisManager->CreateNtupleDColumn("EIn");
-     fAnalysisManager->FinishNtuple();
-     // histrogramm id=0
-     fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 1.3, 3.3);}
-
+     fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 1.3, 3.3);
     }
-
+  }
   else if  (outputType == "single"){
 
     if(versionType=="Pol" || versionType=="PolCal"){
       // Creating ntuple vacstep1 , id=0
       //detector between converter and iron core
        BookSingleTuple("bremssim1","vacstep1");
-
       // Creating ntuple vacstep2 , id=1
-      // detector behind iron core 
+      // detector behind iron core
        BookSingleTuple("bremssim2","vacstep2");
     }// end of if version
 
@@ -179,7 +147,6 @@ void RunAction::BookHisto()
 
 void RunAction::CountProcesses(G4String procName)
 {
-  // is the process already counted ?
   // *AS* change to std::map?!
   size_t nbProc = fProcCounter->size();
   size_t i = 0;
@@ -198,7 +165,7 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
 
   G4int  prec = G4cout.precision(5);
 
-  G4Material* material = fDetector->GetMaterial();
+//  G4Material* material = fDetector->GetMaterial();
 //  G4double density = material->GetDensity();
 /*
   G4ParticleDefinition* particle =

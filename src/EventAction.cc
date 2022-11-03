@@ -91,7 +91,7 @@ void EventAction::EndOfEventAction(const G4Event*)
     // get analysis manager
     auto analysisManager = G4AnalysisManager::Instance();
 
-    if(versionType=="Pol"){
+    if(versionType=="Pol" || versionType=="PolCal"){
     // fill ntuple id=0
      analysisManager->FillNtupleDColumn(0,0, fEnergySum);
      analysisManager->FillNtupleIColumn(0,1, fNP);
@@ -101,25 +101,12 @@ void EventAction::EndOfEventAction(const G4Event*)
      analysisManager->FillNtupleIColumn(0,5, fNElectron);
      analysisManager->AddNtupleRow(0);
     }
-    else if(versionType=="Cal"){
-     analysisManager->FillNtupleDColumn(0,0, fEnergyCalo);
-     analysisManager->FillNtupleDColumn(0,1,fPhotonEnergySum);
-     analysisManager->FillNtupleDColumn(0,2,fGammaEnergyIn);
-     analysisManager->AddNtupleRow(0);
-    }
-    else if(versionType=="PolCal"){
-     analysisManager->FillNtupleDColumn(0,0, fEnergySum);
-     analysisManager->FillNtupleIColumn(0,1, fNP);
-     analysisManager->FillNtupleDColumn(0,2, fGammaEnergySum);
-     analysisManager->FillNtupleIColumn(0,3, fNGamma);
-     analysisManager->FillNtupleDColumn(0,4, fElectronEnergySum);
-     analysisManager->FillNtupleIColumn(0,5, fNElectron);
-     analysisManager->AddNtupleRow(0);
-
-     analysisManager->FillNtupleDColumn(1,0, fEnergyCalo);
-     analysisManager->FillNtupleDColumn(1,1,fPhotonEnergySum);
-     analysisManager->FillNtupleDColumn(1,2,fGammaEnergyIn);
-     analysisManager->AddNtupleRow(1);
+    else if(versionType=="Cal"|| versionType=="PolCal"){
+     int tupleID = (versionType=="Cal") ? 0 : 1 ;
+     analysisManager->FillNtupleDColumn(tupleID,0, fEnergyCalo);
+     analysisManager->FillNtupleDColumn(tupleID,1,fPhotonEnergySum);
+     analysisManager->FillNtupleDColumn(tupleID,2,fGammaEnergyIn);
+     analysisManager->AddNtupleRow(tupleID);
     }
   }
 

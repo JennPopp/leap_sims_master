@@ -80,3 +80,24 @@ void BookSingleCalTuple(G4String name, G4String title){
   fAnalysisManager->CreateNtupleDColumn("z");
   fAnalysisManager->FinishNtuple();
 }
+
+void BookBunchTuple(G4String name, G4String title){
+  auto fAnalysisManager = G4AnalysisManager::Instance();
+  fAnalysisManager->CreateNtuple(name, title);
+  fAnalysisManager->CreateNtupleDColumn("Esum");
+  fAnalysisManager->CreateNtupleIColumn("NP");
+  fAnalysisManager->CreateNtupleDColumn("EGammaSum");
+  fAnalysisManager->CreateNtupleIColumn("NGamma");
+  fAnalysisManager->CreateNtupleDColumn("EeSum");
+  fAnalysisManager->CreateNtupleIColumn("Ne");
+  fAnalysisManager->FinishNtuple();
+}
+
+void BookBunchCalTuple(G4String name, G4String title){
+  auto fAnalysisManager = G4AnalysisManager::Instance();
+  fAnalysisManager->CreateNtuple(name, title);
+  fAnalysisManager->CreateNtupleDColumn("Ecalo");
+  fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
+  fAnalysisManager->CreateNtupleDColumn("EIn");
+  fAnalysisManager->FinishNtuple();
+}
