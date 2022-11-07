@@ -216,11 +216,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (versionType == "Pol" || versionType == "PolCal"){
 
-    G4LogicalVolume* LogicalMagnet = ConstructSolenoid(magthick, maggap2, vacthick);
+    //virtual mother volume containing the rest of the polarimeter
+    G4LogicalVolume* LogicalSolenoid = ConstructSolenoid(magthick, maggap2, vacthick);
 
     new G4PVPlacement(0,	//rotation
                      G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm),// translation position
-                     LogicalMagnet,      //its logical volume
+                     LogicalSolenoid,      //its logical volume
                        "PhysicalMagnet",   //its name  (2nd constructor)
                        LogicalWorld,         //its mother volume
                        false,              //no boolean operation
@@ -525,6 +526,18 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
     G4double RminArrayMagnet [] = {36.84308*mm,  absrad,  absrad , absrad,  absrad,  36.84308*mm};
     G4double RmaxArrayMagnet [] = {196.0*mm   ,  196.0*mm, 196.0*mm ,196.0*mm, 196.0*mm, 196.0*mm    };
 
+    G4Tubs *solidSolenoid = new G4Tubs("solidSolenoid",
+                                        0.0*mm, // inner radius
+                                        197.0*mm ,  // outer radius
+                                        magthick/2., // half length in z
+                                        0.0*deg,  // starting angle
+                                        360.0*deg ); // total angle
+
+    G4LogicalVolume * LogicalSolenoid = new G4LogicalVolume(solidSolenoid, //its solid
+                    fWorldMaterial, 	 //its material
+                     "MotherSolenoid" ,		 //its name
+                     0,0,0);
+
     G4Polycone *solidMagnet = new G4Polycone("solidMagnet", 	 //its name
               0.0*deg, 		 //its start angle
               360.0*deg,		 //its opening angle
@@ -537,6 +550,14 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
                     magMat, 	 //its material
                      "Magnet" ,		 //its name
                      0,0,0);
+
+    new G4PVPlacement(0,	//rotation
+                    G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm),// translation position
+                    LogicalMagnet,      //its logical volume
+                      "PhysicalMagnet",   //its name  (2nd constructor)
+                      LogicalSolenoid,         //its mother volume
+                      false,              //no boolean operation
+                      0);                 //copy number
 
     //Copper Coils
     //
@@ -586,30 +607,30 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
 
     // Conversion Target
     //
-    auto solidConversion = new G4Tubs("solidConversion", // name
+    G4Tubs *solidConversion = new G4Tubs("solidConversion", // name
                                         0.0*mm, // inner radius
                                         absrad, // outer radius
-                                        convthick/2, // half length in z
+                                        convthick/2., // half length in z
                                         0.0*deg, // starting angle
                                         360.0*deg ); // total angle
 
-    auto LogicalConversion = new G4LogicalVolume(solidConversion, 	 //its solid
+    G4LogicalVolume *LogicalConversion = new G4LogicalVolume(solidConversion, 	 //its solid
                 absMat,          //its material
-                "solidConversion" ,	 //its name
+                "ConversionTarget" ,	 //its name
                 0,0,0);
 
     new G4PVPlacement(0,	//rotation
                 G4ThreeVector(0.0*mm, 0.0*mm, -maggap2-convthick/2-corethick/2),
               LogicalConversion,         //its logical volume
               "PhysicalConversion",   //its name  (2nd constructor)
-              LogicalMagnet,              //its mother volume
+              LogicalSolenoid,              //its mother volume
               false,                 //no boolean operation
               0);                       //copy number
 
 
     // Iron Core
     //
-    auto solidCore = new G4Tubs ("Container",                           //its name
+    auto *solidCore = new G4Tubs ("Container",                           //its name
                      0.0*mm, absrad*mm, corethick/2, 0.0*deg, 360.0*deg );//its dimensions
 
     G4LogicalVolume*
@@ -621,7 +642,7 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
                              G4ThreeVector(),               //at (0,0,0)
                              LogicalCore,                          //its logical volume
                              "IronCorePV",    //its name
-                             LogicalMagnet,                        //its mother  volume
+                             LogicalSolenoid,                        //its mother  volume
                              false,                         //no boolean operation
                              0);                            //copy number
 
@@ -633,7 +654,7 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
     //
     //vacuum step 1
     //
-    auto VacStepS1 = new G4Tubs("VacStep1",  //Name
+    auto *VacStepS1 = new G4Tubs("VacStep1",  //Name
                                 0.,         // inner radius
                                 absrad,     // outer radius
                                 vacthick/2., // half length in z
@@ -641,7 +662,7 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
                                 360.0*deg); // angle of the segment
 
 
-    auto  VacStepLV1 = new G4LogicalVolume(VacStepS1,    //its solid
+    auto  *VacStepLV1 = new G4LogicalVolume(VacStepS1,    //its solid
                                            fWorldMaterial,    //its material
                                            "VacStep1");  //its name
 
@@ -649,7 +670,7 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
                          G4ThreeVector(0.,0., - corethick/2 -maggap2 +vacthick/2 +1.0*mm),    //its position
                                  VacStepLV1,            //its logical volume
                                  "VacStep1",                 //its name
-                                 LogicalMagnet,               //its mother
+                                 LogicalSolenoid,               //its mother
                                  false,                     //no boolean operat
                                  0);                        //copy number
 
@@ -657,14 +678,14 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
 
     // vacuum step 2
     //
-    auto VacStepS2 = new G4Tubs("VacStep2",  //Name
+    auto *VacStepS2 = new G4Tubs("VacStep2",  //Name
                                  0.,         // inner radius
                                  absrad,     // outer radius
                                  vacthick/2., // half length in z
                                  0.0*deg,    // starting phi angle
                                  360.0*deg); // angle of the segment
 
-    auto VacStepLV2 = new G4LogicalVolume(VacStepS2,    //its solid
+    auto *VacStepLV2 = new G4LogicalVolume(VacStepS2,    //its solid
                                           fWorldMaterial,    //its material
                                           "VacStep1");       //its name
 
@@ -672,7 +693,7 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
                           G4ThreeVector(0.,0.,corethick/2 + vacthick/2 + 10.0*mm),    //its position
                                   VacStepLV2,            //its logical volume
                                   "VacStep2",                 //its name
-                                  LogicalMagnet,               //its mother
+                                  LogicalSolenoid,               //its mother
                                   false,                     //no boolean operat
                                   0);                       //copy number
 
@@ -719,7 +740,7 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
       VacStepLV1->SetVisAttributes(VacStepVis);
       VacStepLV2->SetVisAttributes(VacStepVis);
 
-    return LogicalMagnet;
+    return LogicalSolenoid;
   }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
