@@ -2,7 +2,7 @@
 
 ### How to run leap_sims_detector_test
 1.  set the environment:  
-  `source /cvmfs/sft.cern.ch/lcg/views/LCG_102/x86_64-centos7-gcc11-opt/setup.sh`  
+  `source /cvmfs/sft.cern.ch/lcg/views/LCG_102b/x86_64-centos7-gcc11-opt/setup.sh`  
 
 2.  make a build directory and change to the build directory:  
   `mkdir build`  
@@ -44,6 +44,6 @@
   5. change to HepRep directory and type `java -jar HepRApp.jar` to open the HepRep Browser
   6. select the HepRapFile you want to see
 
-  ### Some useful detector commands 
+  ### Some useful detector commands
   1. To set the number of calorimeter crystals use `/leap/det/Setnumberofcrystals`.
      choose either `one` for one centered crystals of `nine` for a matrix of nine crystals. The default is `one`!
