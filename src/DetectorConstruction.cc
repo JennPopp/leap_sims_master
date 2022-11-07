@@ -106,22 +106,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Geometry parameters
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  //
-  // Polarimeter
-  //
+  G4double vacthick = 1.0*mm;
   G4double  maggap1 = 48.5*mm;
   G4double  maggap2 = 12.5*mm;
-  G4double  absrad  = fSizeXY/2.;
-  G4double shieldrad=75.0*mm;
-  G4double vacthick = 1.0*mm;
-  G4double corethick = fCoreThick;
-  G4double convthick = fConvThick;
-  G4double  coilthick = corethick + 25.0*mm;
-  G4double  shieldthick = corethick - 25.0*mm;
-  G4double  conedist = corethick/2. + maggap2;
-  G4double  magthick = 2.*(maggap1+convthick+maggap2)+corethick;
-
+  G4double magthick = 2.*(maggap1+maggap2+fConvThick)+fCoreThick;
   //
   // Calorimeter
   //
@@ -139,7 +127,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double aluwrapy = alairgapy + 2*aluwrapthick;
   G4double aluwraplength = alairgaplength + aluwrapthick + vacthick;
 
-  //defining the size of the Calorimeterzell and the virtual calorimeter (mother volume of the calorimetercells)
+  //defining the size of the Calorimetercell and the virtual calorimeter (mother volume of the calorimetercells)
   //G4int NbofCalor = 9; //here later free paramter to select numer of crystals
   G4double calorcellxy = aluwrapx;
   G4double calorcelllength = aluwraplength + vacthick;
@@ -168,47 +156,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //Get materials
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  G4Material* absMat    = allMaterials->GetMat("G4_W");
-  G4Material* magMat    = allMaterials->GetMat("G4_Fe");
-  G4Material* coilMat   = allMaterials->GetMat("G4_Cu");
-  G4Material* shieldMat = allMaterials->GetMat("G4_Pb");
+
   G4Material* Air       = allMaterials->GetMat("Air");
   G4Material* Al        = allMaterials->GetMat("Aluminium");
   G4Material* Vacuum    = allMaterials->GetMat("Galactic");
-
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //VisAttributes
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  //Polarimeter
-  //
-
-    G4VisAttributes * MagnetVis= new G4VisAttributes( G4Colour(255/255. ,102/255. ,102/255. ));
-    MagnetVis->SetVisibility(true);
-    MagnetVis->SetLineWidth(1);
-
-    G4VisAttributes * CopperCoilVis= new G4VisAttributes( G4Colour(255/255. ,0/255. ,255/255. ));
-    CopperCoilVis->SetVisibility(true);
-    CopperCoilVis->SetLineWidth(1);
-
-    G4VisAttributes * LeadTubeVis= new G4VisAttributes( G4Colour(0/255. ,102/255. ,204/255. ));
-    LeadTubeVis->SetVisibility(true);
-    LeadTubeVis->SetLineWidth(1);
-
-    G4VisAttributes * ConversionTargetVis= new G4VisAttributes( G4Colour(105/255. ,105/255. ,105/255. ));
-    ConversionTargetVis->SetVisibility(true);
-    ConversionTargetVis->SetLineWidth(2);
-    ConversionTargetVis->SetForceSolid(true);
-
-    G4VisAttributes * IronCoreVis= new G4VisAttributes( G4Colour(51/255. ,51/255. ,255/255. ));
-    IronCoreVis->SetVisibility(true);
-    IronCoreVis->SetLineWidth(2);
-    IronCoreVis->SetForceSolid(true);
-
-    G4VisAttributes * VacStepVis= new G4VisAttributes( G4Colour(255/255. ,165/255. ,0/255. ));
-    VacStepVis->SetVisibility(true);
-    VacStepVis->SetLineWidth(1);
-    VacStepVis->SetForceSolid(true);
 
 
   //Calorimeter
@@ -264,178 +215,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Polarimeter geometry
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (versionType == "Pol" || versionType == "PolCal"){
-  // Magnet
-  //
-  G4double DzArrayMagnet   [] = {-magthick/2.  , -conedist , -corethick/2. , corethick/2.,  conedist, magthick/2.    };
-  G4double RminArrayMagnet [] = {36.84308*mm,  absrad,  absrad , absrad,  absrad,  36.84308*mm};
-  G4double RmaxArrayMagnet [] = {196.0*mm   ,  196.0*mm, 196.0*mm ,196.0*mm, 196.0*mm, 196.0*mm    };
 
-  G4Polycone *solidMagnet = new G4Polycone("solidMagnet", 	 //its name
-            0.0*deg, 		 //its start angle
-            360.0*deg,		 //its opening angle
-            6, 		         //its nZ
-            DzArrayMagnet, 	 //z value
-            RminArrayMagnet, 	 //rmin
-            RmaxArrayMagnet ); 	 //rmax
+    G4LogicalVolume* LogicalMagnet = ConstructSolenoid(magthick, maggap2, vacthick);
 
-  G4LogicalVolume * LogicalMagnet = new G4LogicalVolume(solidMagnet, //its solid
-                  magMat, 	 //its material
-                   "Magnet" ,		 //its name
-                   0,0,0);
-
-  new G4PVPlacement(0,	//rotation
-  								 G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm),// translation position
-  								 LogicalMagnet,      //its logical volume
-  						       "PhysicalMagnet",   //its name  (2nd constructor)
-  						       LogicalWorld,         //its mother volume
-  						       false,              //no boolean operation
-  						       0);                 //copy number
-
-  LogicalMagnet->SetVisAttributes(MagnetVis);
-
-  //Copper Coils
-  //
-  G4Tubs *solidCuTube= new G4Tubs("solidCuTube", //name
-                                  shieldrad, // inner radius
-                                  170.0*mm,  // outer radius
-                                  coilthick/2., // half length in z
-                                  0.0*deg,  // starting angle
-                                  360.0*deg ); // total angle
-
-  G4LogicalVolume * LogicalCuTube = new G4LogicalVolume(solidCuTube, //its solid
-             coilMat,              //its material
-             "CuTube" ,		         //its name
-             0,0,0);
-
-   new G4PVPlacement(0,	//rotation
-         G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm), // translation position
-           LogicalCuTube,      // its logical volume
-           "PhysicalCuTube",   // its name  (2nd constructor)
-           LogicalMagnet,     // its mother volume
-           false,              // no boolean operation
-           0);
-
-  LogicalCuTube->SetVisAttributes(CopperCoilVis);
-
-  // Lead Tube
-  //
-  G4Tubs *solidPbtube= new G4Tubs("solidPbtube", // name
-                                  absrad, // inner radius
-                                  shieldrad, // outer radius
-                                  shieldthick/2., // half length in z
-                                  0.0*deg, // start angle
-                                  360.0*deg ); // total angle
-
-  G4LogicalVolume * LogicalPbtube = new G4LogicalVolume(solidPbtube, 	 //its solid
-  						shieldMat, 		 //its material
-  						"Pbtube" ,		 //its name
-  						0,0,0);
-
-  new G4PVPlacement(0,	//rotation
-  				G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm),
-  				LogicalPbtube,      //its logical volume
-  			    "PhysicalPbTube",   //its name  (2nd constructor)
-  			    LogicalMagnet,     //its mother volume
-  			    false,              //no boolean operation
-  			    0);                 //copy number
-
-  LogicalPbtube->SetVisAttributes(LeadTubeVis);
-
-  // Reconversion Target
-  //
-  auto solidReconversion = new G4Tubs("solidReconversion", // name
-                                      0.0*mm, // inner radius
-                                      absrad, // outer radius
-                                      convthick/2, // half length in z
-                                      0.0*deg, // starting angle
-                                      360.0*deg ); // total angle
-
-  auto LogicalReconversion = new G4LogicalVolume(solidReconversion, 	 //its solid
-              absMat,          //its material
-              "solidReconversion" ,	 //its name
-              0,0,0);
-
-  new G4PVPlacement(0,	//rotation
-              G4ThreeVector(0.0*mm, 0.0*mm, -maggap2-convthick/2-corethick/2),
-            LogicalReconversion,         //its logical volume
-            "PhysicalReconversion",   //its name  (2nd constructor)
-            LogicalWorld,              //its mother volume
-            false,                 //no boolean operation
-            0);                       //copy number
-
-  LogicalReconversion->SetVisAttributes(ConversionTargetVis);
-
-  // Iron Core
-  //
-  auto solidCore = new G4Tubs ("Container",                           //its name
-                   0.0*mm, absrad*mm, corethick/2, 0.0*deg, 360.0*deg );//its dimensions
-
-  G4LogicalVolume*
-  LogicalCore = new G4LogicalVolume(solidCore,                        //its shape
-                             magMat,             //its material
-                             "IronCore");                   //its name
-
-  PhysicalCore = new G4PVPlacement(0,                             //no rotation
-                           G4ThreeVector(),               //at (0,0,0)
-                           LogicalCore,                          //its logical volume
-                           "IronCorePV",    //its name
-                           LogicalWorld,                        //its mother  volume
-                           false,                         //no boolean operation
-                           0);                            //copy number
-
-  // register logical Volume in PolarizationManager with polarization
-  G4PolarizationManager * polMgr = G4PolarizationManager::GetInstance();
-  polMgr->SetVolumePolarization(LogicalCore,G4ThreeVector(0.,0.,1.));
-
-  LogicalCore->SetVisAttributes(IronCoreVis);
-
-  //
-  //vacuum step 1
-  //
-  auto VacStepS1 = new G4Tubs("VacStep1",  //Name
-                              0.,         // inner radius
-                              absrad,     // outer radius
-                              vacthick/2., // half length in z
-                              0.0*deg,    // starting phi angle
-                              360.0*deg); // angle of the segment
-
-
-  auto  VacStepLV1 = new G4LogicalVolume(VacStepS1,    //its solid
-                                         fWorldMaterial,    //its material
-                                         "VacStep1");  //its name
-
-  fVacStepPV1 = new G4PVPlacement(0,                 //no rotation
-                       G4ThreeVector(0.,0., - corethick/2 -maggap2 +vacthick/2 +1.0*mm),    //its position
-                               VacStepLV1,            //its logical volume
-                               "VacStep1",                 //its name
-                               LogicalWorld,               //its mother
-                               false,                     //no boolean operat
-                               0);                        //copy number
-
-  VacStepLV1->SetVisAttributes(VacStepVis);
-
-  // vacuum step 2
-  //
-  auto VacStepS2 = new G4Tubs("VacStep2",  //Name
-                               0.,         // inner radius
-                               absrad,     // outer radius
-                               vacthick/2., // half length in z
-                               0.0*deg,    // starting phi angle
-                               360.0*deg); // angle of the segment
-
-  auto VacStepLV2 = new G4LogicalVolume(VacStepS2,    //its solid
-                                        fWorldMaterial,    //its material
-                                        "VacStep1");       //its name
-
-  fVacStepPV2 = new G4PVPlacement(0,                   //no rotation
-                        G4ThreeVector(0.,0.,corethick/2 + vacthick/2 + 10.0*mm),    //its position
-                                VacStepLV2,            //its logical volume
-                                "VacStep2",                 //its name
-                                LogicalWorld,               //its mother
-                                false,                     //no boolean operat
-                                0);                       //copy number
-
-  VacStepLV2->SetVisAttributes(VacStepVis);
+    new G4PVPlacement(0,	//rotation
+                     G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm),// translation position
+                     LogicalMagnet,      //its logical volume
+                       "PhysicalMagnet",   //its name  (2nd constructor)
+                       LogicalWorld,         //its mother volume
+                       false,              //no boolean operation
+                       0);                 //copy number
 
   } //end if-statement polarimeter
 
@@ -445,7 +234,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (versionType == "Cal" || versionType == "PolCal"){
 
-  // Virtuel calorimeter (mother volume for the hole calorimeter/detector)
+  // Virtuel calorimeter (mother volume for the whole calorimeter/detector)
   auto fVirtCaloS= new G4Box("virtualCalorimeter",  //Name
                                 virtcalorxy/2.,   // x size
                                 virtcalorxy/2.,     // y size
@@ -703,6 +492,235 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   return PhysicalWorld;
 }
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// Construct the Solenoid , returns LV of motherVolume
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
+  G4double maggap2, G4double vacthick){
+    //
+    // Geometry Parameters
+    //
+
+    G4double  absrad  = fSizeXY/2.;
+    G4double shieldrad=75.0*mm;
+    G4double corethick = fCoreThick;
+    G4double convthick = fConvThick;
+    G4double  coilthick = corethick + 25.0*mm;
+    G4double  shieldthick = corethick - 25.0*mm;
+    G4double  conedist = corethick/2. + maggap2;
+
+    //
+    //Get materials
+    //
+    G4Material* absMat    = allMaterials->GetMat("G4_W");
+    G4Material* magMat    = allMaterials->GetMat("G4_Fe");
+    G4Material* coilMat   = allMaterials->GetMat("G4_Cu");
+    G4Material* shieldMat = allMaterials->GetMat("G4_Pb");
+
+    // Housing of Magnet
+    //
+    G4double DzArrayMagnet   [] = {-magthick/2.  , -conedist , -corethick/2. , corethick/2.,  conedist, magthick/2.    };
+    G4double RminArrayMagnet [] = {36.84308*mm,  absrad,  absrad , absrad,  absrad,  36.84308*mm};
+    G4double RmaxArrayMagnet [] = {196.0*mm   ,  196.0*mm, 196.0*mm ,196.0*mm, 196.0*mm, 196.0*mm    };
+
+    G4Polycone *solidMagnet = new G4Polycone("solidMagnet", 	 //its name
+              0.0*deg, 		 //its start angle
+              360.0*deg,		 //its opening angle
+              6, 		         //its nZ
+              DzArrayMagnet, 	 //z value
+              RminArrayMagnet, 	 //rmin
+              RmaxArrayMagnet ); 	 //rmax
+
+    G4LogicalVolume * LogicalMagnet = new G4LogicalVolume(solidMagnet, //its solid
+                    magMat, 	 //its material
+                     "Magnet" ,		 //its name
+                     0,0,0);
+
+    //Copper Coils
+    //
+    G4Tubs *solidCuTube= new G4Tubs("solidCuTube", //name
+                                    shieldrad, // inner radius
+                                    170.0*mm,  // outer radius
+                                    coilthick/2., // half length in z
+                                    0.0*deg,  // starting angle
+                                    360.0*deg ); // total angle
+
+    G4LogicalVolume * LogicalCuTube = new G4LogicalVolume(solidCuTube, //its solid
+               coilMat,              //its material
+               "CuTube" ,		         //its name
+               0,0,0);
+
+     new G4PVPlacement(0,	//rotation
+           G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm), // translation position
+             LogicalCuTube,      // its logical volume
+             "PhysicalCuTube",   // its name  (2nd constructor)
+             LogicalMagnet,     // its mother volume
+             false,              // no boolean operation
+             0);
+
+
+    // Lead Tube
+    //
+    G4Tubs *solidPbtube= new G4Tubs("solidPbtube", // name
+                                    absrad, // inner radius
+                                    shieldrad, // outer radius
+                                    shieldthick/2., // half length in z
+                                    0.0*deg, // start angle
+                                    360.0*deg ); // total angle
+
+    G4LogicalVolume * LogicalPbtube = new G4LogicalVolume(solidPbtube, 	 //its solid
+    						shieldMat, 		 //its material
+    						"Pbtube" ,		 //its name
+    						0,0,0);
+
+    new G4PVPlacement(0,	//rotation
+    				G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm),
+    				LogicalPbtube,      //its logical volume
+    			    "PhysicalPbTube",   //its name  (2nd constructor)
+    			    LogicalMagnet,     //its mother volume
+    			    false,              //no boolean operation
+    			    0);                 //copy number
+
+
+    // Conversion Target
+    //
+    auto solidConversion = new G4Tubs("solidConversion", // name
+                                        0.0*mm, // inner radius
+                                        absrad, // outer radius
+                                        convthick/2, // half length in z
+                                        0.0*deg, // starting angle
+                                        360.0*deg ); // total angle
+
+    auto LogicalConversion = new G4LogicalVolume(solidConversion, 	 //its solid
+                absMat,          //its material
+                "solidConversion" ,	 //its name
+                0,0,0);
+
+    new G4PVPlacement(0,	//rotation
+                G4ThreeVector(0.0*mm, 0.0*mm, -maggap2-convthick/2-corethick/2),
+              LogicalConversion,         //its logical volume
+              "PhysicalConversion",   //its name  (2nd constructor)
+              LogicalMagnet,              //its mother volume
+              false,                 //no boolean operation
+              0);                       //copy number
+
+
+    // Iron Core
+    //
+    auto solidCore = new G4Tubs ("Container",                           //its name
+                     0.0*mm, absrad*mm, corethick/2, 0.0*deg, 360.0*deg );//its dimensions
+
+    G4LogicalVolume*
+    LogicalCore = new G4LogicalVolume(solidCore,                        //its shape
+                               magMat,             //its material
+                               "IronCore");                   //its name
+
+    PhysicalCore = new G4PVPlacement(0,                             //no rotation
+                             G4ThreeVector(),               //at (0,0,0)
+                             LogicalCore,                          //its logical volume
+                             "IronCorePV",    //its name
+                             LogicalMagnet,                        //its mother  volume
+                             false,                         //no boolean operation
+                             0);                            //copy number
+
+    // register logical Volume in PolarizationManager with polarization
+    G4PolarizationManager * polMgr = G4PolarizationManager::GetInstance();
+    polMgr->SetVolumePolarization(LogicalCore,G4ThreeVector(0.,0.,1.));
+
+
+    //
+    //vacuum step 1
+    //
+    auto VacStepS1 = new G4Tubs("VacStep1",  //Name
+                                0.,         // inner radius
+                                absrad,     // outer radius
+                                vacthick/2., // half length in z
+                                0.0*deg,    // starting phi angle
+                                360.0*deg); // angle of the segment
+
+
+    auto  VacStepLV1 = new G4LogicalVolume(VacStepS1,    //its solid
+                                           fWorldMaterial,    //its material
+                                           "VacStep1");  //its name
+
+    fVacStepPV1 = new G4PVPlacement(0,                 //no rotation
+                         G4ThreeVector(0.,0., - corethick/2 -maggap2 +vacthick/2 +1.0*mm),    //its position
+                                 VacStepLV1,            //its logical volume
+                                 "VacStep1",                 //its name
+                                 LogicalMagnet,               //its mother
+                                 false,                     //no boolean operat
+                                 0);                        //copy number
+
+
+
+    // vacuum step 2
+    //
+    auto VacStepS2 = new G4Tubs("VacStep2",  //Name
+                                 0.,         // inner radius
+                                 absrad,     // outer radius
+                                 vacthick/2., // half length in z
+                                 0.0*deg,    // starting phi angle
+                                 360.0*deg); // angle of the segment
+
+    auto VacStepLV2 = new G4LogicalVolume(VacStepS2,    //its solid
+                                          fWorldMaterial,    //its material
+                                          "VacStep1");       //its name
+
+    fVacStepPV2 = new G4PVPlacement(0,                   //no rotation
+                          G4ThreeVector(0.,0.,corethick/2 + vacthick/2 + 10.0*mm),    //its position
+                                  VacStepLV2,            //its logical volume
+                                  "VacStep2",                 //its name
+                                  LogicalMagnet,               //its mother
+                                  false,                     //no boolean operat
+                                  0);                       //copy number
+
+
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //VisAttributes
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    //Polarimeter
+    //
+
+      G4VisAttributes * MagnetVis= new G4VisAttributes( G4Colour(255/255. ,102/255. ,102/255. ));
+      MagnetVis->SetVisibility(true);
+      MagnetVis->SetLineWidth(1);
+      LogicalMagnet->SetVisAttributes(MagnetVis);
+
+      G4VisAttributes * CopperCoilVis= new G4VisAttributes( G4Colour(255/255. ,0/255. ,255/255. ));
+      CopperCoilVis->SetVisibility(true);
+      CopperCoilVis->SetLineWidth(1);
+      LogicalCuTube->SetVisAttributes(CopperCoilVis);
+
+      G4VisAttributes * LeadTubeVis= new G4VisAttributes( G4Colour(0/255. ,102/255. ,204/255. ));
+      LeadTubeVis->SetVisibility(true);
+      LeadTubeVis->SetLineWidth(1);
+      LogicalPbtube->SetVisAttributes(LeadTubeVis);
+
+      G4VisAttributes * ConversionTargetVis= new G4VisAttributes( G4Colour(105/255. ,105/255. ,105/255. ));
+      ConversionTargetVis->SetVisibility(true);
+      ConversionTargetVis->SetLineWidth(2);
+      ConversionTargetVis->SetForceSolid(true);
+      LogicalConversion->SetVisAttributes(ConversionTargetVis);
+
+      G4VisAttributes * IronCoreVis= new G4VisAttributes( G4Colour(51/255. ,51/255. ,255/255. ));
+      IronCoreVis->SetVisibility(true);
+      IronCoreVis->SetLineWidth(2);
+      IronCoreVis->SetForceSolid(true);
+      LogicalCore->SetVisAttributes(IronCoreVis);
+
+      G4VisAttributes * VacStepVis= new G4VisAttributes( G4Colour(255/255. ,165/255. ,0/255. ));
+      VacStepVis->SetVisibility(true);
+      VacStepVis->SetLineWidth(1);
+      VacStepVis->SetForceSolid(true);
+      VacStepLV1->SetVisAttributes(VacStepVis);
+      VacStepLV2->SetVisAttributes(VacStepVis);
+
+    return LogicalMagnet;
+  }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

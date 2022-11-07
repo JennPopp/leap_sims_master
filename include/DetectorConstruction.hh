@@ -54,6 +54,8 @@ public:
 public:
 
   G4VPhysicalVolume* Construct();
+  G4LogicalVolume* ConstructSolenoid(G4double magthick,G4double maggap2, G4double vacthick);
+  G4LogicalVolume* ConstructCalorimeter();
 
   void SetSizeXY   (G4double);
   void SetCoreThick   (G4double);
