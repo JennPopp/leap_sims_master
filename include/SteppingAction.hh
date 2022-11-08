@@ -55,7 +55,8 @@ public:
 private:
   G4String outputType;
   G4String versionType;
-  
+  int tupleID;
+
   DetectorConstruction*   fDetector;
   RunAction*              fRunAction;
   EventAction*  fEventAction;

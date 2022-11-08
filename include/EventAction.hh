@@ -72,6 +72,8 @@ private:
   G4double fGammaEnergyIn;
   G4String outputType;
   G4String versionType;
+
+  int tupleID;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -91,8 +91,9 @@ void EventAction::EndOfEventAction(const G4Event*)
     // get analysis manager
     auto analysisManager = G4AnalysisManager::Instance();
 
-    if(versionType=="Pol"){
+    if(versionType=="Pol" || versionType=="PolCal"){
     // fill ntuple id=0
+    //G4cout <<  "\033[1;31m tupleID == 0 \033[0m\n";
      analysisManager->FillNtupleDColumn(0,0, fEnergySum);
      analysisManager->FillNtupleIColumn(0,1, fNP);
      analysisManager->FillNtupleDColumn(0,2, fGammaEnergySum);
@@ -101,27 +102,21 @@ void EventAction::EndOfEventAction(const G4Event*)
      analysisManager->FillNtupleIColumn(0,5, fNElectron);
      analysisManager->AddNtupleRow(0);
     }
-    else if(versionType=="Cal"){
-     analysisManager->FillNtupleDColumn(0,0, fEnergyCalo);
-     analysisManager->FillNtupleDColumn(0,1,fPhotonEnergySum);
-     analysisManager->FillNtupleDColumn(0,2,fGammaEnergyIn);
-     analysisManager->AddNtupleRow(0);
-    }
-    else if(versionType=="PolCal"){
-     analysisManager->FillNtupleDColumn(0,0, fEnergySum);
-     analysisManager->FillNtupleIColumn(0,1, fNP);
-     analysisManager->FillNtupleDColumn(0,2, fGammaEnergySum);
-     analysisManager->FillNtupleIColumn(0,3, fNGamma);
-     analysisManager->FillNtupleDColumn(0,4, fElectronEnergySum);
-     analysisManager->FillNtupleIColumn(0,5, fNElectron);
-     analysisManager->AddNtupleRow(0);
+    if(versionType=="Cal"|| versionType=="PolCal"){
 
-     analysisManager->FillNtupleDColumn(1,0, fEnergyCalo);
-     analysisManager->FillNtupleDColumn(1,1,fPhotonEnergySum);
-     analysisManager->FillNtupleDColumn(1,2,fGammaEnergyIn);
-     analysisManager->AddNtupleRow(1);
+      if (versionType=="Cal"){
+        tupleID = 0;
+      }
+      else {
+        tupleID = 1;
+      }
+     //G4cout <<  "\033[1;31m tupleID =" << tupleID <<"\033[0m\n";
+     analysisManager->FillNtupleDColumn(tupleID,0, fEnergyCalo);
+     analysisManager->FillNtupleDColumn(tupleID,1,fPhotonEnergySum);
+     analysisManager->FillNtupleDColumn(tupleID,2,fGammaEnergyIn);
+     analysisManager->AddNtupleRow(tupleID);
     }
-  }
+  } // end if outType==bunch
 
 }
 
