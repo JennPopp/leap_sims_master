@@ -188,7 +188,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if(postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)) {
                   aTrack->SetTrackStatus(fStopAndKill);
                 }
-
+                
 */
       }
     }
