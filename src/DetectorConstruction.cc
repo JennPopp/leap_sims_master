@@ -106,87 +106,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Geometry parameters
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //
+  // Solenoid
+  //...........................
   G4double vacthick = 1.0*mm;
   G4double  maggap1 = 48.5*mm;
   G4double  maggap2 = 12.5*mm;
   G4double magthick = 2.*(maggap1+maggap2+fConvThick)+fCoreThick;
-  //
-  // Calorimeter
-  //
-  G4double detthick = 45.*cm; // crystal size
-  G4double detx = 3.8 *cm;
-  G4double dety = 3.8 *cm;
-
-  G4double alairgapthick = 0.001 *mm;    // thickness of the air gap between the aluwrapping and the crystal
-  G4double alairgapx = detx + 2*alairgapthick;
-  G4double alairgapy = dety + 2*alairgapthick;
-  G4double alairgaplength = detthick + alairgapthick;
-
-  G4double aluwrapthick = 0.01  *mm;   // wikipedia: alu foil thickness between 0.004 and 0.02 mm
-  G4double aluwrapx = alairgapx + 2*aluwrapthick;
-  G4double aluwrapy = alairgapy + 2*aluwrapthick;
-  G4double aluwraplength = alairgaplength + aluwrapthick + vacthick;
-
-  //defining the size of the Calorimetercell and the virtual calorimeter (mother volume of the calorimetercells)
-  //G4int NbofCalor = 9; //here later free paramter to select numer of crystals
-  G4double calorcellxy = aluwrapx;
-  G4double calorcelllength = aluwraplength + vacthick;
-  G4double virtcalorxy;
-
-  if (CrystalNumber == "one"){
-    virtcalorxy = calorcellxy;
-  }
-  else if (CrystalNumber == "nine"){
-    virtcalorxy = 3*calorcellxy;
-  }
-  else {
-    virtcalorxy = calorcellxy;
-    SetCrystalnumber("one");
-    G4cout << "NO VALID IMPUT FOR CRYSTALNUMBER: Crystalnumber set to one!" << fCaloMaterial->GetName() << G4endl;
-  }
-
-
-  G4double virtcalorlength = calorcelllength;
-  G4double spacePolCal = 50. *mm;
-  G4double caloZposition = (magthick+virtcalorlength)/2+spacePolCal;
-
-  G4double vac3x = alairgapx;// this version is to place the vacstep in the aluwrapping
-  G4double vac3y = alairgapy; // this version is to place the vacstep in the aluwrapping
-
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  //Get materials
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  G4Material* Air       = allMaterials->GetMat("Air");
-  G4Material* Al        = allMaterials->GetMat("Aluminium");
-  G4Material* Vacuum    = allMaterials->GetMat("Galactic");
-
-
-  //Calorimeter
-  //
-
-
-    G4VisAttributes * AirVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
-    AirVis->SetVisibility(true);
-    AirVis->SetLineWidth(2);
-    AirVis->SetForceWireframe( true );
-    // AirVis->SetForceSolid(false);
-
-
-    G4VisAttributes * AluVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
-    AluVis->SetVisibility(true);
-    AluVis->SetLineWidth(2);
-    AluVis->SetForceSolid(false);
-
-    G4VisAttributes * CrystalVis= new G4VisAttributes( G4Colour(224/255. ,255/255. ,255/255. ));
-    CrystalVis->SetVisibility(true);
-    CrystalVis->SetLineWidth(2);
-    CrystalVis->SetForceSolid(true);
-
-    G4VisAttributes * VacStep3Vis= new G4VisAttributes( G4Colour(255/255. ,165/255. ,0/255. ));
-    VacStep3Vis->SetVisibility(true);
-    VacStep3Vis->SetLineWidth(1);
-    VacStep3Vis->SetForceSolid(true);
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // World
@@ -234,256 +160,27 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Calorimeter geometry
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (versionType == "Cal" || versionType == "PolCal"){
+    G4double detthick = 45.*cm; // length of the lead glass crystals
+    G4double detxy = 3.8*cm; // width in x/y of crystals
 
-  // Virtuel calorimeter (mother volume for the whole calorimeter/detector)
-  auto fVirtCaloS= new G4Box("virtualCalorimeter",  //Name
-                                virtcalorxy/2.,   // x size
-                                virtcalorxy/2.,     // y size
-                                virtcalorlength/2.); // z size
+    G4double alairgapthick = 0.001 *mm;   // thickness of the air gap between
+                                          //the aluwrapping and the crystal
+    G4double aluwrapthick = 0.01  *mm;   // wikipedia: alu foil thickness
+                                         //between 0.004 and 0.02 mm
+    G4double spacePolCal = 50. *mm; //5cm between pol and cal
+    G4double motherLength = detthick+alairgapthick+aluwrapthick+2.*vacthick;
+    G4double caloZposition = (magthick+motherLength)/2+spacePolCal;
 
+    G4LogicalVolume* fVirtCaloLV = ConstructCalorimeter(detthick, detxy,
+        alairgapthick, aluwrapthick, vacthick);
 
-  auto fVirtCaloLV = new G4LogicalVolume(fVirtCaloS,    //its solid
-                                         fWorldMaterial,    //its material
-                                         "virtualCalorimeter");       //its name
-
-  fVirtCaloPV = new G4PVPlacement(0,                   //no rotation
-                         G4ThreeVector(0.,0.,caloZposition),    //its position
-                                 fVirtCaloLV,            //its logical volume
-                                 "virtualCalorimeter",                 //its name
-                                LogicalWorld,               //its mother
-                                 false,                     //no boolean operat
-                                 0);                        //copy number
-
-  fVirtCaloLV->SetVisAttributes(G4VisAttributes::GetInvisible());
-
-  //
-  // Calorimeter cells (placing (for now) 9 calorimeter cells in the virtual calorimeter)
-  //
-  auto fCaloCellS= new G4Box("physicalcalorimeter",  //Name
-                               calorcellxy/2.,   // x size
-                               calorcellxy/2.,     // y size
-                               calorcelllength/2.); // z size
-
-  auto fCaloCellLV = new G4LogicalVolume(fCaloCellS,    //its solid
-                                        fWorldMaterial,    //its material
-                                        "physicalcalorimeter");       //its name
-
-  if(CrystalNumber=="nine"){
-  //the array for the placement of the 9 calorimetercells in the virtual calorimeter
-  G4double CalorRX[9]={0,0,calorcellxy,calorcellxy,calorcellxy,0,-calorcellxy,-calorcellxy,-calorcellxy};
-  G4double CalorRY[9]={0,calorcellxy,calorcellxy,0,-calorcellxy,-calorcellxy,-calorcellxy,0,calorcellxy};
-
-  for (G4int i=0;i<=8;i++){
-  fCaloCellPV = new G4PVPlacement(0,		       //no rotation
-               G4ThreeVector(CalorRX[i],CalorRY[i],0),  //its position
-               fCaloCellLV,            //its logical volume
-              "physicalcalorimeter",    //its name
-               fVirtCaloLV,               //its mother
-               false,                     //no boolean operat
-               i);                        //copy number       //copy number
-  }
-  }
-
-  else if (CrystalNumber == "one"){
-  fCaloCellPV = new G4PVPlacement(0,		       //no rotation
-               G4ThreeVector(0,0,0),  //its position
-               fCaloCellLV,            //its logical volume
-              "physicalcalorimeter",    //its name
-               fVirtCaloLV,               //its mother
-               false,                     //no boolean operat
-               0);                        //copy number       //copy number
-  }
-
-
-  fCaloCellLV->SetVisAttributes(G4VisAttributes::GetInvisible());
-
-  // Alu-wrapping
-  //
-  auto fAluWrapS= new G4Box("AluWrapping",  //Name
-                                aluwrapx/2.,   // x size
-                                aluwrapy/2.,     // y size
-                                aluwraplength/2.); // z size
-
-
-  auto fAluwrapLV = new G4LogicalVolume(fAluWrapS,    //its solid
-                                         Al,    //its material
-                                         "AluWrapping");       //its name
-
-  fAluwrapPV = new G4PVPlacement(0,                   //no rotation
-                         G4ThreeVector(0.,0.,vacthick/2),    //its position // old 0.,0.,-vacthick/2
-                                 fAluwrapLV,            //its logical volume
-                                 "AluWrapping",                 //its name
-                                 fCaloCellLV,               //its mother
-                                 false,                     //no boolean operat
-                                 0);                        //copy number
-
-  fAluwrapLV->SetVisAttributes(AluVis);
-
-  //
-  // AirGap
-  //
-  auto fAlAirGapS= new G4Box("AlAirGap",  //Name
-                               alairgapx/2.,   // x size
-                               alairgapy/2.,     // y size
-                               alairgaplength/2.); // z size
-
-
-  auto fAlAirGapLV = new G4LogicalVolume(fAlAirGapS,    //its solid
-                                        Air,    //its material
-                                        "AlAirGap");       //its name
-
-  fAlAirGapPV = new G4PVPlacement(0,                   //no rotation
-                        G4ThreeVector(0.,0.,-(vacthick-aluwrapthick)/2),    //its position // old 0.,0.,aluwrapthick/2
-                                fAlAirGapLV,            //its logical volume
-                                "AlAirGap",                 //its name
-                                fAluwrapLV,               //its mother
-                                false,                     //no boolean operat
-                                0);                        //copy number
-
-  fAlAirGapLV->SetVisAttributes(G4VisAttributes::GetInvisible());
-  // fAlAirGapLV->SetVisAttributes(AirVis);
-  //
-  // Detector(in this case a crystal)
-  //
-  //Detector Box shape as in E166
-  auto fDetectorS= new G4Box("Detector",  //Name
-                               detx/2.,   // x size
-                               dety/2.,     // y size
-                               detthick/2.); // z size
-
-
-  fDetectorLV = new G4LogicalVolume(fDetectorS,    //its solid
-                                        fCaloMaterial,    //its material
-                                        "Detector");       //its name
-
-  fDetectorPV = new G4PVPlacement(0,                   //no rotation
-                        G4ThreeVector(0.,0.,alairgapthick/2),    //its position
-                                fDetectorLV,            //its logical volume
-                                "Detector",                 //its name
-                                fAlAirGapLV,               //its mother
-                                false,                     //no boolean operat
-                                0);                        //copy number
-
-  fDetectorLV->SetVisAttributes(CrystalVis);
-
-  //
-  //vacuum step 3
-  //
-  auto fVacStepS3 = new G4Box("VacStep3",  //Name
-                               vac3x/2.,
-                               vac3y/2,
-                               vacthick/2.);
-
-  auto fVacStepLV3 = new G4LogicalVolume(fVacStepS3,    //its solid
-                                        Vacuum,    //its material
-                                        "VacStep3");       //its name
-
-  fVacStepPV3 = new G4PVPlacement(0,                   //no rotation
-                        G4ThreeVector(0.,0.,(aluwrapthick+alairgaplength)/2),    //its position //old 0.,0.,aluwraplength/2
-                                fVacStepLV3,            //its logical volume
-                                "VacStep3",                 //its name
-                                fAluwrapLV,               //its mother //old fCaloCellLV
-                                false,                     //no boolean operat
-                                0);                        //copy number
-
-  fVacStepLV3->SetVisAttributes(VacStep3Vis);
-
-  //
-  // vacuum step 4
-  // all in front of the crystall
-
-  auto fVacStepS4 = new G4Box("VacStep4",  //Name
-                               calorcellxy/2.,
-                               calorcellxy/2,
-                               vacthick/2.);
-
-  auto fVacStepLV4 = new G4LogicalVolume(fVacStepS4,    //its solid
-                                        Vacuum,    //its material
-                                        "VacStep4");       //its name
-
-  fVacStepPV4 = new G4PVPlacement(0,                   //no rotation
-                        G4ThreeVector(0.,0.,-aluwraplength/2),    //its position //old 0.,0.,aluwraplength/2
-                                fVacStepLV4,            //its logical volume
-                                "VacStep4",                 //its name
-                                fCaloCellLV,               //its mother //old fCaloCellLV
-                                false,                     //no boolean operat
-                                0);                        //copy number
-
-  fVacStepLV4->SetVisAttributes(VacStep3Vis);
-
-
-
-
-
- //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- // Optical boundary surfaces
- //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- // Al <-> Air optical surface copied from QuaSim
- //
- G4MaterialPropertiesTable *AlWrapProperty = new G4MaterialPropertiesTable();
- const G4int n_AlAir=8;
- // G4double PE_AlWrap[n_AlAir] = {1.38*eV, 1.90*eV, 2.38*eV, 2.48*eV, 5.17*eV, 5.64*eV, 6.20*eV, 7.77*eV };
- // G4double RE_AlWrap[n_AlAir] = {0.82,    0.83,    0.84,    0.85,    0.86,    0.84,    0.81,    0.74 };
- G4double PE_AlWrap[n_AlAir] = {1.38*eV, 1.90*eV, 2.38*eV, 2.48*eV, 5.17*eV, 5.64*eV, 6.20*eV, 6.7*eV };
- G4double RE_AlWrap[n_AlAir] = {0.82,    0.83,    0.84,    0.85,    0.86,    0.84,    0.81,    0.79 };
- AlWrapProperty -> AddProperty("REFLECTIVITY", PE_AlWrap, RE_AlWrap, n_AlAir);
-
- // optical and logical surface
- G4OpticalSurface* OpAlWrapSurface = new G4OpticalSurface("AirAluSurface");
- OpAlWrapSurface -> SetType(dielectric_metal);
- OpAlWrapSurface -> SetFinish(ground);
- G4double AlPolish = 0; // 1 = smooth, 0 = maximum roughness
- OpAlWrapSurface -> SetPolish(AlPolish);
- OpAlWrapSurface -> SetModel(glisur);
- OpAlWrapSurface -> SetMaterialPropertiesTable(AlWrapProperty);
- // need to attach them to all the physical volumes for the alu
- G4LogicalBorderSurface* AlWrapSurface =
-          new G4LogicalBorderSurface("AirAluSurface",fAluwrapPV , fAlAirGapPV, OpAlWrapSurface);
- G4LogicalBorderSurface* AlWrapSurface2 =
-          new G4LogicalBorderSurface("AirAluSurface", fAlAirGapPV, fAluwrapPV, OpAlWrapSurface);
-
-
-  //
-  /// - Quartz <-> Air: Unified model (taken from QuaSi) /have to check if TF1 <-> Air is different
-
-  // properties table
-  G4MaterialPropertiesTable* AirQSurfProp = new G4MaterialPropertiesTable();
-  const G4int n_AirQ=2;
-  G4double OpAirSpecularlobe[n_AirQ] = {1.0, 1.0};
-  G4double OpAirSpecularspike[n_AirQ] = {0.0, 0.0};
-  G4double OpAirBackscatter[n_AirQ] = {0.0, 0.0};
-
-  G4double PE_OpAir[n_AirQ] = {1.38*eV, 6.70*eV};
-  G4double RI_OpAir[n_AirQ] = {1.00029, 1.00029};
-  AirQSurfProp -> AddProperty("RINDEX", PE_OpAir, RI_OpAir, n_AirQ);
-  AirQSurfProp -> AddProperty("SPECULARLOBECONSTANT", PE_OpAir, OpAirSpecularlobe, n_AirQ);
-  AirQSurfProp -> AddProperty("SPECULARSPIKECONSTANT", PE_OpAir, OpAirSpecularspike, n_AirQ);
-  AirQSurfProp -> AddProperty("BACKSCATTERCONSTANT", PE_OpAir, OpAirBackscatter, n_AirQ);
-
-  // optical and logical surface
-  G4OpticalSurface* OpAirSurface = new G4OpticalSurface("QAirSurface");
-  OpAirSurface -> SetType(dielectric_dielectric);
-  OpAirSurface -> SetModel(unified);
-
-  // from Janacek, Morses, Simulating Scintillator Light ..., IEEE 2010:
-  // polished 1.3 degree, etched 3.8 degree, ground 12 degree
-  //          0.023              0.066              0.21
-  // degree   1      2      3      4      5      6      7      8      9      10     11     12
-  // radians  0.017  0.035  0.052  0.070  0.087  0.105  0.122  0.140  0.157  0.175  0.192  0.209
-  // degree   13     14     15
-  // radians  0.227  0.244  0.262
-
-  OpAirSurface -> SetFinish(ground);
-  //  G4double sigma_alpha = 0.023;
-  //  G4double sigma_alpha = 0.066;
-  G4double sigma_alpha = 0.209;
-  OpAirSurface -> SetSigmaAlpha(sigma_alpha);
-  OpAirSurface -> SetMaterialPropertiesTable(AirQSurfProp);
-  G4LogicalBorderSurface* AirSurface =
-  	new G4LogicalBorderSurface("QAirSurface", fDetectorPV, fAlAirGapPV, OpAirSurface);
-  G4LogicalBorderSurface* AirSurface2 =
-  	new G4LogicalBorderSurface("QAirSurface", fAlAirGapPV, fDetectorPV, OpAirSurface);
-
+    fVirtCaloPV = new G4PVPlacement(0,                   //no rotation
+                           G4ThreeVector(0.,0.,caloZposition),    //its position
+                                   fVirtCaloLV,            //its logical volume
+                                   "virtualCalorimeter",                 //its name
+                                  LogicalWorld,               //its mother
+                                   false,                     //no boolean operat
+                                   0);                        //copy number
 
   } //end if-statement for the calorimeter geometry
 
@@ -744,6 +441,308 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
   }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// Construct the Calorimeter , returns LV of motherVolume
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4double detthick, G4double detxy,
+    G4double alairgapthick, G4double aluwrapthick, G4double vacthick){
+    //..........................................................................
+    // Define some geometry parameters .........................................
+    G4double alairgapxy = detxy + 2*alairgapthick;
+    G4double alairgaplength = detthick + alairgapthick;
+    G4double aluwrapxy = alairgapxy + 2*aluwrapthick;
+    G4double aluwraplength = alairgaplength + aluwrapthick + vacthick;
+
+    //defining the size of the Calorimetercell and the virtual calorimeter (mother volume of the calorimetercells)
+    //G4int NbofCalor = 9; //here later free paramter to select numer of crystals
+    G4double calorcellxy = aluwrapxy;
+    G4double calorcelllength = aluwraplength + vacthick;
+    G4double virtcalorlength = calorcelllength;
+
+    G4double vac3xy = alairgapxy;// this version is to place the vacstep in the aluwrapping
+
+    G4double virtcalorxy;
+    if (CrystalNumber == "one"){
+      virtcalorxy = calorcellxy;
+    }
+    else if (CrystalNumber == "nine"){
+      virtcalorxy = 3*calorcellxy;
+    }
+    else {
+      virtcalorxy = calorcellxy;
+      SetCrystalnumber("one");
+      G4cout << "NO VALID IMPUT FOR CRYSTALNUMBER: Crystalnumber set to one!" << fCaloMaterial->GetName() << G4endl;
+    }
+    //..........................................................................
+    // Get Materials  .........................................
+    G4Material* Air       = allMaterials->GetMat("Air");
+    G4Material* Al        = allMaterials->GetMat("Aluminium");
+    G4Material* Vacuum    = allMaterials->GetMat("Galactic");
+
+    //................................................
+    //Define Geometry ................................................
+    // Virtuel calorimeter (mother volume for the whole calorimeter/detector)
+    auto fVirtCaloS= new G4Box("virtualCalorimeter",  //Name
+                                  virtcalorxy/2.,   // x size
+                                  virtcalorxy/2.,     // y size
+                                  virtcalorlength/2.); // z size
+
+
+    auto fVirtCaloLV = new G4LogicalVolume(fVirtCaloS,    //its solid
+                                           fWorldMaterial,    //its material
+                                           "virtualCalorimeter");       //its name
+
+    //
+    // Calorimeter cells (placing (for now) 9 calorimeter cells in the virtual calorimeter)
+    //
+    auto fCaloCellS= new G4Box("physicalcalorimeter",  //Name
+                                 calorcellxy/2.,   // x size
+                                 calorcellxy/2.,     // y size
+                                 calorcelllength/2.); // z size
+
+    auto fCaloCellLV = new G4LogicalVolume(fCaloCellS,    //its solid
+                                          fWorldMaterial,    //its material
+                                          "physicalcalorimeter");       //its name
+
+    if(CrystalNumber=="nine"){
+    //the array for the placement of the 9 calorimetercells in the virtual calorimeter
+    G4double CalorRX[9]={0,0,calorcellxy,calorcellxy,calorcellxy,0,-calorcellxy,-calorcellxy,-calorcellxy};
+    G4double CalorRY[9]={0,calorcellxy,calorcellxy,0,-calorcellxy,-calorcellxy,-calorcellxy,0,calorcellxy};
+
+    for (G4int i=0;i<=8;i++){
+    fCaloCellPV = new G4PVPlacement(0,		       //no rotation
+                 G4ThreeVector(CalorRX[i],CalorRY[i],0),  //its position
+                 fCaloCellLV,            //its logical volume
+                "physicalcalorimeter",    //its name
+                 fVirtCaloLV,               //its mother
+                 false,                     //no boolean operat
+                 i);                        //copy number       //copy number
+    }
+    }
+
+    else if (CrystalNumber == "one"){
+    fCaloCellPV = new G4PVPlacement(0,		       //no rotation
+                 G4ThreeVector(0,0,0),  //its position
+                 fCaloCellLV,            //its logical volume
+                "physicalcalorimeter",    //its name
+                 fVirtCaloLV,               //its mother
+                 false,                     //no boolean operat
+                 0);                        //copy number       //copy number
+    }
+
+
+    // Alu-wrapping
+    //
+    auto fAluWrapS= new G4Box("AluWrapping",  //Name
+                                  aluwrapxy/2.,   // x size
+                                  aluwrapxy/2.,     // y size
+                                  aluwraplength/2.); // z size
+
+
+    auto fAluwrapLV = new G4LogicalVolume(fAluWrapS,    //its solid
+                                           Al,    //its material
+                                           "AluWrapping");       //its name
+
+    fAluwrapPV = new G4PVPlacement(0,                   //no rotation
+                           G4ThreeVector(0.,0.,vacthick/2),    //its position // old 0.,0.,-vacthick/2
+                                   fAluwrapLV,            //its logical volume
+                                   "AluWrapping",                 //its name
+                                   fCaloCellLV,               //its mother
+                                   false,                     //no boolean operat
+                                   0);                        //copy number
+
+    //
+    // AirGap
+    //
+    auto fAlAirGapS= new G4Box("AlAirGap",  //Name
+                                 alairgapxy/2.,   // x size
+                                 alairgapxy/2.,     // y size
+                                 alairgaplength/2.); // z size
+
+
+    auto fAlAirGapLV = new G4LogicalVolume(fAlAirGapS,    //its solid
+                                          Air,    //its material
+                                          "AlAirGap");       //its name
+
+    fAlAirGapPV = new G4PVPlacement(0,                   //no rotation
+                          G4ThreeVector(0.,0.,-(vacthick-aluwrapthick)/2),    //its position // old 0.,0.,aluwrapthick/2
+                                  fAlAirGapLV,            //its logical volume
+                                  "AlAirGap",                 //its name
+                                  fAluwrapLV,               //its mother
+                                  false,                     //no boolean operat
+                                  0);                        //copy number
+
+    //
+    // Detector(in this case a crystal)
+    //
+    //Detector Box shape as in E166
+    auto fDetectorS= new G4Box("Detector",  //Name
+                                 detxy/2.,   // x size
+                                 detxy/2.,     // y size
+                                 detthick/2.); // z size
+
+
+    fDetectorLV = new G4LogicalVolume(fDetectorS,    //its solid
+                                          fCaloMaterial,    //its material
+                                          "Detector");       //its name
+
+    fDetectorPV = new G4PVPlacement(0,                   //no rotation
+                          G4ThreeVector(0.,0.,alairgapthick/2),    //its position
+                                  fDetectorLV,            //its logical volume
+                                  "Detector",                 //its name
+                                  fAlAirGapLV,               //its mother
+                                  false,                     //no boolean operat
+                                  0);                        //copy number
+
+    //
+    //vacuum step 3
+    //
+    auto fVacStepS3 = new G4Box("VacStep3",  //Name
+                                 vac3xy/2.,
+                                 vac3xy/2,
+                                 vacthick/2.);
+
+    auto fVacStepLV3 = new G4LogicalVolume(fVacStepS3,    //its solid
+                                          Vacuum,    //its material
+                                          "VacStep3");       //its name
+
+    fVacStepPV3 = new G4PVPlacement(0,                   //no rotation
+                          G4ThreeVector(0.,0.,(aluwrapthick+alairgaplength)/2),    //its position //old 0.,0.,aluwraplength/2
+                                  fVacStepLV3,            //its logical volume
+                                  "VacStep3",                 //its name
+                                  fAluwrapLV,               //its mother //old fCaloCellLV
+                                  false,                     //no boolean operat
+                                  0);                        //copy number
+
+    //
+    // vacuum step 4
+    // all in front of the crystall
+
+    auto fVacStepS4 = new G4Box("VacStep4",  //Name
+                                 calorcellxy/2.,
+                                 calorcellxy/2,
+                                 vacthick/2.);
+
+    auto fVacStepLV4 = new G4LogicalVolume(fVacStepS4,    //its solid
+                                          Vacuum,    //its material
+                                          "VacStep4");       //its name
+
+    fVacStepPV4 = new G4PVPlacement(0,                   //no rotation
+                          G4ThreeVector(0.,0.,-aluwraplength/2),    //its position //old 0.,0.,aluwraplength/2
+                                  fVacStepLV4,            //its logical volume
+                                  "VacStep4",                 //its name
+                                  fCaloCellLV,               //its mother //old fCaloCellLV
+                                  false,                     //no boolean operat
+                                  0);                        //copy number
+
+    //------------------------------------------------------------------
+    //set visual VisAttributes
+    //------------------------------------------------------------------
+    //make virtual mother volumes invisible
+    fVirtCaloLV->SetVisAttributes(G4VisAttributes::GetInvisible());
+    fCaloCellLV->SetVisAttributes(G4VisAttributes::GetInvisible());
+
+    /*
+    G4VisAttributes * AirVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
+    AirVis->SetVisibility(true);
+    AirVis->SetLineWidth(2);
+    AirVis->SetForceWireframe( true );
+    fAlAirGapLV->SetVisAttributes(AirVis);
+    */
+    fAlAirGapLV->SetVisAttributes(G4VisAttributes::GetInvisible());
+
+    G4VisAttributes * AluVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
+    AluVis->SetVisibility(true);
+    AluVis->SetLineWidth(2);
+    AluVis->SetForceSolid(false);
+    fAluwrapLV->SetVisAttributes(AluVis);
+
+    G4VisAttributes * CrystalVis= new G4VisAttributes( G4Colour(224/255. ,255/255. ,255/255. ));
+    CrystalVis->SetVisibility(true);
+    CrystalVis->SetLineWidth(2);
+    CrystalVis->SetForceSolid(true);
+    fDetectorLV->SetVisAttributes(CrystalVis);
+
+    G4VisAttributes * CaloVacStepVis= new G4VisAttributes( G4Colour(255/255. ,165/255. ,0/255. ));
+    CaloVacStepVis->SetVisibility(true);
+    CaloVacStepVis->SetLineWidth(1);
+    CaloVacStepVis->SetForceSolid(true);
+    fVacStepLV3->SetVisAttributes(CaloVacStepVis);
+    fVacStepLV4->SetVisAttributes(CaloVacStepVis);
+
+   /*
+   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   // Optical boundary surfaces
+   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   // Al <-> Air optical surface copied from QuaSim
+   //
+   G4MaterialPropertiesTable *AlWrapProperty = new G4MaterialPropertiesTable();
+   const G4int n_AlAir=8;
+   // G4double PE_AlWrap[n_AlAir] = {1.38*eV, 1.90*eV, 2.38*eV, 2.48*eV, 5.17*eV, 5.64*eV, 6.20*eV, 7.77*eV };
+   // G4double RE_AlWrap[n_AlAir] = {0.82,    0.83,    0.84,    0.85,    0.86,    0.84,    0.81,    0.74 };
+   G4double PE_AlWrap[n_AlAir] = {1.38*eV, 1.90*eV, 2.38*eV, 2.48*eV, 5.17*eV, 5.64*eV, 6.20*eV, 6.7*eV };
+   G4double RE_AlWrap[n_AlAir] = {0.82,    0.83,    0.84,    0.85,    0.86,    0.84,    0.81,    0.79 };
+   AlWrapProperty -> AddProperty("REFLECTIVITY", PE_AlWrap, RE_AlWrap, n_AlAir);
+
+   // optical and logical surface
+   G4OpticalSurface* OpAlWrapSurface = new G4OpticalSurface("AirAluSurface");
+   OpAlWrapSurface -> SetType(dielectric_metal);
+   OpAlWrapSurface -> SetFinish(ground);
+   G4double AlPolish = 0; // 1 = smooth, 0 = maximum roughness
+   OpAlWrapSurface -> SetPolish(AlPolish);
+   OpAlWrapSurface -> SetModel(glisur);
+   OpAlWrapSurface -> SetMaterialPropertiesTable(AlWrapProperty);
+   // need to attach them to all the physical volumes for the alu
+   G4LogicalBorderSurface* AlWrapSurface =
+            new G4LogicalBorderSurface("AirAluSurface",fAluwrapPV , fAlAirGapPV, OpAlWrapSurface);
+   G4LogicalBorderSurface* AlWrapSurface2 =
+            new G4LogicalBorderSurface("AirAluSurface", fAlAirGapPV, fAluwrapPV, OpAlWrapSurface);
+
+
+    //
+    /// - Quartz <-> Air: Unified model (taken from QuaSi) /have to check if TF1 <-> Air is different
+
+    // properties table
+    G4MaterialPropertiesTable* AirQSurfProp = new G4MaterialPropertiesTable();
+    const G4int n_AirQ=2;
+    G4double OpAirSpecularlobe[n_AirQ] = {1.0, 1.0};
+    G4double OpAirSpecularspike[n_AirQ] = {0.0, 0.0};
+    G4double OpAirBackscatter[n_AirQ] = {0.0, 0.0};
+
+    G4double PE_OpAir[n_AirQ] = {1.38*eV, 6.70*eV};
+    G4double RI_OpAir[n_AirQ] = {1.00029, 1.00029};
+    AirQSurfProp -> AddProperty("RINDEX", PE_OpAir, RI_OpAir, n_AirQ);
+    AirQSurfProp -> AddProperty("SPECULARLOBECONSTANT", PE_OpAir, OpAirSpecularlobe, n_AirQ);
+    AirQSurfProp -> AddProperty("SPECULARSPIKECONSTANT", PE_OpAir, OpAirSpecularspike, n_AirQ);
+    AirQSurfProp -> AddProperty("BACKSCATTERCONSTANT", PE_OpAir, OpAirBackscatter, n_AirQ);
+
+    // optical and logical surface
+    G4OpticalSurface* OpAirSurface = new G4OpticalSurface("QAirSurface");
+    OpAirSurface -> SetType(dielectric_dielectric);
+    OpAirSurface -> SetModel(unified);
+
+    // from Janacek, Morses, Simulating Scintillator Light ..., IEEE 2010:
+    // polished 1.3 degree, etched 3.8 degree, ground 12 degree
+    //          0.023              0.066              0.21
+    // degree   1      2      3      4      5      6      7      8      9      10     11     12
+    // radians  0.017  0.035  0.052  0.070  0.087  0.105  0.122  0.140  0.157  0.175  0.192  0.209
+    // degree   13     14     15
+    // radians  0.227  0.244  0.262
+
+    OpAirSurface -> SetFinish(ground);
+    //  G4double sigma_alpha = 0.023;
+    //  G4double sigma_alpha = 0.066;
+    G4double sigma_alpha = 0.209;
+    OpAirSurface -> SetSigmaAlpha(sigma_alpha);
+    OpAirSurface -> SetMaterialPropertiesTable(AirQSurfProp);
+    G4LogicalBorderSurface* AirSurface =
+    	new G4LogicalBorderSurface("QAirSurface", fDetectorPV, fAlAirGapPV, OpAirSurface);
+    G4LogicalBorderSurface* AirSurface2 =
+    	new G4LogicalBorderSurface("QAirSurface", fAlAirGapPV, fDetectorPV, OpAirSurface);
+    */
+return fVirtCaloLV;
+
+}
+
 
 void DetectorConstruction::PrintParameters()
 { if(versionType=="Pol" || versionType=="PolCal"){
