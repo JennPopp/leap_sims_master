@@ -113,7 +113,7 @@ void RunAction::BookHisto()
      // detector behind iron absorber
      BookBunchTuple("bremssim2", "vacstep2");
      }
-    else if(versionType=="Cal" || versionType=="PolCal"){
+    if(versionType=="Cal" || versionType=="PolCal"){
       // ntuple with id 0 if Cal else 1
      BookBunchCalTuple("calorimeter", "crystal_vacstep3");
      // histrogramm id=0
@@ -131,7 +131,7 @@ void RunAction::BookHisto()
        BookSingleTuple("bremssim2","vacstep2");
     }// end of if version
 
-    else if(versionType=="Cal" || versionType=="PolCal"){
+    if(versionType=="Cal" || versionType=="PolCal"){
        //id=0 if Cal else 2
        BookSingleCalTuple("calorimeter", "vacstep3");
 
