@@ -55,7 +55,7 @@
 
 SteppingAction::SteppingAction(DetectorConstruction* det,
                                EventAction* eventAction,
-                               RunAction* ruAct, G4String outType, G4String version
+                               RunAction* ruAct, G4String outType, G4String version, G4String dipolState
                              )
  : G4UserSteppingAction(),
    fDetector(det), fRunAction(ruAct),fEventAction(eventAction){
@@ -188,7 +188,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if(postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)) {
                   aTrack->SetTrackStatus(fStopAndKill);
                 }
-                
+
 */
       }
     }

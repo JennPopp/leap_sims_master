@@ -63,7 +63,7 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-DetectorConstruction::DetectorConstruction(G4String version)
+DetectorConstruction::DetectorConstruction(G4String version, G4String dipolState)
 : G4VUserDetectorConstruction(),
   PhysicalWorld(0), PhysicalCore(0), fConvMaterial(0), fWorldMaterial(0), fCaloMaterial(0)
 {
@@ -72,7 +72,7 @@ DetectorConstruction::DetectorConstruction(G4String version)
   allMaterials->DefineMaterials();
 
   fSizeXY = 50*mm;
-  fCoreThick = 75*mm;
+  fCoreThick = 150*mm;
   fConvThick = 1.75*mm;
   fWorldSize = 4.1*m;
   CrystalNumber= "one";
@@ -402,6 +402,8 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
 
     //Polarimeter
     //
+
+      LogicalSolenoid->SetVisAttributes(G4VisAttributes::GetInvisible());
 
       G4VisAttributes * MagnetVis= new G4VisAttributes( G4Colour(255/255. ,102/255. ,102/255. ));
       MagnetVis->SetVisibility(true);

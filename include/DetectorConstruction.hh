@@ -48,7 +48,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
 
-  DetectorConstruction(G4String version);
+  DetectorConstruction(G4String version, G4String dipolState);
   ~DetectorConstruction();
 
 public:

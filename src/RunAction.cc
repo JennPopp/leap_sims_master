@@ -55,7 +55,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim,
-  G4String outFile, G4String outType, G4String version)
+  G4String outFile, G4String outType, G4String version, G4String dipolState)
 : G4UserRunAction(),
    fDetector(det), fPrimary(prim),fProcCounter(0), fAnalysisManager(0)
 {
