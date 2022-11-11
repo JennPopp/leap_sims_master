@@ -68,6 +68,7 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String dipolState
   PhysicalWorld(0), PhysicalCore(0), fConvMaterial(0), fWorldMaterial(0), fCaloMaterial(0)
 {
   versionType=version;
+  dipolStatus = dipolState;
   allMaterials = new Materials();
   allMaterials->DefineMaterials();
 
@@ -114,6 +115,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double  maggap2 = 12.5*mm;
   G4double magthick = 2.*(maggap1+maggap2+fConvThick)+fCoreThick;
 
+  //
+  //Dipol
+  //....................
+  G4double dipoleGap = 50*mm; // Gap between solenoid and dipole
+  G4double BLength = 100*mm; // Length of dipole magnetic field
+  G4double Bx = 50*mm;
+  G4double By = 25*mm;
+
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // World
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -146,7 +155,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4LogicalVolume* LogicalSolenoid = ConstructSolenoid(magthick, maggap2, vacthick);
 
     new G4PVPlacement(0,	//rotation
-                     G4ThreeVector(0.0*mm, 0.0*mm, 0.0*mm),// translation position
+                     G4ThreeVector(0.0*mm, 0.0*mm, magthick/2.),// translation position
                      LogicalSolenoid,      //its logical volume
                        "PhysicalMagnet",   //its name  (2nd constructor)
                        LogicalWorld,         //its mother volume
@@ -154,7 +163,26 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                        0);                 //copy number
 
   } //end if-statement polarimeter
-
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // Dipol geometry
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (dipolStatus == "On"){
+    G4LogicalVolume* LogicalDipol = ConstructDipol(BLength, Bx, By);
+    G4double dipolZpos;
+    if (versionType == "Pol" || versionType == "PolCal"){
+         dipolZpos = magthick+dipoleGap+BLength/2.;
+      } // end if version
+    else if (versionType == "Cal"){
+         dipolZpos = BLength/2.;
+    }
+    new G4PVPlacement(0,	//rotation
+                     G4ThreeVector(0.0*mm, 0.0*mm, dipolZpos),// translation position
+                     LogicalDipol,      //its logical volume
+                       "PhysicalDipol",   //its name  (2nd constructor)
+                       LogicalWorld,         //its mother volume
+                       false,              //no boolean operation
+                       0);
+  } // endif dipol State
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // Calorimeter geometry
@@ -167,9 +195,29 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                           //the aluwrapping and the crystal
     G4double aluwrapthick = 0.01  *mm;   // wikipedia: alu foil thickness
                                          //between 0.004 and 0.02 mm
-    G4double spacePolCal = 50. *mm; //5cm between pol and cal
-    G4double motherLength = detthick+alairgapthick+aluwrapthick+2.*vacthick;
-    G4double caloZposition = (magthick+motherLength)/2+spacePolCal;
+    G4double ZtoCalo = 50. *mm; // distance from solenoid or dipol to calorimeter
+    G4double caloLength = detthick+alairgapthick+aluwrapthick+2.*vacthick;
+    //G4double caloZposition;
+
+    // statements to get the correct Z-Position of the calorimeter
+    if (dipolStatus == "Off"){
+
+        if(versionType == "Cal"){
+          caloZposition = caloLength/2.;
+        }
+        else if(versionType == "PolCal"){
+          caloZposition = magthick + ZtoCalo + caloLength/2.;
+        }
+
+    }
+    else if (dipolStatus == "On"){
+      if(versionType == "Cal"){
+          caloZposition = BLength+ZtoCalo+caloLength/2.;
+        }
+        else if(versionType == "PolCal"){
+          caloZposition = magthick + dipoleGap + BLength + ZtoCalo + caloLength/2.;
+        }
+    }
 
     G4LogicalVolume* fVirtCaloLV = ConstructCalorimeter(detthick, detxy,
         alairgapthick, aluwrapthick, vacthick);
@@ -745,6 +793,23 @@ return fVirtCaloLV;
 
 }
 
+G4LogicalVolume* DetectorConstruction::ConstructDipol(G4double BLength, G4double Bx, G4double By){
+
+  //................................................
+  //Define Geometry ................................................
+  // Virtuel calorimeter (mother volume for the whole calorimeter/detector)
+  auto solidDipole = new G4Box("DipoleSolid",  //Name
+                                Bx/2.,   // x size
+                                By/2.,     // y size
+                                BLength/2.); // z size
+
+
+  auto LogicalDipol = new G4LogicalVolume(solidDipole,    //its solid
+                                         fWorldMaterial,    //its material
+                                         "DipoleFieldVolume");       //its name
+
+  return LogicalDipol;
+}
 
 void DetectorConstruction::PrintParameters()
 { if(versionType=="Pol" || versionType=="PolCal"){
