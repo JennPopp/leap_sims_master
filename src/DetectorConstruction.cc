@@ -57,15 +57,19 @@
 // #include "G4NistManager.hh"
 #include "G4SystemOfUnits.hh"
 
-#include "G4OpBoundaryProcess.hh"
-#include "G4LogicalBorderSurface.hh"
-#include "G4LogicalSkinSurface.hh"
+// #include "G4OpBoundaryProcess.hh"
+// #include "G4LogicalBorderSurface.hh"
+// #include "G4LogicalSkinSurface.hh"
+
+#include "G4UniformMagField.hh"
+#include "G4FieldManager.hh"
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::DetectorConstruction(G4String version, G4String dipolState)
 : G4VUserDetectorConstruction(),
-  PhysicalWorld(0), PhysicalCore(0), fConvMaterial(0), fWorldMaterial(0), fCaloMaterial(0)
+  PhysicalWorld(0), PhysicalCore(0), fConvMaterial(0), fWorldMaterial(0), fCaloMaterial(0), fLogicalDipol(0)
 {
   versionType=version;
   dipolStatus = dipolState;
@@ -182,6 +186,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                        LogicalWorld,         //its mother volume
                        false,              //no boolean operation
                        0);
+
   } // endif dipol State
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -804,11 +809,11 @@ G4LogicalVolume* DetectorConstruction::ConstructDipol(G4double BLength, G4double
                                 BLength/2.); // z size
 
 
-  auto LogicalDipol = new G4LogicalVolume(solidDipole,    //its solid
+  fLogicalDipol = new G4LogicalVolume(solidDipole,    //its solid
                                          fWorldMaterial,    //its material
                                          "DipoleFieldVolume");       //its name
 
-  return LogicalDipol;
+  return fLogicalDipol;
 }
 
 void DetectorConstruction::PrintParameters()
@@ -828,7 +833,18 @@ void DetectorConstruction::PrintParameters()
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+// Instantiate the magnetic field
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void DetectorConstruction::ConstructSDandField()
+{
+  G4ThreeVector fieldValue = G4ThreeVector (0.,  1.0*tesla,  0.);
+  G4MagneticField* magField = new G4UniformMagField(fieldValue);
 
+  auto localFieldManager = new G4FieldManager(magField);
+  fLogicalDipol -> SetFieldManager(localFieldManager, true);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void DetectorConstruction::SetConvMaterial(G4String materialChoice)
 {
   // search the material by its name
