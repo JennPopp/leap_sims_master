@@ -39,10 +39,8 @@
      `/vis/viewer/set/sectionPlane [on|off] <3 vector of point> [unit of point] <3 vector of plane normal>`
      e.g., for a y-z plane at x = 1 cm:
      `/vis/viewer/set/sectionPlane on 1 0 0 cm 1 0 0`
-  3. for HepRep type in `/vis/open HepRepFile` and `/vis/viewer/flush` to save a         HepRepFile of the geometry
-  4. copy the HepRepFiles to the HepRep directory
-  5. change to HepRep directory and type `java -jar HepRApp.jar` to open the HepRep Browser
-  6. select the HepRapFile you want to see
+
+  HepRApp is no longer supported by the latest Java versions, they ran out of funding. 
 
   ### Some useful detector commands
   1. To set the number of calorimeter crystals use `/leap/det/Setnumberofcrystals`.
