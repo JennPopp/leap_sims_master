@@ -80,7 +80,10 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String dipolState
   fCoreThick = 150*mm;
   fConvThick = 1.75*mm;
   fWorldSize = 4.1*m;
-  CrystalNumber= "one";
+  CrystalNumber= "nine";
+  fDipoleB = 0.1 * tesla;
+  fDipoleSize = G4ThreeVector( 50*mm, 25*mm, 100*mm);
+  fZtoCalo = 50 * mm;
 
   SetConvMaterial("G4_W");
   SetWorldMaterial("Galactic");
@@ -123,9 +126,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //Dipol
   //....................
   G4double dipoleGap = 50*mm; // Gap between solenoid and dipole
-  G4double BLength = 100*mm; // Length of dipole magnetic field
-  G4double Bx = 50*mm;
-  G4double By = 25*mm;
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // World
@@ -171,13 +171,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Dipol geometry
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (dipolStatus == "On"){
-    G4LogicalVolume* LogicalDipol = ConstructDipol(BLength, Bx, By);
+    G4LogicalVolume* LogicalDipol = ConstructDipol();
     G4double dipolZpos;
     if (versionType == "Pol" || versionType == "PolCal"){
-         dipolZpos = magthick+dipoleGap+BLength/2.;
+         dipolZpos = magthick+dipoleGap+fDipoleSize[2]/2.;
       } // end if version
     else if (versionType == "Cal"){
-         dipolZpos = BLength/2.;
+         dipolZpos = fDipoleSize[2]/2.;
     }
     new G4PVPlacement(0,	//rotation
                      G4ThreeVector(0.0*mm, 0.0*mm, dipolZpos),// translation position
@@ -187,6 +187,22 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                        false,              //no boolean operation
                        0);
 
+    auto solidBigVac = new G4Box("BigVacSolid",  //Name
+                                  fWorldSize/2.,   // x size
+                                  fWorldSize/2.,     // y size
+                                  1.*mm); // z size
+
+    auto BigVacLV = new G4LogicalVolume(solidBigVac,    //its solid
+                                          fWorldMaterial,    //its material
+                                          "BigVac");       //its name
+
+    fBigVacPV = new G4PVPlacement(0,                   //no rotation
+                          G4ThreeVector(0.0*mm, 0.0*mm, dipolZpos+1.0*mm),    //its position
+                                  BigVacLV,            //its logical volume
+                                  "BigVacPV",                 //its name
+                                  LogicalWorld,               //its mother
+                                  false,                     //no boolean operat
+                                  0);                       //copy number
   } // endif dipol State
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -200,7 +216,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                           //the aluwrapping and the crystal
     G4double aluwrapthick = 0.01  *mm;   // wikipedia: alu foil thickness
                                          //between 0.004 and 0.02 mm
-    G4double ZtoCalo = 50. *mm; // distance from solenoid or dipol to calorimeter
+
     G4double caloLength = detthick+alairgapthick+aluwrapthick+2.*vacthick;
     //G4double caloZposition;
 
@@ -211,16 +227,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
           caloZposition = caloLength/2.;
         }
         else if(versionType == "PolCal"){
-          caloZposition = magthick + ZtoCalo + caloLength/2.;
+          caloZposition = magthick + fZtoCalo + caloLength/2.;
         }
 
     }
     else if (dipolStatus == "On"){
       if(versionType == "Cal"){
-          caloZposition = BLength+ZtoCalo+caloLength/2.;
+          caloZposition = fDipoleSize[2]+fZtoCalo+caloLength/2.;
         }
         else if(versionType == "PolCal"){
-          caloZposition = magthick + dipoleGap + BLength + ZtoCalo + caloLength/2.;
+          caloZposition = magthick + dipoleGap + fDipoleSize[2] + fZtoCalo + caloLength/2.;
         }
     }
 
@@ -798,15 +814,15 @@ return fVirtCaloLV;
 
 }
 
-G4LogicalVolume* DetectorConstruction::ConstructDipol(G4double BLength, G4double Bx, G4double By){
+G4LogicalVolume* DetectorConstruction::ConstructDipol(){
 
   //................................................
   //Define Geometry ................................................
   // Virtuel calorimeter (mother volume for the whole calorimeter/detector)
   auto solidDipole = new G4Box("DipoleSolid",  //Name
-                                Bx/2.,   // x size
-                                By/2.,     // y size
-                                BLength/2.); // z size
+                                fDipoleSize[0]/2.,   // x size
+                                fDipoleSize[1]/2.,     // y size
+                                fDipoleSize[2]/2.); // z size
 
 
   fLogicalDipol = new G4LogicalVolume(solidDipole,    //its solid
@@ -835,14 +851,17 @@ void DetectorConstruction::PrintParameters()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 // Instantiate the magnetic field
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-void DetectorConstruction::ConstructSDandField()
-{
-  G4ThreeVector fieldValue = G4ThreeVector (0.,  1.0*tesla,  0.);
-  G4MagneticField* magField = new G4UniformMagField(fieldValue);
 
-  auto localFieldManager = new G4FieldManager(magField);
-  fLogicalDipol -> SetFieldManager(localFieldManager, true);
-}
+  void DetectorConstruction::ConstructSDandField()
+  {
+    if (dipolStatus == "On"){
+      G4ThreeVector fieldValue = G4ThreeVector (0.,  fDipoleB,  0.);
+      G4MagneticField* magField = new G4UniformMagField(fieldValue);
+
+      auto localFieldManager = new G4FieldManager(magField);
+      fLogicalDipol -> SetFieldManager(localFieldManager, true);
+    }
+  }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 void DetectorConstruction::SetConvMaterial(G4String materialChoice)
@@ -924,10 +943,27 @@ void DetectorConstruction::SetConvThick(G4double value)
 
 void DetectorConstruction::SetCrystalnumber(G4String value)
 {
-  CrystalNumber=value;
+  CrystalNumber = value;
   UpdateGeometry();
 }
 
+void DetectorConstruction::SetDipoleB(G4double value)
+{
+  fDipoleB = value;
+  ConstructSDandField();
+}
+
+void DetectorConstruction::SetDipoleSize(G4ThreeVector value)
+{
+  fDipoleSize = value;
+  UpdateGeometry();
+}
+
+void DetectorConstruction::SetZtoCalo(G4double value)
+{
+  fZtoCalo = value;
+  UpdateGeometry();
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4RunManager.hh"

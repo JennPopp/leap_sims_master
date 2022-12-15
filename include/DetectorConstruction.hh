@@ -37,6 +37,7 @@
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
 #include "Materials.hh"
+#include "G4ThreeVector.hh"
 
 class G4LogicalVolume;
 class G4Material;
@@ -56,7 +57,7 @@ public:
   G4VPhysicalVolume* Construct();
   void ConstructSDandField();
   G4LogicalVolume* ConstructSolenoid(G4double magthick,G4double maggap2, G4double vacthick);
-  G4LogicalVolume* ConstructDipol(G4double BLength, G4double Bx, G4double By);
+  G4LogicalVolume* ConstructDipol();
   G4LogicalVolume* ConstructCalorimeter(G4double detthick, G4double detxy , G4double alairgapthick, G4double aluwrapthick, G4double vacthick);
 
   void SetSizeXY   (G4double);
@@ -66,6 +67,9 @@ public:
   void SetWorldMaterial (G4String);
   void SetCaloMaterial (G4String);
   void SetCrystalnumber (G4String);
+  void SetDipoleB (G4double);
+ void SetDipoleSize (G4ThreeVector);
+ void SetZtoCalo (G4double);
 
   void UpdateGeometry();
 
@@ -77,6 +81,7 @@ public:
   const G4VPhysicalVolume* GetVacStep2PV() const;
   const G4VPhysicalVolume* GetVacStep3PV() const;
   const G4VPhysicalVolume* GetVacStep4PV() const;
+  const G4VPhysicalVolume* GetBigVacPV() const;
   const G4VPhysicalVolume* GetDetectorPV() const;
   const G4VPhysicalVolume* GetAluwrapPV() const;
 
@@ -87,6 +92,9 @@ public:
   G4double           GetConvZ()   {return fConvThick;};
   G4Material*        GetMaterial()   {return fConvMaterial;};
   G4String           GetCrystalNumber(){return CrystalNumber;};
+  G4double           GetDipoleB() {return fDipoleB;};
+  G4ThreeVector      GetDipoleSize() {return fDipoleSize;};
+  G4double           GetZtoCalo() {return fZtoCalo;};
 
   void               PrintParameters();
 
@@ -99,6 +107,7 @@ private:
   G4VPhysicalVolume*   fVacStepPV2;
   G4VPhysicalVolume*   fVacStepPV3;
   G4VPhysicalVolume*   fVacStepPV4;
+  G4VPhysicalVolume*   fBigVacPV;
   G4VPhysicalVolume*   fDetectorPV;
   G4LogicalVolume*     fDetectorLV;
   G4VPhysicalVolume*   fAluwrapPV;
@@ -111,11 +120,14 @@ private:
   G4double              fCoreThick;
   G4double              fConvThick;
   G4double              fWorldSize;
+  G4double              fDipoleB;
+  G4ThreeVector              fDipoleSize;
+  G4double         fZtoCalo;
   G4Material*           fConvMaterial;
   G4Material*           fWorldMaterial;
   G4Material*           fCaloMaterial;
   G4LogicalVolume*     fLogicalDipol;
-  
+
   DetectorMessenger* fMessenger;
 
   G4String versionType;
@@ -137,6 +149,9 @@ inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep3PV() const {
 }
 inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep4PV() const {
   return fVacStepPV4;
+}
+inline const G4VPhysicalVolume* DetectorConstruction::GetBigVacPV() const {
+  return fBigVacPV;
 }
 inline const G4VPhysicalVolume* DetectorConstruction::GetDetectorPV() const {
   return fDetectorPV;
