@@ -38,6 +38,7 @@
 #include "G4UIcmdWithAString.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithoutParameter.hh"
+#include "G4UIcmdWith3VectorAndUnit.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -90,6 +91,25 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fCrystalnumberCmd->SetParameterName("choice",false);
   fCrystalnumberCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+  fDipoleBCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/SetDipoleB",this);
+  fDipoleBCmd->SetGuidance("Set y-value of dipole magnetic field");
+  fDipoleBCmd->SetParameterName("B-Value",false);
+  fDipoleBCmd->SetUnitCategory("Magnetic Field");
+  fDipoleBCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fDipoleSizeCmd = new G4UIcmdWith3VectorAndUnit("/leap/det/SetDipoleSize",this);
+  fDipoleSizeCmd->SetGuidance("Set (x,y,z)-length of the dipole magnetic field");
+  fDipoleSizeCmd->SetParameterName("DipoleSizeX","DipoleSizeY","DipoleSizeZ",false);
+  fDipoleSizeCmd->SetUnitCategory("Length");
+  fDipoleSizeCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fZtoCaloCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/SetZtoCalo",this);
+  fZtoCaloCmd->SetGuidance("Set Z distance to Calorimeter");
+  fZtoCaloCmd->SetParameterName("ZtoCalo",false);
+  fZtoCaloCmd->SetRange("ZtoCalo>=0.");
+  fZtoCaloCmd->SetUnitCategory("Length");
+  fZtoCaloCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -104,6 +124,9 @@ DetectorMessenger::~DetectorMessenger()
   delete fDetDir;
   delete fLeapDir;
   delete fCrystalnumberCmd;
+  delete fDipoleBCmd;
+  delete fDipoleSizeCmd;
+  delete fZtoCaloCmd;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -127,6 +150,16 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 
  if( command == fCrystalnumberCmd )
    { fDetector->SetCrystalnumber(newValue);}
+
+   if( command == fDipoleBCmd )
+      { fDetector->SetDipoleB(fDipoleBCmd->GetNewDoubleValue(newValue));}
+
+    if( command == fDipoleSizeCmd )
+      { fDetector->SetDipoleSize(fDipoleSizeCmd->GetNew3VectorValue(newValue));}
+
+    if( command == fZtoCaloCmd )
+      { fDetector->SetZtoCalo(fZtoCaloCmd->GetNewDoubleValue(newValue));}
+
 
 
 }
