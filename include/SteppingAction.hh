@@ -55,6 +55,7 @@ public:
 private:
   G4String outputType;
   G4String versionType;
+  G4String dipolStatus;
   int tupleID;
 
   DetectorConstruction*   fDetector;

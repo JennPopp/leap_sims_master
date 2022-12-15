@@ -59,6 +59,7 @@ RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim,
 : G4UserRunAction(),
    fDetector(det), fPrimary(prim),fProcCounter(0), fAnalysisManager(0)
 {
+  dipolStatus = dipolState;
   outFileName=outFile;
   outputType=outType;
   versionType=version;
@@ -138,6 +139,11 @@ void RunAction::BookHisto()
        //id=1 if Cal else 3
        BookSingleCalTuple("calorimeterIn", "vacstep4");
     } // end of if version
+
+    if(dipolStatus=="On"){
+      //id=4 if PolCal else 2
+      BookSingleTuple("dipoleVac","BigVac");
+    } // end if dipolStatus
    } // end of if single
   } // end of BookHisto
 

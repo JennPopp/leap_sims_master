@@ -61,6 +61,7 @@ SteppingAction::SteppingAction(DetectorConstruction* det,
    fDetector(det), fRunAction(ruAct),fEventAction(eventAction){
 outputType=outType;
 versionType=version;
+dipolStatus = dipolState;
  }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -105,7 +106,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
            // get analysis manager
            auto Ee=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
            fEventAction->AddeVals(Ee,1);}
-    }
+    } // end if version pol|polcal
 
 
    if(versionType=="Cal" || versionType=="PolCal"){
@@ -134,30 +135,28 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       // else if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == -11){
       //                 aTrack->SetTrackStatus(fStopAndKill);}
 
-    }
+    } // end if version cal|polcal
 
 
-   }
+  } // end if type bunch
 
   else if (outputType == "single"){
     if (versionType=="Pol" || versionType=="PolCal"){
       auto VacStep1PV=fDetector->GetVacStep1PV();
       auto VacStep2PV=fDetector->GetVacStep2PV();
+
       if ( postvolume == VacStep1PV && prevolume !=VacStep1PV ) {
         tupleID = 0;
         WriteSingleEntry(tupleID, aStep);
+        }
 
-    //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
-       }
+      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
+        tupleID = 1;
+        WriteSingleEntry(tupleID, aStep);
+      }
 
-       if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
-         tupleID = 1;
-         WriteSingleEntry(tupleID, aStep);
+    } // end if version pol|polcal
 
-
-      //G4cout<< " This part of the code you are currently testing is executed"  << G4endl;
-         }
-    }
     if (versionType=="Cal" || versionType == "PolCal"){
       auto VacStep3PV=fDetector->GetVacStep3PV();
       auto VacStep4PV=fDetector->GetVacStep4PV();
@@ -190,8 +189,18 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
                 }
 
 */
-      }
-    }
+      }  // end if version cal|polcal
+
+      if (dipolStatus == "On"){
+        if (versionType == "PolCal"){
+          tupleID = 4;
+        }
+        else{
+          tupleID = 2;
+        }
+      } // end if DipolStatus
+
+    } // end if outType=single
   }
 
 

@@ -67,9 +67,10 @@ private:
   void BookHisto();
   void SaveHisto(G4int nevents);
 
-G4String outFileName;
-G4String outputType;
-G4String versionType;
+  G4String outFileName;
+  G4String outputType;
+  G4String versionType;
+  G4String dipolStatus;
 
   DetectorConstruction*   fDetector;
   PrimaryGeneratorAction* fPrimary;
