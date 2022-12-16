@@ -192,16 +192,30 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       }  // end if version cal|polcal
 
       if (dipolStatus == "On"){
-        if (versionType == "PolCal"){
-          tupleID = 4;
-        }
-        else{
-          tupleID = 2;
-        }
-      } // end if DipolStatus
+        auto DipoleVacPV = fDetector->GetBigVacPV();
+        auto DipoleVac2PV = fDetector->GetBigVac2PV();
+        if( postvolume == DipoleVacPV && prevolume !=DipoleVacPV && aStep->GetPostStepPoint()->GetMomentumDirection().z()>0.) {
+          if (versionType == "PolCal"){
+            tupleID = 4;
+          }
+          else {
+            tupleID = 2;
+          }
+          WriteSingleEntry(tupleID, aStep);
+        } // end if postvolume = DipoleVacPV
+        if( postvolume == DipoleVac2PV && prevolume !=DipoleVac2PV && aStep->GetPostStepPoint()->GetMomentumDirection().z()>0.) {
+          if (versionType == "PolCal"){
+            tupleID = 5;
+          }
+          else {
+            tupleID = 3;
+          }
+          WriteSingleEntry(tupleID, aStep);
+        } // end if postvolume = DipoleVacPV
+     } // end if DipolStatus
 
     } // end if outType=single
-  }
+  } // end UserSteppingAction
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -188,18 +188,30 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                        0);
 
     auto solidBigVac = new G4Box("BigVacSolid",  //Name
-                                  fWorldSize/2.,   // x size
-                                  fWorldSize/2.,     // y size
-                                  1.*mm); // z size
+                                  75.*cm,   // x size
+                                  75.*cm,     // y size
+                                  1.*mm/2.); // z size
 
     auto BigVacLV = new G4LogicalVolume(solidBigVac,    //its solid
                                           fWorldMaterial,    //its material
                                           "BigVac");       //its name
 
     fBigVacPV = new G4PVPlacement(0,                   //no rotation
-                          G4ThreeVector(0.0*mm, 0.0*mm, dipolZpos+1.0*mm),    //its position
+                          G4ThreeVector(0.0*mm, 0.0*mm, dipolZpos-fDipoleSize[2]/2-1.0*mm),    //its position
                                   BigVacLV,            //its logical volume
                                   "BigVacPV",                 //its name
+                                  LogicalWorld,               //its mother
+                                  false,                     //no boolean operat
+                                  0);                       //copy number
+
+    auto BigVacLV2 = new G4LogicalVolume(solidBigVac,    //its solid
+                                          fWorldMaterial,    //its material
+                                          "BigVac2");       //its name
+
+    fBigVacPV2 = new G4PVPlacement(0,                   //no rotation
+                          G4ThreeVector(0.0*mm, 0.0*mm, dipolZpos+fDipoleSize[2]/2+1.0*mm),    //its position
+                                  BigVacLV,            //its logical volume
+                                  "BigVacPV2",                 //its name
                                   LogicalWorld,               //its mother
                                   false,                     //no boolean operat
                                   0);                       //copy number

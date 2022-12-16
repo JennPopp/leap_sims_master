@@ -82,6 +82,7 @@ public:
   const G4VPhysicalVolume* GetVacStep3PV() const;
   const G4VPhysicalVolume* GetVacStep4PV() const;
   const G4VPhysicalVolume* GetBigVacPV() const;
+  const G4VPhysicalVolume* GetBigVac2PV() const;
   const G4VPhysicalVolume* GetDetectorPV() const;
   const G4VPhysicalVolume* GetAluwrapPV() const;
 
@@ -108,6 +109,7 @@ private:
   G4VPhysicalVolume*   fVacStepPV3;
   G4VPhysicalVolume*   fVacStepPV4;
   G4VPhysicalVolume*   fBigVacPV;
+  G4VPhysicalVolume*   fBigVacPV2;
   G4VPhysicalVolume*   fDetectorPV;
   G4LogicalVolume*     fDetectorLV;
   G4VPhysicalVolume*   fAluwrapPV;
@@ -152,6 +154,9 @@ inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep4PV() const {
 }
 inline const G4VPhysicalVolume* DetectorConstruction::GetBigVacPV() const {
   return fBigVacPV;
+}
+inline const G4VPhysicalVolume* DetectorConstruction::GetBigVac2PV() const {
+  return fBigVacPV2;
 }
 inline const G4VPhysicalVolume* DetectorConstruction::GetDetectorPV() const {
   return fDetectorPV;
