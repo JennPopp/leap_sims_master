@@ -6,16 +6,19 @@
 /random/setSeeds 57630758  32767
 /run/printProgress 1
 
-/run/initialize
+
 
 #-----------geometry-----------------------------
 /leap/det/SetCoreThick 75 mm
 /leap/det/SetConvThick 1.75 mm
-/leap/det/update
+#/leap/det/update
+
+/run/initialize
 
 /polarization/manager/verbose 1
 /polarization/volume/set IronCore 0. 0. 1
 /polarization/volume/list
+
 
 #-----------particle-gunlike-------------------------------
 /gps/energy 25 MeV
