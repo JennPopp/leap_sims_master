@@ -20,12 +20,12 @@ public:
   RunActionMessenger(RunAction*);
   virtual ~RunActionMessenger();
 
-//  virtual void SetNewValue(G4UIcommand*, G4String);
+  virtual void SetNewValue(G4UIcommand*, G4String);
 
 private:
   RunAction*            fRun;
 
-  //G4UIdirectory*        fRunDir;
+  G4UIdirectory*        fRunDir;
   //G4UIcmdWith3Vector*   fAccCmd;
   //G4UIcmdWithAnInteger* fVerbCmd;
 };
