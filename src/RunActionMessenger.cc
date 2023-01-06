@@ -10,7 +10,7 @@
 
 RunActionMessenger::RunActionMessenger(RunAction* run)
 :G4UImessenger(),fRun(run),
- fRunDir(0),
+ fRunDir(0)
  // fAccCmd(0),
  // fVerbCmd(0)
 {

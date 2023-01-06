@@ -29,3 +29,7 @@ private:
   //G4UIcmdWith3Vector*   fAccCmd;
   //G4UIcmdWithAnInteger* fVerbCmd;
 };
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+#endif
