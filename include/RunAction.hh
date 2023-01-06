@@ -44,6 +44,7 @@
 
 class DetectorConstruction;
 class PrimaryGeneratorAction;
+class RunActionMessenger;
 class G4Run;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -61,6 +62,12 @@ public:
 
   void CountProcesses(G4String);
 
+  void SetCore1Stat(G4bool);
+  void SetCore2Stat(G4bool);
+  void SetDipole1Stat(G4bool);
+  void SetDipole2Stat(G4bool);
+  void SetCal1Stat(G4bool);
+  void SetCal2Stat(G4bool);
 
 private:
 
@@ -75,12 +82,17 @@ private:
   DetectorConstruction*   fDetector;
   PrimaryGeneratorAction* fPrimary;
   ProcessesCount*         fProcCounter;
-
+  RunActionMessenger*     fRunMessenger;
   G4AnalysisManager*      fAnalysisManager;
 
   G4int fTotalEventCount;
 
-
+  G4int fCore1Stat;
+  G4int fCore2Stat;
+  G4int fDipole1Stat;
+  G4int fDipole2Stat;
+  G4int fCal1Stat;
+  G4int fCal2Stat;
 
 
 };

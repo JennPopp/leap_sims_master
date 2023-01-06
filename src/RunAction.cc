@@ -32,6 +32,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "RunAction.hh"
+#include "RunActionMessenger.hh"
 #include "G4AnalysisManager.hh"
 
 #include "DetectorConstruction.hh"
@@ -57,8 +58,11 @@
 RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim,
   G4String outFile, G4String outType, G4String version, G4String dipolState)
 : G4UserRunAction(),
-   fDetector(det), fPrimary(prim),fProcCounter(0), fAnalysisManager(0)
+   fDetector(det), fPrimary(prim),fProcCounter(0), fAnalysisManager(0),fCore1Stat(1),fCore2Stat(1),fDipole1Stat(1),fDipole2Stat(1),fCal1Stat(1),fCal2Stat(1)
 {
+  fRunMessenger = new RunActionMessenger(this);
+
+
   dipolStatus = dipolState;
   outFileName=outFile;
   outputType=outType;
@@ -212,6 +216,9 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
   fAnalysisManager->Write();
   fAnalysisManager->CloseFile();
 
+G4cout << "....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......" << G4endl;
+G4cout << "Core1 vactep state: " <<  fCore1Stat << G4endl;
+G4cout << "....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......" << G4endl;
 
   G4cout << "### Run " << aRun->GetRunID() << " Ended." << G4endl;
 }
@@ -219,3 +226,34 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+
+void RunAction::SetCore1Stat(G4bool value)
+{
+  fCore1Stat = value;
+}
+
+void RunAction::SetCore2Stat(G4bool value)
+{
+  fCore2Stat = value;
+}
+
+void RunAction::SetDipole1Stat(G4bool value)
+{
+  fDipole1Stat = value;
+}
+
+void RunAction::SetDipole2Stat(G4bool value)
+{
+  fDipole2Stat = value;
+}
+
+void RunAction::SetCal1Stat(G4bool value)
+{
+  fCal1Stat = value;
+}
+
+void RunAction::SetCal2Stat(G4bool value)
+{
+  fCal2Stat = value;
+}

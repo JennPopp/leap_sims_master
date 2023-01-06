@@ -6,11 +6,7 @@
 
 class RunAction;
 class G4UIdirectory;
-/* add depending on Gui commands needed
-class G4UIcmdWithAString;
-class G4UIcmdWith3Vector;
-class G4UIcmdWithAnInteger;
-*/
+class G4UIcmdWithABool;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -26,8 +22,12 @@ private:
   RunAction*            fRun;
 
   G4UIdirectory*        fRunDir;
-  //G4UIcmdWith3Vector*   fAccCmd;
-  //G4UIcmdWithAnInteger* fVerbCmd;
+  G4UIcmdWithABool* fCore1StatCmd;
+  G4UIcmdWithABool* fCore2StatCmd;
+  G4UIcmdWithABool* fDipole1StatCmd;
+  G4UIcmdWithABool* fDipole2StatCmd;
+  G4UIcmdWithABool* fCal1StatCmd;
+  G4UIcmdWithABool* fCal2StatCmd;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
