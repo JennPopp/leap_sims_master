@@ -42,7 +42,6 @@ target_link_libraries(leap_sims ${Geant4_LIBRARIES} )
 # relies on these scripts being in the current working directory.
 #
 set(LEAP_SIMS_SCRIPTS
-    heprep2.mac
     vis.mac
     init_vis.mac
     gui.mac
