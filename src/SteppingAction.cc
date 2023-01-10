@@ -86,6 +86,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   auto aTrack = aStep->GetTrack();
 
   //G4TouchableHistory* theTouchable = (G4TouchableHistory*)(aStep->GetPostStepPoint()->GetTouchable());
+  auto core1stat = fRunAction->GetCore1Stat();
+  auto core2stat = fRunAction->GetCore2Stat();
+  auto dipole1stat = fRunAction->GetDipole1Stat();
+  auto dipole2stat = fRunAction->GetDipole2Stat();
+  auto cal1stat = fRunAction->GetCal1Stat();
+  auto cal2stat = fRunAction->GetCal2Stat();  
 
   auto fAnalysisManager = G4AnalysisManager::Instance();
 

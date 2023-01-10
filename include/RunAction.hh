@@ -69,6 +69,13 @@ public:
   void SetCal1Stat(G4bool);
   void SetCal2Stat(G4bool);
 
+  G4bool GetCore1Stat() const;
+  G4bool GetCore2Stat() const;
+  G4bool GetDipole1Stat() const;
+  G4bool GetDipole2Stat() const;
+  G4bool GetCal1Stat() const;
+  G4bool GetCal2Stat() const;
+
 private:
 
   void BookHisto();
@@ -87,17 +94,35 @@ private:
 
   G4int fTotalEventCount;
 
-  G4int fCore1Stat;
-  G4int fCore2Stat;
-  G4int fDipole1Stat;
-  G4int fDipole2Stat;
-  G4int fCal1Stat;
-  G4int fCal2Stat;
+  G4bool fCore1Stat;
+  G4bool fCore2Stat;
+  G4bool fDipole1Stat;
+  G4bool fDipole2Stat;
+  G4bool fCal1Stat;
+  G4bool fCal2Stat;
 
 
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+inline G4bool RunAction::GetCore1Stat() const {
+  return fCore1Stat;
+}
+inline G4bool RunAction::GetCore2Stat() const {
+  return fCore2Stat;
+}
+inline G4bool RunAction::GetDipole1Stat() const {
+  return fDipole1Stat;
+}
+inline G4bool RunAction::GetDipole2Stat() const {
+  return fDipole2Stat;
+}
+inline G4bool RunAction::GetCal1Stat() const {
+  return fCal1Stat;
+}
+inline G4bool RunAction::GetCal2Stat() const {
+  return fCal2Stat;
+}
 
 
 #endif

@@ -218,6 +218,11 @@ void RunAction::EndOfRunAction(const G4Run* aRun)
 
 G4cout << "....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......" << G4endl;
 G4cout << "Core1 vactep state: " <<  fCore1Stat << G4endl;
+G4cout << "Core2 vactep state: " <<  fCore2Stat << G4endl;
+G4cout << "Dipole1 vactep state: " <<  fDipole1Stat << G4endl;
+G4cout << "Dipole2 vactep state: " <<  fDipole2Stat << G4endl;
+G4cout << "Cal1 vactep state: " <<  fCal1Stat << G4endl;
+G4cout << "Cal2 vactep state: " <<  fCal2Stat << G4endl;
 G4cout << "....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......" << G4endl;
 
   G4cout << "### Run " << aRun->GetRunID() << " Ended." << G4endl;
