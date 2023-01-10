@@ -40,8 +40,17 @@
      e.g., for a y-z plane at x = 1 cm:
      `/vis/viewer/set/sectionPlane on 1 0 0 cm 1 0 0`
 
-  HepRApp is no longer supported by the latest Java versions, they ran out of funding. 
+  HepRApp is no longer supported by the latest Java versions, they ran out of funding.
 
   ### Some useful detector commands
   1. To set the number of calorimeter crystals use `/leap/det/Setnumberofcrystals`.
      choose either `one` for one centered crystals of `nine` for a matrix of nine crystals. The default is `one`!
+  2. It is possible to switch the individual detector areas on and off.
+    The corresponding command is: `/leap/run/Set[DetName]State [boolean value]`
+    Where the detector names are:
+     * Core1 (between converter target and core)
+     * Core2  (directly behind the iron absorber)
+     * Dipole1 (large plane in front of the dipole)
+     * Dipole2 (large plane behind the dipole)
+     * Cal1 (attached to the front plane of the calorimeter)
+     * Cal2 (attached to the back plane of the calorimeter)
