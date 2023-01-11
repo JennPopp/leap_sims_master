@@ -210,7 +210,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
     fBigVacPV2 = new G4PVPlacement(0,                   //no rotation
                           G4ThreeVector(0.0*mm, 0.0*mm, dipolZpos+fDipoleSize[2]/2+1.0*mm),    //its position
-                                  BigVacLV,            //its logical volume
+                                  BigVacLV2,            //its logical volume
                                   "BigVacPV2",                 //its name
                                   LogicalWorld,               //its mother
                                   false,                     //no boolean operat
