@@ -113,12 +113,12 @@ oss << "run"<< aRun->GetRunID()<< "_"<< outFileName ;
 void RunAction::BookHisto()
 {
   if (outputType == "bunch"){
-    if(versionType=="Pol" || versionType=="PolCal"){
+    if((versionType=="Pol" || versionType=="PolCal")&&fCore2Stat==1){
      // book ntuple with id=0
      // detector behind iron absorber
      BookBunchTuple("bremssim2", "vacstep2");
      }
-    if(versionType=="Cal" || versionType=="PolCal"){
+    if((versionType=="Cal" || versionType=="PolCal")&&(fCal1Stat==1 || fCal2Stat==1)){
       // ntuple with id 0 if Cal else 1
      BookBunchCalTuple("calorimeter", "crystal_vacstep3");
      // histrogramm id=0
@@ -130,25 +130,28 @@ void RunAction::BookHisto()
     if(versionType=="Pol" || versionType=="PolCal"){
       // Creating ntuple vacstep1 , id=0
       //detector between converter and iron core
-       BookSingleTuple("bremssim1","vacstep1");
+       if (fCore1Stat==1){BookSingleTuple("bremssim1","vacstep1");}
       // Creating ntuple vacstep2 , id=1
       // detector behind iron core
-       BookSingleTuple("bremssim2","vacstep2");
+       if (fCore2Stat==1){BookSingleTuple("bremssim2","vacstep2");}
     }// end of if version
 
     if(versionType=="Cal" || versionType=="PolCal"){
+
        //id=0 if Cal else 2
-       BookSingleCalTuple("calorimeter", "vacstep3");
+       if(fCal2Stat==1){
+         BookSingleCalTuple("calorimeter", "vacstep3");
+       }
 
        //id=1 if Cal else 3
-       BookSingleCalTuple("calorimeterIn", "vacstep4");
+       if(fCal1Stat==1){BookSingleCalTuple("calorimeterIn", "vacstep4");}
     } // end of if version
 
     if(dipolStatus=="On"){
       //id=4 if PolCal else 2
-      BookSingleTuple("dipoleVac","BigVac");
+      if(fDipole1Stat==1){BookSingleTuple("dipoleVac","BigVac");}
       //id=5 if PolCal else 3
-      BookSingleTuple("dipoleVac2","BigVac2");
+      if(fDipole2Stat==1){BookSingleTuple("dipoleVac2","BigVac2");}
     } // end if dipolStatus
    } // end of if single
   } // end of BookHisto

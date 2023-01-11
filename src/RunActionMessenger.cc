@@ -40,7 +40,7 @@ RunActionMessenger::RunActionMessenger(RunAction* run)
   fCal1StatCmd->SetParameterName("detector state",false);
   fCal1StatCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fCal2StatCmd = new G4UIcmdWithABool("/leap/run/SetDipole1Stat",this);
+  fCal2StatCmd = new G4UIcmdWithABool("/leap/run/SetCal2Stat",this);
   fCal2StatCmd->SetGuidance("set detector status for Cal2 vacstep");
   fCal2StatCmd->SetParameterName("detector state",false);
   fCal2StatCmd->AvailableForStates(G4State_PreInit,G4State_Idle);

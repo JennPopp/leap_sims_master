@@ -91,7 +91,11 @@ void EventAction::EndOfEventAction(const G4Event*)
     // get analysis manager
     auto analysisManager = G4AnalysisManager::Instance();
 
-    if(versionType=="Pol" || versionType=="PolCal"){
+    auto core2stat = fRunAction->GetCore2Stat();
+    auto cal1stat = fRunAction->GetCal1Stat();
+    auto cal2stat = fRunAction->GetCal2Stat();
+
+    if((versionType=="Pol" || versionType=="PolCal") && core2stat==1){
     // fill ntuple id=0
     //G4cout <<  "\033[1;31m tupleID == 0 \033[0m\n";
      analysisManager->FillNtupleDColumn(0,0, fEnergySum);
@@ -102,7 +106,7 @@ void EventAction::EndOfEventAction(const G4Event*)
      analysisManager->FillNtupleIColumn(0,5, fNElectron);
      analysisManager->AddNtupleRow(0);
     }
-    if(versionType=="Cal"|| versionType=="PolCal"){
+    if((versionType=="Cal"|| versionType=="PolCal")&&(cal1stat==1 || cal2stat==1)){
 
       if (versionType=="Cal"){
         tupleID = 0;

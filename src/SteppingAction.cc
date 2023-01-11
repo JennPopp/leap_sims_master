@@ -91,13 +91,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   auto dipole1stat = fRunAction->GetDipole1Stat();
   auto dipole2stat = fRunAction->GetDipole2Stat();
   auto cal1stat = fRunAction->GetCal1Stat();
-  auto cal2stat = fRunAction->GetCal2Stat();  
+  auto cal2stat = fRunAction->GetCal2Stat();
 
   auto fAnalysisManager = G4AnalysisManager::Instance();
 
   if (outputType == "bunch"){
    // now separating the differnt versions
-   if(versionType=="Pol" || versionType=="PolCal"){
+   if((versionType=="Pol" || versionType=="PolCal") && core1stat==1){
      auto VacStep2PV=fDetector->GetVacStep2PV();
      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
             // get analysis manager
@@ -115,7 +115,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     } // end if version pol|polcal
 
 
-   if(versionType=="Cal" || versionType=="PolCal"){
+   if((versionType=="Cal" || versionType=="PolCal")&&(cal1stat==1 || cal2stat==1)){
       auto CrystalPV=fDetector->GetDetectorPV();
       auto VacStep3PV=fDetector->GetVacStep3PV();
       auto VacStep4PV=fDetector->GetVacStep4PV();
@@ -125,17 +125,17 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             auto edep = aStep->GetTotalEnergyDeposit();
             fEventAction->AddEnergyCalo(edep);}
 
-      if (postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
+      if (cal2stat==1 && postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
             auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
             fEventAction->AddPhotonEnergy(ephot);   // here the Photon Energy will be added up
             fAnalysisManager->FillH1(0, ephot);}
 
 
-      if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22){
+      if (cal1stat==1 && postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22){
             auto egamma = aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
             fEventAction->AddGammaEnergy(egamma);}
 
-      // here I kill the eletrons
+      // here I kill the electrons
       //if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)){
       //                aTrack->SetTrackStatus(fStopAndKill);}
       // else if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == -11){
@@ -151,12 +151,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       auto VacStep1PV=fDetector->GetVacStep1PV();
       auto VacStep2PV=fDetector->GetVacStep2PV();
 
-      if ( postvolume == VacStep1PV && prevolume !=VacStep1PV ) {
+      if (core1stat==1 &&  postvolume == VacStep1PV && prevolume !=VacStep1PV ) {
         tupleID = 0;
         WriteSingleEntry(tupleID, aStep);
         }
 
-      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
+      if (core2stat==1 && postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
         tupleID = 1;
         WriteSingleEntry(tupleID, aStep);
       }
@@ -168,18 +168,19 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       auto VacStep4PV=fDetector->GetVacStep4PV();
       auto AluwrapPV =fDetector->GetAluwrapPV();
 
-      if ( postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
+      if ( cal2stat==1 && postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
           if (versionType=="Cal"){
             tupleID = 0;
           }
           else {
             tupleID = 2;
           }
+
           WriteSingleCalEntry(tupleID, aStep);
 
           }
 
-      if( postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
+      if( cal1stat==1 && postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
 
         if (versionType=="Cal"){
           tupleID = 1;
@@ -200,7 +201,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if (dipolStatus == "On"){
         auto DipoleVacPV = fDetector->GetBigVacPV();
         auto DipoleVac2PV = fDetector->GetBigVac2PV();
-        if( postvolume == DipoleVacPV && prevolume !=DipoleVacPV && aStep->GetPostStepPoint()->GetMomentumDirection().z()>0.) {
+        if( dipole1stat==1 && postvolume == DipoleVacPV && prevolume !=DipoleVacPV && aStep->GetPostStepPoint()->GetMomentumDirection().z()>0.) {
           if (versionType == "PolCal"){
             tupleID = 4;
           }
@@ -209,7 +210,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           }
           WriteSingleEntry(tupleID, aStep);
         } // end if postvolume = DipoleVacPV
-        if( postvolume == DipoleVac2PV && prevolume !=DipoleVac2PV && aStep->GetPostStepPoint()->GetMomentumDirection().z()>0.) {
+        if( dipole2stat==1 && postvolume == DipoleVac2PV && prevolume !=DipoleVac2PV && aStep->GetPostStepPoint()->GetMomentumDirection().z()>0.) {
           if (versionType == "PolCal"){
             tupleID = 5;
           }
