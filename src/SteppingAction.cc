@@ -222,6 +222,21 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
      } // end if DipolStatus
 
     } // end if outType=single
+
+  else if (outputType == "histo"){
+    if (dipolStatus == "On"){
+      auto DipoleVacPV = fDetector->GetBigVacPV();
+
+      if( dipole1stat==1 && postvolume == DipoleVacPV && prevolume !=DipoleVacPV && aStep->GetPostStepPoint()->GetMomentumDirection().z()>0.) {
+
+        fAnalysisManager->FillH3(0,  // histogram ID
+                    aStep->GetTrack()->GetPolarization().x(),
+                    aStep->GetTrack()->GetPolarization().y(),
+                    aStep->GetTrack()->GetPolarization().z());
+         } // end if step ends in dipol1Det
+        } // end if dipol
+      } // end if outType = histo
+
   } // end UserSteppingAction
 
 

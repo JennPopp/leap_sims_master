@@ -154,6 +154,18 @@ void RunAction::BookHisto()
       if(fDipole2Stat==1){BookSingleTuple("dipoleVac2","BigVac2");}
     } // end if dipolStatus
    } // end of if single
+   else if (outputType == "histo" && dipolStatus=="On"){
+     //create H1s for Energy -> for dipole1/2 and gamma,e- and e+
+      //fAnalysisManager->CreateH1("Ee-Dip1","Ee- in Dipole1Det;E / MeV; counts", 1000, 0.,Eprim*MeV);
+
+    //create H3s for Polarization information -> for dipole1/2 and gamma,e- and e+
+    auto nbinsPol=100;
+    auto minPol=-1.;
+    auto maxPol=1.;
+    fAnalysisManager->CreateH3("Polgamma-Dip1", "Pol_gamma in Dipole1Det",nbinsPol,minPol,maxPol,nbinsPol,minPol,maxPol,nbinsPol,minPol,maxPol);
+    fAnalysisManager->CreateH3("Pole--Dip1")
+
+   }
   } // end of BookHisto
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
