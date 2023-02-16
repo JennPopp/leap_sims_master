@@ -157,70 +157,80 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
         }
 
       if (core2stat==1 && postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
-        tupleID = 1;
+        tupleID = core1stat;
         WriteSingleEntry(tupleID, aStep);
       }
 
     } // end if version pol|polcal
 
-    if (versionType=="Cal" || versionType == "PolCal"){
-      auto VacStep3PV=fDetector->GetVacStep3PV();
-      auto VacStep4PV=fDetector->GetVacStep4PV();
-      auto AluwrapPV =fDetector->GetAluwrapPV();
-
-      if ( cal2stat==1 && postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
-          if (versionType=="Cal"){
-            tupleID = 0;
-          }
-          else {
-            tupleID = 2;
-          }
-
-          WriteSingleCalEntry(tupleID, aStep);
-
-          }
-
-      if( cal1stat==1 && postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
-
-        if (versionType=="Cal"){
-          tupleID = 1;
-        }
-        else {
-          tupleID = 3;
-        }
-        WriteSingleCalEntry(tupleID, aStep);
-      }
-      /*
-      if(postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)) {
-                  aTrack->SetTrackStatus(fStopAndKill);
-                }
-
-*/
-      }  // end if version cal|polcal
-
       if (dipolStatus == "On"){
         auto DipoleVacPV = fDetector->GetBigVacPV();
         auto DipoleVac2PV = fDetector->GetBigVac2PV();
         if( dipole1stat==1 && postvolume == DipoleVacPV && prevolume !=DipoleVacPV && aStep->GetPostStepPoint()->GetMomentumDirection().z()>0.) {
-          if (versionType == "PolCal"){
-            tupleID = 4;
+          if (versionType == "Pol" || versionType == "PolCal"){
+            tupleID = core1stat+core2stat;
           }
           else {
-            tupleID = 2;
+            tupleID = 0;
           }
           WriteSingleEntry(tupleID, aStep);
         } // end if postvolume = DipoleVacPV
         if( dipole2stat==1 && postvolume == DipoleVac2PV && prevolume !=DipoleVac2PV && aStep->GetPostStepPoint()->GetMomentumDirection().z()>0.) {
-          if (versionType == "PolCal"){
-            tupleID = 5;
+          if (versionType == "Pol" || versionType == "PolCal"){
+            tupleID = core1stat+core2stat+dipole1stat;
           }
           else {
-            tupleID = 3;
+            tupleID = dipole1stat;
           }
           WriteSingleEntry(tupleID, aStep);
         } // end if postvolume = DipoleVacPV
      } // end if DipolStatus
+     if (versionType=="Cal" || versionType == "PolCal"){
+       auto VacStep3PV=fDetector->GetVacStep3PV();
+       auto VacStep4PV=fDetector->GetVacStep4PV();
+       auto AluwrapPV =fDetector->GetAluwrapPV();
 
+       if ( cal2stat==1 && postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
+           if (versionType=="Cal" && dipolStatus=="Off"){
+             tupleID = 0;
+           }
+           else if (versionType=="Cal" && dipolStatus=="On"){
+             tupleID = dipole1stat + dipole2stat;
+           }
+           else if (versionType=="PolCal" && dipolStatus=="Off"){
+             tupleID = core1stat + core2stat;
+           }
+           else {
+             tupleID = core1stat + core2stat + dipole1stat + dipole2stat;
+           }
+
+           WriteSingleCalEntry(tupleID, aStep);
+
+           }
+
+       if( cal1stat==1 && postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
+
+         if (versionType=="Cal" && dipolStatus=="Off"){
+           tupleID = cal1stat;
+         }
+         else if (versionType=="Cal" && dipolStatus=="On"){
+           tupleID = dipole1stat + dipole2stat + cal1stat;
+         }
+         else if (versionType=="PolCal" && dipolStatus=="Off"){
+           tupleID = core1stat + core2stat + cal1stat;
+         }
+         else {
+           tupleID = core1stat + core2stat + dipole1stat + dipole2stat + cal1stat;
+         }
+         WriteSingleCalEntry(tupleID, aStep);
+       }
+       /*
+       if(postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)) {
+                   aTrack->SetTrackStatus(fStopAndKill);
+                 }
+
+ */
+       }  // end if version cal|polcal
     } // end if outType=single
   } // end UserSteppingAction
 

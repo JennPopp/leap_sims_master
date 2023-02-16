@@ -136,6 +136,13 @@ void RunAction::BookHisto()
        if (fCore2Stat==1){BookSingleTuple("bremssim2","vacstep2");}
     }// end of if version
 
+    if(dipolStatus=="On"){
+      //id=4 if PolCal else 2
+      if(fDipole1Stat==1){BookSingleTuple("dipoleVac","BigVac");}
+      //id=5 if PolCal else 3
+      if(fDipole2Stat==1){BookSingleTuple("dipoleVac2","BigVac2");}
+    } // end if dipolStatus
+
     if(versionType=="Cal" || versionType=="PolCal"){
 
        //id=0 if Cal else 2
@@ -147,12 +154,7 @@ void RunAction::BookHisto()
        if(fCal1Stat==1){BookSingleCalTuple("calorimeterIn", "vacstep4");}
     } // end of if version
 
-    if(dipolStatus=="On"){
-      //id=4 if PolCal else 2
-      if(fDipole1Stat==1){BookSingleTuple("dipoleVac","BigVac");}
-      //id=5 if PolCal else 3
-      if(fDipole2Stat==1){BookSingleTuple("dipoleVac2","BigVac2");}
-    } // end if dipolStatus
+
    } // end of if single
   } // end of BookHisto
 
