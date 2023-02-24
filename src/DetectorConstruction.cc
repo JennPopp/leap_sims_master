@@ -215,6 +215,25 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                   LogicalWorld,               //its mother
                                   false,                     //no boolean operat
                                   0);                       //copy number
+
+    auto solidDipVac3 = new G4Box("BigVacSolid",  //Name
+                                  1.*mm/2,   // x size
+                                  360.*mm/2,     // y size
+                                  (dipoleGap+fDipoleSize[2]+fZtoCalo)/2); // z size
+
+    auto dipVac3LV = new G4LogicalVolume(solidDipVac3,    //its solid
+                                          fWorldMaterial,    //its material
+                                          "dipVac3");       //its name
+
+    fDipVac3PV = new G4PVPlacement(0,                   //no rotation
+                          G4ThreeVector(fDipoleSize[0]+1.*mm, 0.0*mm, dipolZpos),    //its position
+                                  dipVac3LV,            //its logical volume
+                                  "BigVacPV",                 //its name
+                                  LogicalWorld,               //its mother
+                                  false,                     //no boolean operat
+                                  0);                       //copy number
+
+
   } // endif dipol State
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -845,7 +864,8 @@ G4LogicalVolume* DetectorConstruction::ConstructDipol(){
 }
 
 void DetectorConstruction::PrintParameters()
-{ if(versionType=="Pol" || versionType=="PolCal"){
+{
+  if(versionType=="Pol" || versionType=="PolCal"){
   G4cout << "\n The ConverterTarget is made of " << fConvMaterial->GetName()
           << " , " << G4BestUnit(fSizeXY,"Length")<<  "in diameter and "
          <<  G4BestUnit(fConvThick,"Length") << " thick"
