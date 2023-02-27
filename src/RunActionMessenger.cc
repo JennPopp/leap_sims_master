@@ -9,7 +9,7 @@
 RunActionMessenger::RunActionMessenger(RunAction* run)
 :G4UImessenger(),fRun(run),
  fRunDir(0), fCore1StatCmd(0), fCore2StatCmd(0),fDipole1StatCmd(0),
- fDipole2StatCmd(0), fCal1StatCmd(0), fCal2StatCmd(0)
+ fDipole2StatCmd(0),fDipole3StatCmd(0), fCal1StatCmd(0), fCal2StatCmd(0)
 
 {
   fRunDir = new G4UIdirectory("/leap/run/");
@@ -35,6 +35,11 @@ RunActionMessenger::RunActionMessenger(RunAction* run)
   fDipole2StatCmd->SetParameterName("detector state",false);
   fDipole2StatCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+  fDipole3StatCmd = new G4UIcmdWithABool("/leap/run/SetDipole3Stat",this);
+  fDipole3StatCmd->SetGuidance("set detector status for Dipole3 vacstep");
+  fDipole3StatCmd->SetParameterName("detector state",false);
+  fDipole3StatCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
   fCal1StatCmd = new G4UIcmdWithABool("/leap/run/SetCal1Stat",this);
   fCal1StatCmd->SetGuidance("set detector status for Cal1 vacstep");
   fCal1StatCmd->SetParameterName("detector state",false);
@@ -54,6 +59,7 @@ RunActionMessenger::~RunActionMessenger()
   delete fCore2StatCmd;
   delete fDipole1StatCmd;
   delete fDipole2StatCmd;
+  delete fDipole3StatCmd;
   delete fCal1StatCmd;
   delete fCal2StatCmd;
   delete fRunDir;
@@ -74,6 +80,9 @@ void RunActionMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 
   if (command == fDipole2StatCmd )
     { fRun->SetDipole2Stat(fDipole2StatCmd->GetNewBoolValue(newValue));}
+
+    if (command == fDipole3StatCmd )
+      { fRun->SetDipole3Stat(fDipole3StatCmd->GetNewBoolValue(newValue));}
 
   if (command == fCal1StatCmd )
     { fRun->SetCal1Stat(fCal1StatCmd->GetNewBoolValue(newValue));}

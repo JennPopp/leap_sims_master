@@ -66,6 +66,7 @@ public:
   void SetCore2Stat(G4bool);
   void SetDipole1Stat(G4bool);
   void SetDipole2Stat(G4bool);
+  void SetDipole3Stat(G4bool);
   void SetCal1Stat(G4bool);
   void SetCal2Stat(G4bool);
 
@@ -73,13 +74,14 @@ public:
   G4bool GetCore2Stat() const;
   G4bool GetDipole1Stat() const;
   G4bool GetDipole2Stat() const;
+  G4bool GetDipole3Stat() const;
   G4bool GetCal1Stat() const;
   G4bool GetCal2Stat() const;
 
 private:
 
-  void BookHisto();
-  void SaveHisto(G4int nevents);
+  // void BookHisto();
+  // void SaveHisto(G4int nevents);
 
   G4String outFileName;
   G4String outputType;
@@ -98,6 +100,7 @@ private:
   G4bool fCore2Stat;
   G4bool fDipole1Stat;
   G4bool fDipole2Stat;
+  G4bool fDipole3Stat;
   G4bool fCal1Stat;
   G4bool fCal2Stat;
 
@@ -116,6 +119,9 @@ inline G4bool RunAction::GetDipole1Stat() const {
 }
 inline G4bool RunAction::GetDipole2Stat() const {
   return fDipole2Stat;
+}
+inline G4bool RunAction::GetDipole3Stat() const {
+  return fDipole3Stat;
 }
 inline G4bool RunAction::GetCal1Stat() const {
   return fCal1Stat;

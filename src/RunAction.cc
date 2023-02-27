@@ -57,8 +57,9 @@
 
 RunAction::RunAction(DetectorConstruction* det, PrimaryGeneratorAction* prim,
   G4String outFile, G4String outType, G4String version, G4String dipolState)
-: G4UserRunAction(),
-   fDetector(det), fPrimary(prim),fProcCounter(0), fAnalysisManager(0),fCore1Stat(1),fCore2Stat(1),fDipole1Stat(1),fDipole2Stat(1),fCal1Stat(1),fCal2Stat(1)
+: G4UserRunAction(), fDetector(det), fPrimary(prim),fProcCounter(0),
+  fAnalysisManager(0),fCore1Stat(1),fCore2Stat(1),fDipole1Stat(1),
+  fDipole2Stat(1),fDipole3Stat(1),fCal1Stat(1),fCal2Stat(1)
 {
   fRunMessenger = new RunActionMessenger(this);
 
@@ -136,6 +137,14 @@ void RunAction::BookHisto()
        if (fCore2Stat==1){BookSingleTuple("bremssim2","vacstep2");}
     }// end of if version
 
+    if(dipolStatus=="On"){
+      //id=4 if PolCal else 2
+      if(fDipole1Stat==1){BookSingleTuple("dipoleVac","BigVac");}
+      //id=5 if PolCal else 3
+      if(fDipole2Stat==1){BookSingleTuple("dipoleVac2","BigVac2");}
+      if(fDipole3Stat==1){BookSingleTuple("dipoleVac3","DipVac3");}
+    } // end if dipolStatus
+
     if(versionType=="Cal" || versionType=="PolCal"){
 
        //id=0 if Cal else 2
@@ -147,26 +156,8 @@ void RunAction::BookHisto()
        if(fCal1Stat==1){BookSingleCalTuple("calorimeterIn", "vacstep4");}
     } // end of if version
 
-    if(dipolStatus=="On"){
-      //id=4 if PolCal else 2
-      if(fDipole1Stat==1){BookSingleTuple("dipoleVac","BigVac");}
-      //id=5 if PolCal else 3
-      if(fDipole2Stat==1){BookSingleTuple("dipoleVac2","BigVac2");}
-    } // end if dipolStatus
+
    } // end of if single
-/*
-   else if (outputType == "histo" && dipolStatus=="On"){
-     //create H1s for Energy -> for dipole1/2 and gamma,e- and e+
-      //fAnalysisManager->CreateH1("Ee-Dip1","Ee- in Dipole1Det;E / MeV; counts", 1000, 0.,Eprim*MeV);
-
-    //create H3s for Polarization information -> for dipole1/2 and gamma,e- and e+
-    auto nbinsPol=100;
-    auto minPol=-1.;
-    auto maxPol=1.;
-    fAnalysisManager->CreateH3("Polgamma-Dip1", "Pol_gamma in Dipole1Det",nbinsPol,minPol,maxPol,nbinsPol,minPol,maxPol,nbinsPol,minPol,maxPol);
-    fAnalysisManager->CreateH3("Pole--Dip1")
-
-  }*/
   } // end of BookHisto
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
@@ -237,6 +228,7 @@ G4cout << "Core1 vactep state: " <<  fCore1Stat << G4endl;
 G4cout << "Core2 vactep state: " <<  fCore2Stat << G4endl;
 G4cout << "Dipole1 vactep state: " <<  fDipole1Stat << G4endl;
 G4cout << "Dipole2 vactep state: " <<  fDipole2Stat << G4endl;
+G4cout << "Dipole2 vactep state: " <<  fDipole3Stat << G4endl;
 G4cout << "Cal1 vactep state: " <<  fCal1Stat << G4endl;
 G4cout << "Cal2 vactep state: " <<  fCal2Stat << G4endl;
 G4cout << "....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......" << G4endl;
@@ -267,6 +259,11 @@ void RunAction::SetDipole1Stat(G4bool value)
 void RunAction::SetDipole2Stat(G4bool value)
 {
   fDipole2Stat = value;
+}
+
+void RunAction::SetDipole3Stat(G4bool value)
+{
+  fDipole3Stat = value;
 }
 
 void RunAction::SetCal1Stat(G4bool value)
