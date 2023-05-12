@@ -80,7 +80,7 @@ public:
 
 private:
 
-  // void BookHisto();
+  void BookHisto();
   // void SaveHisto(G4int nevents);
 
   G4String outFileName;

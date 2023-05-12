@@ -62,6 +62,7 @@ class DetectorMessenger: public G4UImessenger
     G4UIdirectory*             fLeapDir;
     G4UIdirectory*             fDetDir;
     G4UIcmdWithAString*        fConvMaterCmd;
+    G4UIcmdWithAString*        fWorldMaterCmd;
     G4UIcmdWithADoubleAndUnit* fConvZCmd;
     G4UIcmdWithADoubleAndUnit* fCoreZCmd;
     G4UIcmdWithADoubleAndUnit* fSizeXYCmd;

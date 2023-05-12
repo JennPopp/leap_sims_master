@@ -57,6 +57,11 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fConvMaterCmd->SetParameterName("choice",false);
   fConvMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+  fWorldMaterCmd = new G4UIcmdWithAString("/leap/det/SetWorldMaterial",this);
+  fWorldMaterCmd->SetGuidance("Select material of the world volume.");
+  fWorldMaterCmd->SetParameterName("choice",false);
+  fWorldMaterCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
   fSizeXYCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/SetSizeXY",this);
   fSizeXYCmd->SetGuidance("Set diameter of the converter target and iron core");
   fSizeXYCmd->SetParameterName("Size",false);
@@ -117,6 +122,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
 DetectorMessenger::~DetectorMessenger()
 {
   delete fConvMaterCmd;
+  delete fWorldMaterCmd;
   delete fSizeXYCmd;
   delete fCoreZCmd;
   delete fConvZCmd;
@@ -135,6 +141,9 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   if( command == fConvMaterCmd )
    { fDetector->SetConvMaterial(newValue);}
+
+  if(command == fWorldMaterCmd)
+   { fDetector->SetWorldMaterial(newValue);}
 
   if( command == fSizeXYCmd )
    { fDetector->SetSizeXY(fSizeXYCmd->GetNewDoubleValue(newValue));}

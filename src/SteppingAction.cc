@@ -209,7 +209,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              tupleID = dipole1stat + dipole2stat+dipole3stat;
            }
            else if (versionType=="PolCal" && dipolStatus=="Off"){
-             tupleID = core1stat + core2stat;
+             tupleID = core1stat + core2stat+ cal1stat;
            }
            else {
              tupleID = core1stat + core2stat + dipole1stat + dipole2stat+dipole3stat;
@@ -228,7 +228,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
            tupleID = dipole1stat + dipole2stat +dipole3stat +cal1stat;
          }
          else if (versionType=="PolCal" && dipolStatus=="Off"){
-           tupleID = core1stat + core2stat + cal1stat;
+           tupleID = core1stat + core2stat;
          }
          else {
            tupleID = core1stat + core2stat + dipole1stat + dipole2stat +dipole3stat+ cal1stat;

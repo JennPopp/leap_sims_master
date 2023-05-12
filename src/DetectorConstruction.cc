@@ -905,7 +905,6 @@ void DetectorConstruction::SetConvMaterial(G4String materialChoice)
   if (mat != fConvMaterial) {
     if(mat) {
       fConvMaterial = mat;
-      UpdateGeometry();
     } else {
       G4cout << "### Warning!  Converter Target material: <"
            << materialChoice << "> not found" << G4endl;
@@ -924,7 +923,6 @@ void DetectorConstruction::SetWorldMaterial(G4String materialChoice)
   if (mat != fWorldMaterial) {
     if(mat) {
       fWorldMaterial = mat;
-      UpdateGeometry();
     } else {
       G4cout << "### Warning! World material: <"
            << materialChoice << "> not found" << G4endl;
@@ -943,7 +941,6 @@ void DetectorConstruction::SetCaloMaterial(G4String materialChoice)
   if (mat != fCaloMaterial) {
     if(mat) {
       fCaloMaterial = mat;
-      UpdateGeometry();
     } else {
       G4cout << "### Warning! Calorimeter material: <"
            << materialChoice << "> not found" << G4endl;
@@ -957,26 +954,22 @@ void DetectorConstruction::SetSizeXY(G4double value)
 {
   fSizeXY = value;
   if (fWorldSize<fSizeXY) fWorldSize = 10*fSizeXY;
-  UpdateGeometry();
 }
 
 void DetectorConstruction::SetCoreThick(G4double value)
 {
   fCoreThick = value;
   if (fWorldSize<fCoreThick) fWorldSize = 10*fCoreThick;
-  UpdateGeometry();
 }
 
 void DetectorConstruction::SetConvThick(G4double value)
 {
   fConvThick = value;
-  UpdateGeometry();
 }
 
 void DetectorConstruction::SetCrystalnumber(G4String value)
 {
   CrystalNumber = value;
-  UpdateGeometry();
 }
 
 void DetectorConstruction::SetDipoleB(G4double value)
@@ -988,13 +981,11 @@ void DetectorConstruction::SetDipoleB(G4double value)
 void DetectorConstruction::SetDipoleSize(G4ThreeVector value)
 {
   fDipoleSize = value;
-  UpdateGeometry();
 }
 
 void DetectorConstruction::SetZtoCalo(G4double value)
 {
   fZtoCalo = value;
-  UpdateGeometry();
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
