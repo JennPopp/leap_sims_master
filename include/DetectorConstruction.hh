@@ -169,6 +169,9 @@ inline const G4VPhysicalVolume* DetectorConstruction::GetDetectorPV() const {
 inline const G4VPhysicalVolume* DetectorConstruction::GetAluwrapPV() const {
   return fAluwrapPV;
 }
+inline const G4VPhysicalVolume* DetectorConstruction::GetVirtCaloPV() const {
+  return fVirtCaloPV;
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
