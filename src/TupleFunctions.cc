@@ -8,7 +8,7 @@ void WriteSingleEntry(int tupleID,const G4Step* aStep){
   auto fAnalysisManager = G4AnalysisManager::Instance();
   fAnalysisManager->FillNtupleIColumn(tupleID,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
-  fAnalysisManager->FillNtupleDColumn(tupleID,1, aStep->GetPostStepPoint()->GetKineticEnergy()/CLHEP::MeV);
+  fAnalysisManager->FillNtupleDColumn(tupleID,1, aStep->GetPostStepPoint()->GetTotalEnergy()/CLHEP::MeV);
 
   fAnalysisManager->FillNtupleDColumn(tupleID,2, aStep->GetPostStepPoint()->GetPosition().x());
   fAnalysisManager->FillNtupleDColumn(tupleID,3, aStep->GetPostStepPoint()->GetPosition().y());
@@ -31,6 +31,18 @@ void WriteSingleEntry(int tupleID,const G4Step* aStep){
   fAnalysisManager->FillNtupleDColumn(tupleID,16, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
 
   fAnalysisManager->AddNtupleRow(tupleID);
+}
+
+void WriteShowerDevEntry(int tupleID,const G4Step* aStep){
+  fAnalysisManager->FillNtupleIColumn(tupleID,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+  fAnalysisManager->FillNtupleDColumn(tupleID,1, aStep->GetPostStepPoint()->GetTotalEnergy()/CLHEP::MeV);
+  fAnalysisManager->FillNtupleDColumn(tupleID,2,aStep->GetTotalEnergyDeposit()/CLHEP::MeV);
+  fAnalysisManager->FillNtupleDColumn(tupleID,3, aStep->GetPostStepPoint()->GetPosition().x());
+  fAnalysisManager->FillNtupleDColumn(tupleID,4, aStep->GetPostStepPoint()->GetPosition().y());
+  fAnalysisManager->FillNtupleDColumn(tupleID,5, aStep->GetPostStepPoint()->GetPosition().z());
+  fAnalysisManager->FillNtupleDColumn(tupleID,6, aStep->GetTrack()->GetTrackID());
+  fAnalysisManager->FillNtupleDColumn(tupleID,7, aStep->GetTrack()->GetParentID());
+
 }
 
 void WriteSingleCalEntry(int tupleID,const G4Step* aStep){
@@ -100,4 +112,17 @@ void BookBunchCalTuple(G4String name, G4String title){
   fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
   fAnalysisManager->CreateNtupleDColumn("EIn");
   fAnalysisManager->FinishNtuple();
+}
+
+void BookShowerDevTuple(G4String name, G4String title){
+  auto fAnalysisManager = G4AnalysisManager::Instance();
+  fAnalysisManager->CreateNtuple(name, title);
+  fAnalysisManager->CreateNtupleDColumn("pdg");
+  fAnalysisManager->CreateNtupleDColumn("E");
+  fAnalysisManager->CreateNtupleDColumn("Edep");
+  fAnalysisManager->CreateNtupleDColumn("x");
+  fAnalysisManager->CreateNtupleDColumn("y");
+  fAnalysisManager->CreateNtupleDColumn("z");
+  fAnalysisManager->CreateNtupleDColumn("TrackID");
+  fAnalysisManager->CreateNtupleDColumn("ParentID");
 }

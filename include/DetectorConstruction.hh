@@ -86,6 +86,7 @@ public:
   const G4VPhysicalVolume* GetDipVac3PV() const;
   const G4VPhysicalVolume* GetDetectorPV() const;
   const G4VPhysicalVolume* GetAluwrapPV() const;
+  const G4VPhysicalVolume* GetVirtCaloPV() const;
 
 
   G4double           GetWorldSize()  {return fWorldSize;};

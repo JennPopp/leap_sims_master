@@ -102,16 +102,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
      auto VacStep2PV=fDetector->GetVacStep2PV();
      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
             // get analysis manager
-            auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+            auto Eval=aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
             fEventAction->AddVals(Eval,1);}
 
      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
             // get analysis manager
-            auto EGamma=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+            auto EGamma=aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
             fEventAction->AddGammaVals(EGamma,1);}
      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 11) {
            // get analysis manager
-           auto Ee=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+           auto Ee=aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
            fEventAction->AddeVals(Ee,1);}
     } // end if version pol|polcal
 
@@ -196,7 +196,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           WriteSingleEntry(tupleID, aStep);
         } // end if postvolume = DipoleVac2PV
      } // end if DipolStatus
-     if (versionType=="Cal" || versionType == "PolCal"){
+    if (versionType=="Cal" || versionType == "PolCal"){
        auto VacStep3PV=fDetector->GetVacStep3PV();
        auto VacStep4PV=fDetector->GetVacStep4PV();
        auto AluwrapPV =fDetector->GetAluwrapPV();
@@ -242,7 +242,20 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
  */
        }  // end if version cal|polcal
     } // end if outType=single
-  } // end UserSteppingAction
+  
+  else if (outputType == "shower"){
+    auto edep = aStep->GetTotalEnergyDeposit();
+    auto VirtCaloPV=fDetector->GetVirtCaloPV();
+    if ((versionType=="Cal" || versionType == "PolCal") && edep>0 && postvolume == VirtCaloPV){
+      WriteShowerDevEntry(0, aStep);
+    }
+    else{
+      G4cout << "### Warning!  You want to look at the shower development inside the calorimeter, but no calorimeter is placed !###" << G4endl;
+      // should throw a real error and stop the run at some point
+    }
+
+  } // end if outType=shower
+} // end UserSteppingAction
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

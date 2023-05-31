@@ -159,8 +159,11 @@ void RunAction::BookHisto()
     } // end of if version
 
 
-   } // end of if single
-  } // end of BookHisto
+  } // end of if single
+  else if (outputType == "shower"){
+    BookShowerDevTuple("showerDev","showerDev");
+  }
+} // end of BookHisto
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
 
