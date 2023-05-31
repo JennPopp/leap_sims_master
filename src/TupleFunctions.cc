@@ -34,6 +34,7 @@ void WriteSingleEntry(int tupleID,const G4Step* aStep){
 }
 
 void WriteShowerDevEntry(int tupleID,const G4Step* aStep){
+  auto fAnalysisManager = G4AnalysisManager::Instance();
   fAnalysisManager->FillNtupleIColumn(tupleID,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
   fAnalysisManager->FillNtupleDColumn(tupleID,1, aStep->GetPostStepPoint()->GetTotalEnergy()/CLHEP::MeV);
   fAnalysisManager->FillNtupleDColumn(tupleID,2,aStep->GetTotalEnergyDeposit()/CLHEP::MeV);
