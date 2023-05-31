@@ -215,6 +215,25 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                   LogicalWorld,               //its mother
                                   false,                     //no boolean operat
                                   0);                       //copy number
+
+    auto solidDipVac3 = new G4Box("BigVacSolid",  //Name
+                                  1.*mm/2,   // x size
+                                  360.*mm/2,     // y size
+                                  (dipoleGap+fDipoleSize[2]+fZtoCalo)/2); // z size
+
+    auto dipVac3LV = new G4LogicalVolume(solidDipVac3,    //its solid
+                                          fWorldMaterial,    //its material
+                                          "dipVac3");       //its name
+
+    fDipVac3PV = new G4PVPlacement(0,                   //no rotation
+                          G4ThreeVector(fDipoleSize[0]+1.*mm, 0.0*mm, dipolZpos),    //its position
+                                  dipVac3LV,            //its logical volume
+                                  "BigVacPV",                 //its name
+                                  LogicalWorld,               //its mother
+                                  false,                     //no boolean operat
+                                  0);                       //copy number
+
+
   } // endif dipol State
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -845,7 +864,8 @@ G4LogicalVolume* DetectorConstruction::ConstructDipol(){
 }
 
 void DetectorConstruction::PrintParameters()
-{ if(versionType=="Pol" || versionType=="PolCal"){
+{
+  if(versionType=="Pol" || versionType=="PolCal"){
   G4cout << "\n The ConverterTarget is made of " << fConvMaterial->GetName()
           << " , " << G4BestUnit(fSizeXY,"Length")<<  "in diameter and "
          <<  G4BestUnit(fConvThick,"Length") << " thick"
@@ -885,7 +905,6 @@ void DetectorConstruction::SetConvMaterial(G4String materialChoice)
   if (mat != fConvMaterial) {
     if(mat) {
       fConvMaterial = mat;
-      UpdateGeometry();
     } else {
       G4cout << "### Warning!  Converter Target material: <"
            << materialChoice << "> not found" << G4endl;
@@ -904,7 +923,6 @@ void DetectorConstruction::SetWorldMaterial(G4String materialChoice)
   if (mat != fWorldMaterial) {
     if(mat) {
       fWorldMaterial = mat;
-      UpdateGeometry();
     } else {
       G4cout << "### Warning! World material: <"
            << materialChoice << "> not found" << G4endl;
@@ -923,7 +941,6 @@ void DetectorConstruction::SetCaloMaterial(G4String materialChoice)
   if (mat != fCaloMaterial) {
     if(mat) {
       fCaloMaterial = mat;
-      UpdateGeometry();
     } else {
       G4cout << "### Warning! Calorimeter material: <"
            << materialChoice << "> not found" << G4endl;
@@ -937,26 +954,22 @@ void DetectorConstruction::SetSizeXY(G4double value)
 {
   fSizeXY = value;
   if (fWorldSize<fSizeXY) fWorldSize = 10*fSizeXY;
-  UpdateGeometry();
 }
 
 void DetectorConstruction::SetCoreThick(G4double value)
 {
   fCoreThick = value;
   if (fWorldSize<fCoreThick) fWorldSize = 10*fCoreThick;
-  UpdateGeometry();
 }
 
 void DetectorConstruction::SetConvThick(G4double value)
 {
   fConvThick = value;
-  UpdateGeometry();
 }
 
 void DetectorConstruction::SetCrystalnumber(G4String value)
 {
   CrystalNumber = value;
-  UpdateGeometry();
 }
 
 void DetectorConstruction::SetDipoleB(G4double value)
@@ -968,13 +981,11 @@ void DetectorConstruction::SetDipoleB(G4double value)
 void DetectorConstruction::SetDipoleSize(G4ThreeVector value)
 {
   fDipoleSize = value;
-  UpdateGeometry();
 }
 
 void DetectorConstruction::SetZtoCalo(G4double value)
 {
   fZtoCalo = value;
-  UpdateGeometry();
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

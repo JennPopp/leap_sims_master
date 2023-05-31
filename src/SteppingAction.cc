@@ -90,6 +90,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   auto core2stat = fRunAction->GetCore2Stat();
   auto dipole1stat = fRunAction->GetDipole1Stat();
   auto dipole2stat = fRunAction->GetDipole2Stat();
+  auto dipole3stat = fRunAction->GetDipole3Stat();
   auto cal1stat = fRunAction->GetCal1Stat();
   auto cal2stat = fRunAction->GetCal2Stat();
 
@@ -166,6 +167,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if (dipolStatus == "On"){
         auto DipoleVacPV = fDetector->GetBigVacPV();
         auto DipoleVac2PV = fDetector->GetBigVac2PV();
+        auto DipoleVac3PV = fDetector->GetDipVac3PV();
         if( dipole1stat==1 && postvolume == DipoleVacPV && prevolume !=DipoleVacPV && aStep->GetPostStepPoint()->GetMomentumDirection().z()>0.) {
           if (versionType == "Pol" || versionType == "PolCal"){
             tupleID = core1stat+core2stat;
@@ -174,7 +176,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             tupleID = 0;
           }
           WriteSingleEntry(tupleID, aStep);
-        } // end if postvolume = DipoleVacPV
+        } // end if postvolume = DipoleVac1PV
         if( dipole2stat==1 && postvolume == DipoleVac2PV && prevolume !=DipoleVac2PV && aStep->GetPostStepPoint()->GetMomentumDirection().z()>0.) {
           if (versionType == "Pol" || versionType == "PolCal"){
             tupleID = core1stat+core2stat+dipole1stat;
@@ -183,7 +185,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             tupleID = dipole1stat;
           }
           WriteSingleEntry(tupleID, aStep);
-        } // end if postvolume = DipoleVacPV
+        } // end if postvolume = DipoleVac2PV
+        if( dipole3stat==1 && postvolume == DipoleVac3PV && prevolume !=DipoleVac3PV) {
+          if (versionType == "Pol" || versionType == "PolCal"){
+            tupleID = core1stat+core2stat+dipole1stat+dipole2stat;
+          }
+          else {
+            tupleID = dipole1stat;
+          }
+          WriteSingleEntry(tupleID, aStep);
+        } // end if postvolume = DipoleVac2PV
      } // end if DipolStatus
      if (versionType=="Cal" || versionType == "PolCal"){
        auto VacStep3PV=fDetector->GetVacStep3PV();
@@ -195,13 +206,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
              tupleID = 0;
            }
            else if (versionType=="Cal" && dipolStatus=="On"){
-             tupleID = dipole1stat + dipole2stat;
+             tupleID = dipole1stat + dipole2stat+dipole3stat;
            }
            else if (versionType=="PolCal" && dipolStatus=="Off"){
-             tupleID = core1stat + core2stat;
+             tupleID = core1stat + core2stat+ cal1stat;
            }
            else {
-             tupleID = core1stat + core2stat + dipole1stat + dipole2stat;
+             tupleID = core1stat + core2stat + dipole1stat + dipole2stat+dipole3stat;
            }
 
            WriteSingleCalEntry(tupleID, aStep);
@@ -214,13 +225,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
            tupleID = cal1stat;
          }
          else if (versionType=="Cal" && dipolStatus=="On"){
-           tupleID = dipole1stat + dipole2stat + cal1stat;
+           tupleID = dipole1stat + dipole2stat +dipole3stat +cal1stat;
          }
          else if (versionType=="PolCal" && dipolStatus=="Off"){
-           tupleID = core1stat + core2stat + cal1stat;
+           tupleID = core1stat + core2stat;
          }
          else {
-           tupleID = core1stat + core2stat + dipole1stat + dipole2stat + cal1stat;
+           tupleID = core1stat + core2stat + dipole1stat + dipole2stat +dipole3stat+ cal1stat;
          }
          WriteSingleCalEntry(tupleID, aStep);
        }
@@ -228,7 +239,6 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
        if(postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)) {
                    aTrack->SetTrackStatus(fStopAndKill);
                  }
-
  */
        }  // end if version cal|polcal
     } // end if outType=single

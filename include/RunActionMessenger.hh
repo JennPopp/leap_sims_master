@@ -26,6 +26,7 @@ private:
   G4UIcmdWithABool* fCore2StatCmd;
   G4UIcmdWithABool* fDipole1StatCmd;
   G4UIcmdWithABool* fDipole2StatCmd;
+  G4UIcmdWithABool* fDipole3StatCmd;
   G4UIcmdWithABool* fCal1StatCmd;
   G4UIcmdWithABool* fCal2StatCmd;
 };
