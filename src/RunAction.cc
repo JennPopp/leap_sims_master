@@ -142,7 +142,9 @@ void RunAction::BookHisto()
       if(fDipole1Stat==1){BookSingleTuple("dipoleVac","BigVac");}
       //id=5 if PolCal else 3
       if(fDipole2Stat==1){BookSingleTuple("dipoleVac2","BigVac2");}
+
       if(fDipole3Stat==1){BookSingleTuple("dipoleVac3","DipVac3");}
+
     } // end if dipolStatus
 
     if(versionType=="Cal" || versionType=="PolCal"){
