@@ -43,7 +43,8 @@ void WriteShowerDevEntry(int tupleID,const G4Step* aStep){
   fAnalysisManager->FillNtupleDColumn(tupleID,5, aStep->GetPostStepPoint()->GetPosition().z());
   fAnalysisManager->FillNtupleDColumn(tupleID,6, aStep->GetTrack()->GetTrackID());
   fAnalysisManager->FillNtupleDColumn(tupleID,7, aStep->GetTrack()->GetParentID());
-
+  fAnalysisManager->AddNtupleRow(tupleID);
+  fAnalysisManager->FillNtupleSColumn(tupleID,8, aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName());
 }
 
 void WriteSingleCalEntry(int tupleID,const G4Step* aStep){
@@ -118,7 +119,7 @@ void BookBunchCalTuple(G4String name, G4String title){
 void BookShowerDevTuple(G4String name, G4String title){
   auto fAnalysisManager = G4AnalysisManager::Instance();
   fAnalysisManager->CreateNtuple(name, title);
-  fAnalysisManager->CreateNtupleDColumn("pdg");
+  fAnalysisManager->CreateNtupleIColumn("pdg");
   fAnalysisManager->CreateNtupleDColumn("E");
   fAnalysisManager->CreateNtupleDColumn("Edep");
   fAnalysisManager->CreateNtupleDColumn("x");
@@ -126,4 +127,6 @@ void BookShowerDevTuple(G4String name, G4String title){
   fAnalysisManager->CreateNtupleDColumn("z");
   fAnalysisManager->CreateNtupleDColumn("TrackID");
   fAnalysisManager->CreateNtupleDColumn("ParentID");
+  fAnalysisManager->CreateNtupleSColumn("Volume");
+  fAnalysisManager->FinishNtuple(0);
 }

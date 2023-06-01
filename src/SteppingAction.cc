@@ -81,7 +81,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // get pre-step-volume of the current aStep
   auto prevolume = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
   //get post-step-volume of the current aStep
-  auto postvolume = aStep->GetPostStepPoint()->GetTouchableHandle()->GetVolume();
+  auto postvolume = aStep->GetPostStepPoint()->GetPhysicalVolume();
 
   auto aTrack = aStep->GetTrack();
 
@@ -242,12 +242,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
  */
        }  // end if version cal|polcal
     } // end if outType=single
-  
+
   else if (outputType == "shower"){
-    auto edep = aStep->GetTotalEnergyDeposit();
-    auto VirtCaloPV=fDetector->GetVirtCaloPV();
-    if ((versionType=="Cal" || versionType == "PolCal") && edep>0 && postvolume == VirtCaloPV){
-      WriteShowerDevEntry(0, aStep);
+    if (versionType=="Cal" || versionType == "PolCal"){
+      auto edep = aStep->GetTotalEnergyDeposit();
+      auto VirtCalo=fDetector->GetVirtCaloPV()->GetLogicalVolume();
+      if ( edep>0 && VirtCalo->IsAncestor(postvolume)) {
+        //G4cout << "An entry should be written now" << G4endl;
+        //G4cout << "poststepvolume  "<< postvolume->GetName()<<G4endl;
+        WriteShowerDevEntry(0, aStep);
+      }
     }
     else{
       G4cout << "### Warning!  You want to look at the shower development inside the calorimeter, but no calorimeter is placed !###" << G4endl;
