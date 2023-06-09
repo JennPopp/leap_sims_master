@@ -1,6 +1,7 @@
 #Ignore the build dir#
 ######################
 **/build
+**/buildold 
 
 #other folders to ignore#
 ######################
