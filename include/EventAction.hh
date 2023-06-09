@@ -39,12 +39,13 @@
 #include "globals.hh"
 
 class RunAction;
+class DetectorConstruction;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class EventAction : public G4UserEventAction
 {
 public:
-  EventAction(RunAction*, G4String outType, G4String version);
+  EventAction(RunAction*,DetectorConstruction*, G4String outType, G4String version);
   virtual ~EventAction();
 
   virtual void BeginOfEventAction(const G4Event*);
@@ -61,6 +62,7 @@ public:
 
 private:
   RunAction* fRunAction;
+  DetectorConstruction*   fDetector;
 
   G4double fEnergySum;
   G4double fNP;

@@ -135,7 +135,7 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   RunAction* run;
   EventAction* event;
   runManager->SetUserAction(run = new RunAction(det,prim,outFile,outType,version, dipolState));
-  runManager->SetUserAction(event = new EventAction(run,outType,version));
+  runManager->SetUserAction(event = new EventAction(run,det,outType,version));
   runManager->SetUserAction(new SteppingAction(det,event,run,outType,version, dipolState));
 
   // get the pointer to the User Interface manager

@@ -33,13 +33,14 @@
 
 #include "EventAction.hh"
 #include "RunAction.hh"
-
+#include "DetectorConstruction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EventAction::EventAction(RunAction *ra, G4String outType, G4String version)
+EventAction::EventAction(RunAction *ra, DetectorConstruction *det, G4String outType, G4String version)
 : G4UserEventAction(),
-  fRunAction(ra)
+  fRunAction(ra),
+  fDetector(det)
 {
   outputType=outType;
   versionType=version;
@@ -65,7 +66,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
      }
 
      else if(versionType=="Cal"){
-      fEnergyCalo.assign (9,0.);
+      fEnergyCalo.assign (fDetector->GetCrystalNumber(),0.);
       fPhotonEnergySum=0.;
       fGammaEnergyIn=0.;
      }
@@ -74,7 +75,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
       fNP=0; // Number of particles behind magnet
       fGammaEnergySum=0;
       fNGamma=0;// Number of gammas behind magent
-      fEnergyCalo.assign (9,0.);
+      fEnergyCalo.assign (fDetector->GetCrystalNumber(),0.);
       fPhotonEnergySum=0.;
       fGammaEnergyIn=0.;
       fElectronEnergySum=0;

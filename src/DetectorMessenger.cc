@@ -39,6 +39,7 @@
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithoutParameter.hh"
 #include "G4UIcmdWith3VectorAndUnit.hh"
+#include "G4UIcmdWithAnInteger.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -91,9 +92,9 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fUpdateCmd->AvailableForStates(G4State_Idle);
 
 
-  fCrystalnumberCmd = new G4UIcmdWithAString("/leap/det/Setnumberofcrystals",this);
-  fCrystalnumberCmd->SetGuidance("Set the Number of the Crystals one or nine");
-  fCrystalnumberCmd->SetParameterName("choice",false);
+  fCrystalnumberCmd = new G4UIcmdWithAnInteger("/leap/det/Setnumberofcrystals",this);
+  fCrystalnumberCmd->SetGuidance("Set the Number of the Crystals 1 or 9");
+  fCrystalnumberCmd->SetParameterName("Ncrystals",false);
   fCrystalnumberCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   fDipoleBCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/SetDipoleB",this);
@@ -158,7 +159,7 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
    { fDetector->UpdateGeometry(); }
 
  if( command == fCrystalnumberCmd )
-   { fDetector->SetCrystalnumber(newValue);}
+   { fDetector->SetCrystalnumber(fCrystalnumberCmd->GetNewIntValue(newValue));}
 
    if( command == fDipoleBCmd )
       { fDetector->SetDipoleB(fDipoleBCmd->GetNewDoubleValue(newValue));}

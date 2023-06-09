@@ -66,7 +66,7 @@ public:
   void SetConvMaterial (G4String);
   void SetWorldMaterial (G4String);
   void SetCaloMaterial (G4String);
-  void SetCrystalnumber (G4String);
+  void SetCrystalnumber (G4int);
   void SetDipoleB (G4double);
  void SetDipoleSize (G4ThreeVector);
  void SetZtoCalo (G4double);
@@ -94,7 +94,7 @@ public:
   G4double           GetCoreZ()   {return fCoreThick;};
   G4double           GetConvZ()   {return fConvThick;};
   G4Material*        GetMaterial()   {return fConvMaterial;};
-  G4String           GetCrystalNumber(){return CrystalNumber;};
+  G4int           GetCrystalNumber(){return CrystalNumber;};
   G4double           GetDipoleB() {return fDipoleB;};
   G4ThreeVector      GetDipoleSize() {return fDipoleSize;};
   G4double           GetZtoCalo() {return fZtoCalo;};
@@ -137,7 +137,7 @@ private:
 
   G4String versionType;
   G4String dipolStatus;
-  G4String CrystalNumber;
+  G4int CrystalNumber;
 
   G4double caloZposition;
 

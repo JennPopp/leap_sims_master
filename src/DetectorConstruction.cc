@@ -80,7 +80,7 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String dipolState
   fCoreThick = 150*mm;
   fConvThick = 1.75*mm;
   fWorldSize = 4.1*m;
-  CrystalNumber= "nine";
+  CrystalNumber= 9;
   fDipoleB = 0.1 * tesla;
   fDipoleSize = G4ThreeVector( 50*mm, 25*mm, 100*mm);
   fZtoCalo = 50 * mm;
@@ -555,7 +555,7 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4double detthick, 
     G4double aluwraplength = alairgaplength + aluwrapthick + vacthick;
 
     //defining the size of the Calorimetercell and the virtual calorimeter (mother volume of the calorimetercells)
-    //G4int NbofCalor = 9; //here later free paramter to select numer of crystals
+    //G4int NbofCalor = 9; //here later free parameter to select number of crystals
     G4double calorcellxy = aluwrapxy;
     G4double calorcelllength = aluwraplength + vacthick;
     G4double virtcalorlength = calorcelllength;
@@ -563,15 +563,15 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4double detthick, 
     G4double vac3xy = alairgapxy;// this version is to place the vacstep in the aluwrapping
 
     G4double virtcalorxy;
-    if (CrystalNumber == "one"){
+    if (CrystalNumber == 1){
       virtcalorxy = calorcellxy;
     }
-    else if (CrystalNumber == "nine"){
+    else if (CrystalNumber == 9){
       virtcalorxy = 3*calorcellxy;
     }
     else {
       virtcalorxy = calorcellxy;
-      SetCrystalnumber("one");
+      SetCrystalnumber(1);
       G4cout << "NO VALID IMPUT FOR CRYSTALNUMBER: Crystalnumber set to one!" << fCaloMaterial->GetName() << G4endl;
     }
     //..........................................................................
@@ -605,10 +605,10 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4double detthick, 
                                           fWorldMaterial,    //its material
                                           "physicalcalorimeter");       //its name
 
-    if(CrystalNumber=="nine"){
+    if(CrystalNumber==9){
     //the array for the placement of the 9 calorimetercells in the virtual calorimeter
-    G4double CalorRX[9]={0,0,calorcellxy,calorcellxy,calorcellxy,0,-calorcellxy,-calorcellxy,-calorcellxy};
-    G4double CalorRY[9]={0,calorcellxy,calorcellxy,0,-calorcellxy,-calorcellxy,-calorcellxy,0,calorcellxy};
+    G4double CalorRX[9]={-calorcellxy, 0, calorcellxy,-calorcellxy, 0, calorcellxy, -calorcellxy, 0, calorcellxy};
+    G4double CalorRY[9]={calorcellxy,calorcellxy,calorcellxy, 0,0,0,-calorcellxy,-calorcellxy,-calorcellxy};
 
     for (G4int i=0;i<=8;i++){
     fCaloCellPV = new G4PVPlacement(0,		       //no rotation
@@ -621,7 +621,7 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4double detthick, 
     }
     }
 
-    else if (CrystalNumber == "one"){
+    else if (CrystalNumber == 1){
     fCaloCellPV = new G4PVPlacement(0,		       //no rotation
                  G4ThreeVector(0,0,0),  //its position
                  fCaloCellLV,            //its logical volume
@@ -876,7 +876,7 @@ void DetectorConstruction::PrintParameters()
   }
 
   if(versionType=="Cal" || versionType=="PolCal"){
-    G4cout << "\n The Calorimeter is made of " << fCaloMaterial->GetName() << G4endl;
+    G4cout << "\n The Calorimeter is made of " << fCaloMaterial->GetName() <<"\n"<< G4endl;
   }
 }
 
@@ -967,7 +967,7 @@ void DetectorConstruction::SetConvThick(G4double value)
   fConvThick = value;
 }
 
-void DetectorConstruction::SetCrystalnumber(G4String value)
+void DetectorConstruction::SetCrystalnumber(G4int value)
 {
   CrystalNumber = value;
 }
