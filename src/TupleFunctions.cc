@@ -1,7 +1,7 @@
 #include "TupleFunctions.hh"
 #include "G4RunManager.hh"
 #include "G4AnalysisManager.hh"
-
+#include "EventAction.hh"
 #include "globals.hh"
 
 void WriteSingleEntry(int tupleID,const G4Step* aStep){
@@ -41,10 +41,11 @@ void WriteShowerDevEntry(int tupleID,const G4Step* aStep){
   fAnalysisManager->FillNtupleDColumn(tupleID,3, aStep->GetPostStepPoint()->GetPosition().x());
   fAnalysisManager->FillNtupleDColumn(tupleID,4, aStep->GetPostStepPoint()->GetPosition().y());
   fAnalysisManager->FillNtupleDColumn(tupleID,5, aStep->GetPostStepPoint()->GetPosition().z());
-  fAnalysisManager->FillNtupleDColumn(tupleID,6, aStep->GetTrack()->GetTrackID());
-  fAnalysisManager->FillNtupleDColumn(tupleID,7, aStep->GetTrack()->GetParentID());
+  fAnalysisManager->FillNtupleIColumn(tupleID,6, aStep->GetTrack()->GetTrackID());
+  fAnalysisManager->FillNtupleIColumn(tupleID,7, aStep->GetTrack()->GetParentID());
+  fAnalysisManager->FillNtupleIColumn(tupleID,8, G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID());
+  fAnalysisManager->FillNtupleSColumn(tupleID,9, aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName());
   fAnalysisManager->AddNtupleRow(tupleID);
-  fAnalysisManager->FillNtupleSColumn(tupleID,8, aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName());
 }
 
 void WriteSingleCalEntry(int tupleID,const G4Step* aStep){
@@ -107,10 +108,12 @@ void BookBunchTuple(G4String name, G4String title){
   fAnalysisManager->FinishNtuple();
 }
 
+
+EventAction* eventAction;
 void BookBunchCalTuple(G4String name, G4String title){
   auto fAnalysisManager = G4AnalysisManager::Instance();
   fAnalysisManager->CreateNtuple(name, title);
-  fAnalysisManager->CreateNtupleDColumn("Ecalo");
+  fAnalysisManager->CreateNtupleDColumn("CaloEdep", eventAction->GetCalEdep());
   fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
   fAnalysisManager->CreateNtupleDColumn("EIn");
   fAnalysisManager->FinishNtuple();
@@ -125,8 +128,9 @@ void BookShowerDevTuple(G4String name, G4String title){
   fAnalysisManager->CreateNtupleDColumn("x");
   fAnalysisManager->CreateNtupleDColumn("y");
   fAnalysisManager->CreateNtupleDColumn("z");
-  fAnalysisManager->CreateNtupleDColumn("TrackID");
-  fAnalysisManager->CreateNtupleDColumn("ParentID");
+  fAnalysisManager->CreateNtupleIColumn("TrackID");
+  fAnalysisManager->CreateNtupleIColumn("ParentID");
+  fAnalysisManager->CreateNtupleIColumn("EventID");
   fAnalysisManager->CreateNtupleSColumn("Volume");
   fAnalysisManager->FinishNtuple(0);
 }

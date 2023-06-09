@@ -65,7 +65,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
      }
 
      else if(versionType=="Cal"){
-      fEnergyCalo =0.;
+      fEnergyCalo.assign (9,0.);
       fPhotonEnergySum=0.;
       fGammaEnergyIn=0.;
      }
@@ -74,7 +74,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
       fNP=0; // Number of particles behind magnet
       fGammaEnergySum=0;
       fNGamma=0;// Number of gammas behind magent
-      fEnergyCalo =0.;
+      fEnergyCalo.assign (9,0.);
       fPhotonEnergySum=0.;
       fGammaEnergyIn=0.;
       fElectronEnergySum=0;
@@ -115,7 +115,10 @@ void EventAction::EndOfEventAction(const G4Event*)
         tupleID = 1;
       }
      //G4cout <<  "\033[1;31m tupleID =" << tupleID <<"\033[0m\n";
-     analysisManager->FillNtupleDColumn(tupleID,0, fEnergyCalo);
+     //analysisManager->FillNtupleDColumn(tupleID,0, fEnergyCalo);
+     G4cout << "Total energy deposited in the respective crystals" <<G4endl;
+     for (auto i: fEnergyCalo)
+     G4cout<< i << ' ';
      analysisManager->FillNtupleDColumn(tupleID,1,fPhotonEnergySum);
      analysisManager->FillNtupleDColumn(tupleID,2,fGammaEnergyIn);
      analysisManager->AddNtupleRow(tupleID);

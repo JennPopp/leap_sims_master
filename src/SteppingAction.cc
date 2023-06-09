@@ -84,8 +84,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   auto postvolume = aStep->GetPostStepPoint()->GetPhysicalVolume();
 
   auto aTrack = aStep->GetTrack();
-
-  //G4TouchableHistory* theTouchable = (G4TouchableHistory*)(aStep->GetPostStepPoint()->GetTouchable());
+  G4TouchableHistory* theTouchable = (G4TouchableHistory*)(aStep->GetPostStepPoint()->GetTouchable());
+  
   auto core1stat = fRunAction->GetCore1Stat();
   auto core2stat = fRunAction->GetCore2Stat();
   auto dipole1stat = fRunAction->GetDipole1Stat();
@@ -124,7 +124,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
       if (prevolume == CrystalPV) { // her i think we have to use prevolume???
             auto edep = aStep->GetTotalEnergyDeposit();
-            fEventAction->AddEnergyCalo(edep);}
+            auto crystNo = theTouchable->GetReplicaNumber(2);
+            fEventAction->AddEnergyCalo(edep,crystNo);}
 
       if (cal2stat==1 && postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
             auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
