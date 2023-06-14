@@ -67,12 +67,13 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-DetectorConstruction::DetectorConstruction(G4String version, G4String dipolState)
+DetectorConstruction::DetectorConstruction(G4String version, G4String dipolState, G4String caloType)
 : G4VUserDetectorConstruction(),
   PhysicalWorld(0), PhysicalCore(0), fConvMaterial(0), fWorldMaterial(0), fCaloMaterial(0), fLogicalDipol(0)
 {
   versionType=version;
   dipolStatus = dipolState;
+  caloTyp = caloType;
   allMaterials = new Materials();
   allMaterials->DefineMaterials();
 
@@ -271,7 +272,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         }
     }
 
-    G4LogicalVolume* fVirtCaloLV = ConstructCalorimeter(detthick, detxy,
+    G4LogicalVolume* fVirtCaloLV = ConstructCalorimeter(caloTyp, detthick, detxy,
         alairgapthick, aluwrapthick, vacthick);
 
     fVirtCaloPV = new G4PVPlacement(0,                   //no rotation
@@ -545,7 +546,7 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 // Construct the Calorimeter , returns LV of motherVolume
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4double detthick, G4double detxy,
+G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4String caloType, G4double detthick, G4double detxy,
     G4double alairgapthick, G4double aluwrapthick, G4double vacthick){
     //..........................................................................
     // Define some geometry parameters .........................................
