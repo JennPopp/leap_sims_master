@@ -121,7 +121,8 @@ void RunAction::BookHisto()
      }
     if((versionType=="Cal" || versionType=="PolCal")&&(fCal1Stat==1 || fCal2Stat==1)){
       // ntuple with id 0 if Cal else 1
-     //BookBunchCalTuple("calorimeter", "crystal_vacstep3");
+     G4int ncryst = fDetector->GetCrystalNumber();
+     BookBunchCalTuple("calorimeter", "crystal_vacstep3",ncryst);
      // histrogramm id=0
      //fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 1.3, 3.3);
     }

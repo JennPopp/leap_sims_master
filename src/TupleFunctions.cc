@@ -110,12 +110,15 @@ void BookBunchTuple(G4String name, G4String title){
 
 
 EventAction* eventAction;
-void BookBunchCalTuple(G4String name, G4String title){
+void BookBunchCalTuple(G4String name, G4String title, G4int ncryst){
   auto fAnalysisManager = G4AnalysisManager::Instance();
   fAnalysisManager->CreateNtuple(name, title);
-  fAnalysisManager->CreateNtupleDColumn("CaloEdep", eventAction->GetCalEdep());
-  fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
   fAnalysisManager->CreateNtupleDColumn("EIn");
+  fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
+  for(int i=0; i<ncryst; i++){
+    G4String cName = "Edep" + std::to_string(i);
+    fAnalysisManager->CreateNtupleDColumn(cName);
+  }
   fAnalysisManager->FinishNtuple();
 }
 

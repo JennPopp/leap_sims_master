@@ -120,8 +120,11 @@ void EventAction::EndOfEventAction(const G4Event*)
      G4cout << "Total energy deposited in the respective crystals" <<G4endl;
      for (auto i: fEnergyCalo)
      G4cout<< i << ' ';
+     analysisManager->FillNtupleDColumn(tupleID,0,fGammaEnergyIn);
      analysisManager->FillNtupleDColumn(tupleID,1,fPhotonEnergySum);
-     analysisManager->FillNtupleDColumn(tupleID,2,fGammaEnergyIn);
+     for(int i=0; i<fEnergyCalo.size(); i++){
+       analysisManager->FillNtupleDColumn(tupleID,i+2,fEnergyCalo[i]);
+     }
      analysisManager->AddNtupleRow(tupleID);
     }
   } // end if outType==bunch
