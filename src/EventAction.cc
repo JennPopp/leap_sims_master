@@ -33,13 +33,14 @@
 
 #include "EventAction.hh"
 #include "RunAction.hh"
-
+#include "DetectorConstruction.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-EventAction::EventAction(RunAction *ra, G4String outType, G4String version)
+EventAction::EventAction(RunAction *ra, DetectorConstruction *det, G4String outType, G4String version)
 : G4UserEventAction(),
-  fRunAction(ra)
+  fRunAction(ra),
+  fDetector(det)
 {
   outputType=outType;
   versionType=version;
@@ -65,7 +66,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
      }
 
      else if(versionType=="Cal"){
-      fEnergyCalo =0.;
+      fEnergyCalo.assign (fDetector->GetCrystalNumber(),0.);
       fPhotonEnergySum=0.;
       fGammaEnergyIn=0.;
      }
@@ -74,7 +75,7 @@ void EventAction::BeginOfEventAction(const G4Event*)
       fNP=0; // Number of particles behind magnet
       fGammaEnergySum=0;
       fNGamma=0;// Number of gammas behind magent
-      fEnergyCalo =0.;
+      fEnergyCalo.assign (fDetector->GetCrystalNumber(),0.);
       fPhotonEnergySum=0.;
       fGammaEnergyIn=0.;
       fElectronEnergySum=0;
@@ -115,9 +116,15 @@ void EventAction::EndOfEventAction(const G4Event*)
         tupleID = 1;
       }
      //G4cout <<  "\033[1;31m tupleID =" << tupleID <<"\033[0m\n";
-     analysisManager->FillNtupleDColumn(tupleID,0, fEnergyCalo);
+     //analysisManager->FillNtupleDColumn(tupleID,0, fEnergyCalo);
+     G4cout << "Total energy deposited in the respective crystals" <<G4endl;
+     for (auto i: fEnergyCalo)
+     G4cout<< i << ' ';
+     analysisManager->FillNtupleDColumn(tupleID,0,fGammaEnergyIn);
      analysisManager->FillNtupleDColumn(tupleID,1,fPhotonEnergySum);
-     analysisManager->FillNtupleDColumn(tupleID,2,fGammaEnergyIn);
+     for(int i=0; i<fEnergyCalo.size(); i++){
+       analysisManager->FillNtupleDColumn(tupleID,i+2,fEnergyCalo[i]);
+     }
      analysisManager->AddNtupleRow(tupleID);
     }
   } // end if outType==bunch

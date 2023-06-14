@@ -43,6 +43,7 @@ class G4UIcmdWithAString;
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithoutParameter;
 class G4UIcmdWith3VectorAndUnit;
+class G4UIcmdWithAnInteger;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -66,7 +67,7 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithADoubleAndUnit* fConvZCmd;
     G4UIcmdWithADoubleAndUnit* fCoreZCmd;
     G4UIcmdWithADoubleAndUnit* fSizeXYCmd;
-    G4UIcmdWithAString* fCrystalnumberCmd;
+    G4UIcmdWithAnInteger* fCrystalnumberCmd;
     G4UIcmdWithoutParameter*   fUpdateCmd;
     G4UIcmdWithADoubleAndUnit* fDipoleBCmd;
     G4UIcmdWith3VectorAndUnit* fDipoleSizeCmd;

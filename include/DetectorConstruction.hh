@@ -66,7 +66,7 @@ public:
   void SetConvMaterial (G4String);
   void SetWorldMaterial (G4String);
   void SetCaloMaterial (G4String);
-  void SetCrystalnumber (G4String);
+  void SetCrystalnumber (G4int);
   void SetDipoleB (G4double);
  void SetDipoleSize (G4ThreeVector);
  void SetZtoCalo (G4double);
@@ -86,6 +86,7 @@ public:
   const G4VPhysicalVolume* GetDipVac3PV() const;
   const G4VPhysicalVolume* GetDetectorPV() const;
   const G4VPhysicalVolume* GetAluwrapPV() const;
+  const G4VPhysicalVolume* GetVirtCaloPV() const;
 
 
   G4double           GetWorldSize()  {return fWorldSize;};
@@ -93,7 +94,7 @@ public:
   G4double           GetCoreZ()   {return fCoreThick;};
   G4double           GetConvZ()   {return fConvThick;};
   G4Material*        GetMaterial()   {return fConvMaterial;};
-  G4String           GetCrystalNumber(){return CrystalNumber;};
+  G4int           GetCrystalNumber(){return CrystalNumber;};
   G4double           GetDipoleB() {return fDipoleB;};
   G4ThreeVector      GetDipoleSize() {return fDipoleSize;};
   G4double           GetZtoCalo() {return fZtoCalo;};
@@ -136,7 +137,7 @@ private:
 
   G4String versionType;
   G4String dipolStatus;
-  G4String CrystalNumber;
+  G4int CrystalNumber;
 
   G4double caloZposition;
 
@@ -168,6 +169,9 @@ inline const G4VPhysicalVolume* DetectorConstruction::GetDetectorPV() const {
 }
 inline const G4VPhysicalVolume* DetectorConstruction::GetAluwrapPV() const {
   return fAluwrapPV;
+}
+inline const G4VPhysicalVolume* DetectorConstruction::GetVirtCaloPV() const {
+  return fVirtCaloPV;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

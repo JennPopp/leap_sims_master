@@ -39,12 +39,13 @@
 #include "globals.hh"
 
 class RunAction;
+class DetectorConstruction;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class EventAction : public G4UserEventAction
 {
 public:
-  EventAction(RunAction*, G4String outType, G4String version);
+  EventAction(RunAction*,DetectorConstruction*, G4String outType, G4String version);
   virtual ~EventAction();
 
   virtual void BeginOfEventAction(const G4Event*);
@@ -53,13 +54,15 @@ public:
   void AddVals(G4double Eval, G4double Npart);
   void AddGammaVals(G4double EGammapol, G4double Ngamma);
   void AddeVals(G4double Ee,G4double Ne);
-  void AddEnergyCalo(G4double ECalo);
+  void AddEnergyCalo(G4double ECalo, G4int crystNo);
   void AddPhotonEnergy(G4double EPhoton);
   void AddGammaEnergy(G4double EGamma);
 
+  std::vector<G4double>& GetCalEdep() { return fEnergyCalo; }
 
 private:
   RunAction* fRunAction;
+  DetectorConstruction*   fDetector;
 
   G4double fEnergySum;
   G4double fNP;
@@ -67,7 +70,7 @@ private:
   G4double fNGamma;
   G4double fElectronEnergySum;
   G4double fNElectron;
-  G4double fEnergyCalo;
+  std::vector<G4double> fEnergyCalo;
   G4double fPhotonEnergySum;
   G4double fGammaEnergyIn;
   G4String outputType;
@@ -90,8 +93,8 @@ inline void EventAction::AddeVals(G4double Ee, G4double Ne) {
   fElectronEnergySum += Ee;
   fNElectron += Ne;
 }
-inline void EventAction::AddEnergyCalo(G4double ECalo) { //deposited energy in the crstals
-  fEnergyCalo += ECalo;
+inline void EventAction::AddEnergyCalo(G4double ECalo, G4int crystNo) { //deposited energy in the crstals
+  fEnergyCalo[crystNo] += ECalo;
 }
 
 inline void EventAction::AddPhotonEnergy(G4double EPhoton) { //Photon Energy which comes out of the crystal

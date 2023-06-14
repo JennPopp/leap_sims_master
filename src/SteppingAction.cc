@@ -81,11 +81,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
   // get pre-step-volume of the current aStep
   auto prevolume = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
   //get post-step-volume of the current aStep
-  auto postvolume = aStep->GetPostStepPoint()->GetTouchableHandle()->GetVolume();
+  auto postvolume = aStep->GetPostStepPoint()->GetPhysicalVolume();
 
   auto aTrack = aStep->GetTrack();
+  G4TouchableHistory* theTouchable = (G4TouchableHistory*)(aStep->GetPostStepPoint()->GetTouchable());
 
-  //G4TouchableHistory* theTouchable = (G4TouchableHistory*)(aStep->GetPostStepPoint()->GetTouchable());
   auto core1stat = fRunAction->GetCore1Stat();
   auto core2stat = fRunAction->GetCore2Stat();
   auto dipole1stat = fRunAction->GetDipole1Stat();
@@ -102,16 +102,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
      auto VacStep2PV=fDetector->GetVacStep2PV();
      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV ) {
             // get analysis manager
-            auto Eval=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+            auto Eval=aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
             fEventAction->AddVals(Eval,1);}
 
      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
             // get analysis manager
-            auto EGamma=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+            auto EGamma=aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
             fEventAction->AddGammaVals(EGamma,1);}
      if ( postvolume == VacStep2PV && prevolume !=VacStep2PV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 11) {
            // get analysis manager
-           auto Ee=aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+           auto Ee=aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
            fEventAction->AddeVals(Ee,1);}
     } // end if version pol|polcal
 
@@ -124,7 +124,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
       if (prevolume == CrystalPV) { // her i think we have to use prevolume???
             auto edep = aStep->GetTotalEnergyDeposit();
-            fEventAction->AddEnergyCalo(edep);}
+            auto crystNo = theTouchable->GetReplicaNumber(3);
+            fEventAction->AddEnergyCalo(edep,crystNo);}
 
       if (cal2stat==1 && postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
             auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
@@ -196,7 +197,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           WriteSingleEntry(tupleID, aStep);
         } // end if postvolume = DipoleVac2PV
      } // end if DipolStatus
-     if (versionType=="Cal" || versionType == "PolCal"){
+    if (versionType=="Cal" || versionType == "PolCal"){
        auto VacStep3PV=fDetector->GetVacStep3PV();
        auto VacStep4PV=fDetector->GetVacStep4PV();
        auto AluwrapPV =fDetector->GetAluwrapPV();
@@ -242,7 +243,24 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
  */
        }  // end if version cal|polcal
     } // end if outType=single
-  } // end UserSteppingAction
+
+  else if (outputType == "shower"){
+    if (versionType=="Cal" || versionType == "PolCal"){
+      auto edep = aStep->GetTotalEnergyDeposit();
+      auto VirtCalo=fDetector->GetVirtCaloPV()->GetLogicalVolume();
+      if ( edep>0 && VirtCalo->IsAncestor(postvolume)) {
+        //G4cout << "An entry should be written now" << G4endl;
+        //G4cout << "poststepvolume  "<< postvolume->GetName()<<G4endl;
+        WriteShowerDevEntry(0, aStep);
+      }
+    }
+    else{
+      G4cout << "### Warning!  You want to look at the shower development inside the calorimeter, but no calorimeter is placed !###" << G4endl;
+      // should throw a real error and stop the run at some point
+    }
+
+  } // end if outType=shower
+} // end UserSteppingAction
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
