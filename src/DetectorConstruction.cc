@@ -564,22 +564,38 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4String caloType, 
     G4double vac3xy = alairgapxy;// this version is to place the vacstep in the aluwrapping
 
     G4double virtcalorxy;
-    if (CrystalNumber == 1){
-      virtcalorxy = calorcellxy;
+    G4double frontPlateZ, frontPlateY,frontPlateX;
+
+    if (caloType == "full"){
+      SetCrystalnumber(9);
+      frontPlateZ=10*mm;
+      frontPlateX=160*mm;
+      frontPlateY=130*mm;
+      virtcalorlength+=frontPlateZ/2;
+      virtcalorxy = frontPlateX;
     }
-    else if (CrystalNumber == 9){
-      virtcalorxy = 3*calorcellxy;
+    else{
+      if (CrystalNumber == 1){
+        virtcalorxy = calorcellxy;
+      }
+      else if (CrystalNumber == 9){
+        virtcalorxy = 3*calorcellxy;
+      }
+      else {
+        virtcalorxy = calorcellxy;
+        SetCrystalnumber(1);
+        G4cout << "NO VALID IMPUT FOR CRYSTALNUMBER: Crystalnumber set to one!" << fCaloMaterial->GetName() << G4endl;
+      }
     }
-    else {
-      virtcalorxy = calorcellxy;
-      SetCrystalnumber(1);
-      G4cout << "NO VALID IMPUT FOR CRYSTALNUMBER: Crystalnumber set to one!" << fCaloMaterial->GetName() << G4endl;
-    }
+    
     //..........................................................................
     // Get Materials  .........................................
     G4Material* Air       = allMaterials->GetMat("Air");
     G4Material* Al        = allMaterials->GetMat("Aluminium");
     G4Material* Vacuum    = allMaterials->GetMat("Galactic");
+    G4Material* PEEK = allMaterials->GetMat("PEEK");
+  
+    
 
     //................................................
     //Define Geometry ................................................
@@ -632,7 +648,7 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4String caloType, 
                  0);                        //copy number       //copy number
     }
 
-
+    //
     // Alu-wrapping
     //
     auto fAluWrapS= new G4Box("AluWrapping",  //Name
@@ -737,6 +753,64 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4String caloType, 
                                   false,                     //no boolean operat
                                   0);                        //copy number
 
+    if (caloType == "full"){
+      //
+      // Plastic front plate with holes in it -----------------------------------------------------------
+      // 
+
+      auto FrontPlateBox = new G4Box("FrontPlateBox",  //Name
+                                  frontPlateX/2.,
+                                  frontPlateY/2,
+                                  frontPlateZ/2.); 
+
+      auto FrontPlateLV = new G4LogicalVolume(FrontPlateBox,    //its solid
+                                          PEEK,    //its material
+                                          "FrontPlateLV");       //its name
+      
+      G4double FrontPlateZPos = -calorcelllength/2.-frontPlateZ/2.;
+
+      new G4PVPlacement(0,                   //no rotation
+                        G4ThreeVector(0.,0.,FrontPlateZPos),    //its position //old 0.,0.,aluwraplength/2
+                                FrontPlateLV,            //its logical volume
+                                "FrontPlate",                 //its name
+                                fVirtCaloLV,               //its mother 
+                                false,                     //no boolean operat
+                                0);                        //copy number
+
+      G4VisAttributes* FrontPlateVis = new G4VisAttributes(G4Colour(0,128/255,1));
+      FrontPlateVis->SetForceSolid(true);
+      FrontPlateLV->SetVisAttributes(FrontPlateVis);
+
+      auto FrontPlaneHoleTub = new G4Tubs("FrontPlaneHoleTub",
+                                        0.0*mm, // inner radius
+                                        18.5*mm ,  // outer radius
+                                        frontPlateZ/2., // half length in z
+                                        0.0*deg,  // starting angle
+                                        360.0*deg ); // total angle
+
+      auto FrontPlaneHoleLV = new G4LogicalVolume(FrontPlaneHoleTub,    //its solid
+                                          fWorldMaterial,    //its material
+                                          "FrontPlateHoleLV");       //its name
+
+      G4double FrontHolDist = 39.0*mm ;
+      G4double FrontHolPosX[9]={-FrontHolDist, 0, FrontHolDist,-FrontHolDist, 0, FrontHolDist, -FrontHolDist, 0, FrontHolDist};
+      G4double FrontHolPosY[9]={FrontHolDist,FrontHolDist,FrontHolDist, 0,0,0,-FrontHolDist,-FrontHolDist,-FrontHolDist};
+
+      for (G4int i=0;i<=8;i++){
+        new G4PVPlacement(0,		       //no rotation
+                  G4ThreeVector(FrontHolPosX[i],FrontHolPosY[i],0),  //its position
+                  FrontPlaneHoleLV,            //its logical volume
+                  "FrontPlaneHole",    //its name
+                  FrontPlateLV,               //its mother
+                  false,                     //no boolean operat
+                  i);                        //copy number       //copy number
+      }
+      
+    }
+    
+
+
+
     //------------------------------------------------------------------
     //set visual VisAttributes
     //------------------------------------------------------------------
@@ -771,6 +845,8 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4String caloType, 
     CaloVacStepVis->SetForceSolid(true);
     fVacStepLV3->SetVisAttributes(CaloVacStepVis);
     fVacStepLV4->SetVisAttributes(CaloVacStepVis);
+
+    
 
    /*
    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

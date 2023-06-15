@@ -35,7 +35,9 @@ void Materials::DefineMaterials()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // G4Element* I       = new G4Element(name="Iodine"  ,symbol="I"   , z= 53., a = 126.904*g/mole);
   // G4Element* Cs      = new G4Element(name="Cesium"  ,symbol="Cs"  , z= 55., a = 132.905*g/mole);
-  G4Element* O       = new G4Element(name="Oxygen"  ,symbol="O"   , z= 8  , a = 16.000*g/mole);
+  G4Element* O       = new G4Element(name="Oxygen"  ,symbol="O"   , z= 8  , a = 15.099*g/mole);
+  G4Element* C       = new G4Element(name="Carbon"  ,symbol="C"   , z= 6  , a = 12.011*g/mole);
+  G4Element* H       = new G4Element(name="Hydrogen",symbol="H"   , z= 1  , a = 1.008*g/mole);
   G4Element* As      = new G4Element(name="Arsenic" ,symbol="As"  , z= 33 , a = 74.922*g/mole);
   G4Element* Al      = new G4Element(name="Aluminum",symbol="Al"  , z= 13 , a = 26.982*g/mole);
   G4Element* Si      = new G4Element(name="Silicon" ,symbol="Si"  , z= 14 , a = 28.086*g/mole);
@@ -102,6 +104,13 @@ void Materials::DefineMaterials()
   TF101->AddMaterial(SiO2  , fractionmass=0.4157); //here 0.4153 but it do not add up to 1 therefore I just use 0.4157
   TF101->AddMaterial(K2O   , fractionmass=0.07);
   TF101->AddMaterial(Cer   , fractionmass=0.002);
+
+  // PEEK: polyether ether ketone, radiation hard polymer 
+  PEEK = new G4Material("PEEK", density=1320*kg/m3, ncomponents=3);
+  PEEK->AddElement(C, natoms=19);
+  PEEK->AddElement(H, natoms=14);
+  PEEK->AddElement(O, natoms=3);
+
 
   // Aluminium
   Aluminium = new G4Material ("Aluminium", density=2.70*g/cm3, ncomponents=1);
