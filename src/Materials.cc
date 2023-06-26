@@ -131,7 +131,16 @@ void Materials::DefineMaterials()
   // Quartz (taken from Quartz Cherenkov Simulation)
   //-------------------------------------------------------------------------------------
   const G4int nSpectRI=25;
+  // const G4int nSpectRI=2;
   const G4int nSpectAbs=9;
+
+
+  // G4double EnergySpectrosil[nSpectRI]={1.38 *eV, 6.7*eV};
+  // G4double RISpectrosil[nSpectRI]={1.5, 1.5};
+
+  // G4double EnergySpectrosil[nSpectRI]={1.38 *eV, 6.7*eV};
+  // G4double RISpectrosil[nSpectRI]={1.45181, 1.57495};
+
 
   G4double EnergySpectrosil[nSpectRI]={1.38 *eV, 1.455*eV, 1.755*eV, 1.889*eV,
                                        1.926*eV, 1.959*eV, 2.104*eV, 2.110*eV,
@@ -192,7 +201,7 @@ void Materials::DefineMaterials()
 
   G4MaterialPropertiesTable* MPT_LeadGlass = new G4MaterialPropertiesTable();
   MPT_LeadGlass->AddProperty ("RINDEX", PE_LeadGlass, RI_LeadGlass, n_LeadGlass);
-  MPT_LeadGlass->AddProperty ("ABSLENGTH", PE_LeadGlass2, abslength_LeadGlass, n_LeadGlass2);
+  // MPT_LeadGlass->AddProperty ("ABSLENGTH", PE_LeadGlass2, abslength_LeadGlass, n_LeadGlass2);
 
   TF1->SetMaterialPropertiesTable (MPT_LeadGlass);
   TF101->SetMaterialPropertiesTable (MPT_LeadGlass);
@@ -229,9 +238,9 @@ void Materials::DefineMaterials()
   MPT_Air->AddProperty ("RINDEX", PE_Air, RI_Air, n_air);
   Air->SetMaterialPropertiesTable (MPT_Air);
 
-  //-------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------
   // Aluminum (values taken from QuaSi)
-  //-------------------------------------------------------------------------------------
+  // -------------------------------------------------------------------------------------
   G4double PE_Al[8] = {1.38*eV, 1.90*eV, 2.38*eV, 2.48*eV, 5.17*eV, 5.64*eV, 6.20*eV, 6.7*eV };
   G4double RE_Al[8] = {0.82,    0.83,    0.84,    0.85,    0.86,    0.84,    0.81,    0.79 };
 

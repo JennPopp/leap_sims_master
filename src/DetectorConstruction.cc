@@ -57,9 +57,9 @@
 // #include "G4NistManager.hh"
 #include "G4SystemOfUnits.hh"
 
-// #include "G4OpBoundaryProcess.hh"
-// #include "G4LogicalBorderSurface.hh"
-// #include "G4LogicalSkinSurface.hh"
+#include "G4OpBoundaryProcess.hh"
+#include "G4LogicalBorderSurface.hh"
+#include "G4LogicalSkinSurface.hh"
 
 #include "G4UniformMagField.hh"
 #include "G4FieldManager.hh"
@@ -87,7 +87,9 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String dipolState
 
   SetConvMaterial("G4_W");
   SetWorldMaterial("Galactic");
-  SetCaloMaterial("TF101");
+  // SetCaloMaterial("TF101");
+  SetCaloMaterial("Quartz");
+  // SetCaloMaterial("Air");
 
   fMessenger = new DetectorMessenger(this);
 }
@@ -771,18 +773,23 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4double detthick, 
     fVacStepLV3->SetVisAttributes(CaloVacStepVis);
     fVacStepLV4->SetVisAttributes(CaloVacStepVis);
 
-   /*
+   
    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    // Optical boundary surfaces
    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    // Al <-> Air optical surface copied from QuaSim
-   //
+  //  //
    G4MaterialPropertiesTable *AlWrapProperty = new G4MaterialPropertiesTable();
    const G4int n_AlAir=8;
-   // G4double PE_AlWrap[n_AlAir] = {1.38*eV, 1.90*eV, 2.38*eV, 2.48*eV, 5.17*eV, 5.64*eV, 6.20*eV, 7.77*eV };
-   // G4double RE_AlWrap[n_AlAir] = {0.82,    0.83,    0.84,    0.85,    0.86,    0.84,    0.81,    0.74 };
+  //  G4double PE_AlWrap[n_AlAir] = {1.38*eV, 1.90*eV, 2.38*eV, 2.48*eV, 5.17*eV, 5.64*eV, 6.20*eV, 7.77*eV };
+  //  G4double RE_AlWrap[n_AlAir] = {0.82,    0.83,    0.84,    0.85,    0.86,    0.84,    0.81,    0.74 };
    G4double PE_AlWrap[n_AlAir] = {1.38*eV, 1.90*eV, 2.38*eV, 2.48*eV, 5.17*eV, 5.64*eV, 6.20*eV, 6.7*eV };
    G4double RE_AlWrap[n_AlAir] = {0.82,    0.83,    0.84,    0.85,    0.86,    0.84,    0.81,    0.79 };
+   //with const Reflectivity
+  //  const G4int n_AlAir=2;
+  //  G4double PE_AlWrap[n_AlAir] = {1.38*eV, 6.7*eV };
+  //  G4double RE_AlWrap[n_AlAir] = {1.0, 1.0};
+
    AlWrapProperty -> AddProperty("REFLECTIVITY", PE_AlWrap, RE_AlWrap, n_AlAir);
 
    // optical and logical surface
@@ -806,16 +813,16 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4double detthick, 
     // properties table
     G4MaterialPropertiesTable* AirQSurfProp = new G4MaterialPropertiesTable();
     const G4int n_AirQ=2;
-    G4double OpAirSpecularlobe[n_AirQ] = {1.0, 1.0};
-    G4double OpAirSpecularspike[n_AirQ] = {0.0, 0.0};
-    G4double OpAirBackscatter[n_AirQ] = {0.0, 0.0};
+    // G4double OpAirSpecularlobe[n_AirQ] = {1.0, 1.0};
+    // G4double OpAirSpecularspike[n_AirQ] = {0.0, 0.0};
+    // G4double OpAirBackscatter[n_AirQ] = {0.0, 0.0};
 
     G4double PE_OpAir[n_AirQ] = {1.38*eV, 6.70*eV};
     G4double RI_OpAir[n_AirQ] = {1.00029, 1.00029};
     AirQSurfProp -> AddProperty("RINDEX", PE_OpAir, RI_OpAir, n_AirQ);
-    AirQSurfProp -> AddProperty("SPECULARLOBECONSTANT", PE_OpAir, OpAirSpecularlobe, n_AirQ);
-    AirQSurfProp -> AddProperty("SPECULARSPIKECONSTANT", PE_OpAir, OpAirSpecularspike, n_AirQ);
-    AirQSurfProp -> AddProperty("BACKSCATTERCONSTANT", PE_OpAir, OpAirBackscatter, n_AirQ);
+    // AirQSurfProp -> AddProperty("SPECULARLOBECONSTANT", PE_OpAir, OpAirSpecularlobe, n_AirQ);
+    // AirQSurfProp -> AddProperty("SPECULARSPIKECONSTANT", PE_OpAir, OpAirSpecularspike, n_AirQ);
+    // AirQSurfProp -> AddProperty("BACKSCATTERCONSTANT", PE_OpAir, OpAirBackscatter, n_AirQ);
 
     // optical and logical surface
     G4OpticalSurface* OpAirSurface = new G4OpticalSurface("QAirSurface");
@@ -840,7 +847,7 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4double detthick, 
     	new G4LogicalBorderSurface("QAirSurface", fDetectorPV, fAlAirGapPV, OpAirSurface);
     G4LogicalBorderSurface* AirSurface2 =
     	new G4LogicalBorderSurface("QAirSurface", fAlAirGapPV, fDetectorPV, OpAirSurface);
-    */
+    
 return fVirtCaloLV;
 
 }

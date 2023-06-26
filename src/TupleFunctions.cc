@@ -50,7 +50,7 @@ void WriteShowerDevEntry(int tupleID,const G4Step* aStep){
 void WriteSingleCalEntry(int tupleID,const G4Step* aStep){
   auto fAnalysisManager = G4AnalysisManager::Instance();
   fAnalysisManager->FillNtupleIColumn(tupleID,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
-
+  // fAnalysisManager->FillNtupleDColumn(tupleID,1,aStep->GetTotalEnergyDeposit()/CLHEP::eV );
   fAnalysisManager->FillNtupleDColumn(tupleID,1,aStep->GetPostStepPoint()->GetTotalEnergy()/CLHEP::eV );
   fAnalysisManager->FillNtupleDColumn(tupleID,2,aStep->GetPostStepPoint()->GetTouchable()->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
 

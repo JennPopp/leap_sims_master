@@ -63,9 +63,9 @@ public:
 private:
 
   G4VPhysicsConstructor*  fEmPhysicsList;
-  //G4VPhysicsConstructor*  fOptPhysicsList;
+  G4VPhysicsConstructor*  fOptPhysicsList;
   G4String fEmName;
-  //G4String fOptName; //not sure if we need this
+  G4String fOptName; //not sure if we need this
   G4String versionType;
   PhysicsListMessenger* fMessenger;
 

@@ -37,15 +37,15 @@
 
 #include "G4EmStandardPhysics.hh"
 #include "PhysListEmPolarized.hh"
-//#include "PhysListOptical.hh"
-
+#include "PhysListOptical.hh"
+#include "G4OpticalPhysics.hh"
 #include "G4EmParameters.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PhysicsList::PhysicsList(G4String version)
 : G4VModularPhysicsList(),
-  fEmPhysicsList(0), fEmName("polarized"), fMessenger(0)//, fOptName("optical")
+  fEmPhysicsList(0), fEmName("polarized"), fMessenger(0), fOptName("optical")
 {
   fMessenger = new PhysicsListMessenger(this);
   versionType = version;
@@ -54,7 +54,8 @@ PhysicsList::PhysicsList(G4String version)
   SetVerboseLevel(1);
 
   fEmPhysicsList = new PhysListEmPolarized();
-  //fOptPhysicsList= new PhysListOptical();
+  fOptPhysicsList= new PhysListOptical();
+  // RegisterPhysics(new G4OpticalPhysics());
 
 }
 
@@ -112,12 +113,12 @@ void PhysicsList::ConstructProcess()
   // Electromagnetic physics list
   //
   fEmPhysicsList->ConstructProcess();
-/*
+
   // Optical processes just active if Calorimeter is in use (have to check if this is necessary)
   if(versionType == "Cal" || versionType == "PolCal"){
   fOptPhysicsList->ConstructProcess();
   }
-*/
+
   // step limitation (as a full process)
   //
   AddStepMax();

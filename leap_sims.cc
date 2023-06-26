@@ -37,6 +37,7 @@
 
 #include "DetectorConstruction.hh"
 #include "PhysicsList.hh"
+// #include "PhysicsListTest.hh"
 #include "PrimaryGeneratorAction.hh"
 
 #include "RunAction.hh"
@@ -121,7 +122,8 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   // G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
   // physicsList->RegisterPhysics(opticalPhysics);
   // runManager-> SetUserInitialization(physicsList);
-
+  //// This is to do the physcis list from Antonios
+  // runManager->SetUserInitialization(new PhysicsList());
   // Physicslist user defined
   runManager->SetUserInitialization(new PhysicsList(version));
   runManager->SetUserAction(prim = new PrimaryGeneratorAction());

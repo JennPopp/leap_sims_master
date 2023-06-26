@@ -126,11 +126,21 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
             auto edep = aStep->GetTotalEnergyDeposit();
             fEventAction->AddEnergyCalo(edep);}
 
-      if (cal2stat==1 && postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
-            auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
+      // if (cal2stat==1 && postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
+      //       //aTrack->SetTrackStatus(fStopAndKill);
+      //       auto ephot = aStep->GetTotalEnergyDeposit()/eV;
+      //       // G4cout<<ephot<<G4endl;
+      //       // auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
+      //       fEventAction->AddPhotonEnergy(ephot);   // here the Photon Energy will be added up
+      //       fAnalysisManager->FillH1(0, ephot);}
+            // G4cout<<ephot<<G4endl;
+      if (cal2stat==1 && aStep->GetTotalEnergyDeposit()>0. && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
+            //aTrack->SetTrackStatus(fStopAndKill);
+            auto ephot = aStep->GetTotalEnergyDeposit()/eV;
+            // G4cout<<ephot<<G4endl;
+            // auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
             fEventAction->AddPhotonEnergy(ephot);   // here the Photon Energy will be added up
             fAnalysisManager->FillH1(0, ephot);}
-
 
       if (cal1stat==1 && postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22){
             auto egamma = aStep->GetPostStepPoint()->GetTotalEnergy()/MeV;
@@ -201,6 +211,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
        auto VacStep4PV=fDetector->GetVacStep4PV();
        auto AluwrapPV =fDetector->GetAluwrapPV();
 
+      //  if (cal2stat==1 && aStep->GetTotalEnergyDeposit()>0. && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
        if ( cal2stat==1 && postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
            if (versionType=="Cal" && dipolStatus=="Off"){
              tupleID = 0;

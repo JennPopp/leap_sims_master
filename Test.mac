@@ -13,8 +13,8 @@
 /leap/det/Setnumberofcrystals 1 
 /leap/det/update
 #
-/gps/energy 20 MeV
-/gps/number 10 #number of electrons in a bunch
+/gps/energy 1 GeV
+/gps/number 20 #number of electrons in a bunch
 /gps/particle e-
 /gps/pos/centre 0.0 0.0 -2.0 m
 
@@ -35,5 +35,4 @@
 #/gps/direction 0 0 1
 #------------------------------------------------------
 
-# Visualization setting
-/control/execute vis.mac
+/run/beamOn 1 
