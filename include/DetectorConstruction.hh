@@ -49,7 +49,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
 
-  DetectorConstruction(G4String version, G4String dipolState);
+  DetectorConstruction(G4String version, G4String dipolState, G4String caloType);
   ~DetectorConstruction();
 
 public:
@@ -58,7 +58,7 @@ public:
   void ConstructSDandField();
   G4LogicalVolume* ConstructSolenoid(G4double magthick,G4double maggap2, G4double vacthick);
   G4LogicalVolume* ConstructDipol();
-  G4LogicalVolume* ConstructCalorimeter(G4double detthick, G4double detxy , G4double alairgapthick, G4double aluwrapthick, G4double vacthick);
+  G4LogicalVolume* ConstructCalorimeter(G4String caloType, G4double detthick, G4double detxy , G4double alairgapthick, G4double aluwrapthick, G4double vacthick);
 
   void SetSizeXY   (G4double);
   void SetCoreThick   (G4double);
@@ -137,6 +137,7 @@ private:
 
   G4String versionType;
   G4String dipolStatus;
+  G4String caloTyp;
   G4int CrystalNumber;
 
   G4double caloZposition;

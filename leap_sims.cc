@@ -62,7 +62,7 @@
 namespace {
   void PrintUsage() {
     G4cerr << " Usage: " << G4endl;
-    G4cerr << " leap_sims [-m macro ] [-f outFileName] [-t outType] [-v version] [-d dipolState]" << G4endl;
+    G4cerr << " leap_sims [-m macro ] [-f outFileName] [-t outType] [-v version] [-d dipolState] [-c caloType]" << G4endl;
   }
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -75,6 +75,7 @@ G4String outFile;
 G4String outType;
 G4String version;
 G4String dipolState;
+G4String caloType;
 
 for ( G4int i=1; i<argc; i=i+2 ) {
   if      ( G4String(argv[i]) == "-m" ) macro = argv[i+1];
@@ -82,6 +83,7 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   else if ( G4String(argv[i]) == "-t" ) outType = argv[i+1];
   else if ( G4String(argv[i]) == "-v" ) version = argv[i+1];
   else if ( G4String(argv[i]) == "-d" ) dipolState = argv[i+1];
+  else if ( G4String(argv[i]) == "-c" ) caloType = argv[i+1];
   else{
     PrintUsage();
     return 1;
@@ -91,6 +93,7 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   if (outType.empty()){outType = "bunch";}
   if (version.empty()){version = "Pol";}
   if (dipolState.empty()){dipolState = "Off";}
+  if (caloType.empty()){caloType = "simple";}
 
   // Detect interactive mode (if no macro provided) and define UI session
   //
@@ -113,7 +116,7 @@ for ( G4int i=1; i<argc; i=i+2 ) {
   // set mandatory initialization classes
   DetectorConstruction* det;
   PrimaryGeneratorAction* prim;
-  runManager->SetUserInitialization(det = new DetectorConstruction(version, dipolState));
+  runManager->SetUserInitialization(det = new DetectorConstruction(version, dipolState, caloType));
 
   // PhysicsList FTFP_BERT with optical PhysList (like in all optical physics examples for Geant4)
   // G4VModularPhysicsList* physicsList = new FTFP_BERT;
