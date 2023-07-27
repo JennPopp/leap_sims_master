@@ -314,7 +314,7 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
     //
     //Get materials
     //
-    G4Material* absMat    = allMaterials->GetMat("G4_W");
+    //G4Material* absMat    = allMaterials->GetMat("G4_W");
     G4Material* magMat    = allMaterials->GetMat("G4_Fe");
     G4Material* coilMat   = allMaterials->GetMat("G4_Cu");
     G4Material* shieldMat = allMaterials->GetMat("G4_Pb");
@@ -414,7 +414,7 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
                                         360.0*deg ); // total angle
 
     G4LogicalVolume *LogicalConversion = new G4LogicalVolume(solidConversion, 	 //its solid
-                absMat,          //its material
+                fConvMaterial,          //its material
                 "ConversionTarget" ,	 //its name
                 0,0,0);
 
