@@ -1,35 +1,36 @@
-# Macro file for the initialization of leap sim
-# in interactive session
-#
-# Set some default verbose
-#
 /control/verbose 2
-/control/saveHistory
 /run/verbose 2
-#
-# Initialize kernel
+/leap/phys/addPhysics polarized
+
+/run/printProgress 1
+
 /run/initialize
-#
-/gps/energy 20 MeV
-/gps/number 10 #number of electrons in a bunch
+
+#-----------particle-gunlike-------------------------------
+/gps/energy 30 MeV
+/gps/number 10
 /gps/particle e-
-/gps/pos/centre 0.0 0.0 -2.0 m
+/gps/pos/centre 0.0 0.0 -3.1 m
 
 #---------gps-commands-------------------------------------
 #simply comment if not needed
 #2D-Beam
+/gps/ene/type Gauss
+/gps/ene/sigma 0.0
 /gps/pos/type Beam
-/gps/pos/sigma_r 0.001  mm
+/gps/pos/sigma_x 0.0  mm
+/gps/pos/sigma_y 0.0  mm
 /gps/ang/type beam2d
-#/gps/ang/sigma_x 0.01 rad
-#/gps/ang/sigma_y 0.01 rad
+/gps/ang/sigma_x 0.0 rad
+/gps/ang/sigma_y 0.0 rad
 /gps/ang/rot1 0 1 0
 /gps/ang/rot2 1 0 0
 
-#Point like source
-#/gps/pos/type Point
-#/gps/direction 0 0 1
 #------------------------------------------------------
+#Polarization of the beam
+
+/gps/polarization 0. 0. 1
+
 
 # Visualization setting
 /control/execute vis.mac

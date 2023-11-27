@@ -40,6 +40,8 @@ private:
   G4Material* Copper;
   G4Material* Aluminium;
   G4Material* PEEK;
+  G4Material* Steel;
+  G4Material* Lanex;
 
   // G4Material* Grease; ///< Optical grease between PMT window and quartz stick
 

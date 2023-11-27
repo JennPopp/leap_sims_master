@@ -77,6 +77,8 @@ void Materials::DefineMaterials()
   Tungsten = nistManager->FindOrBuildMaterial("G4_W");
   Copper = nistManager->FindOrBuildMaterial("G4_Cu");
   Lead = nistManager->FindOrBuildMaterial("G4_Pb");
+  Steel = nistManager->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+  Lanex = nistManager->FindOrBuildMaterial("G4_GADOLINIUM_OXYSULFIDE");
 
   G4Material* PbO = nistManager->FindOrBuildMaterial("G4_LEAD_OXIDE");
   G4Material* SiO2 = nistManager->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
@@ -105,7 +107,7 @@ void Materials::DefineMaterials()
   TF101->AddMaterial(K2O   , fractionmass=0.07);
   TF101->AddMaterial(Cer   , fractionmass=0.002);
 
-  // PEEK: polyether ether ketone, radiation hard polymer 
+  // PEEK: polyether ether ketone, radiation hard polymer
   PEEK = new G4Material("PEEK", density=1320*kg/m3, ncomponents=3);
   PEEK->AddElement(C, natoms=19);
   PEEK->AddElement(H, natoms=14);

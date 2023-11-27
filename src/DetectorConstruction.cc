@@ -68,26 +68,27 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-DetectorConstruction::DetectorConstruction(G4String version, G4String dipolState, G4String caloType)
+DetectorConstruction::DetectorConstruction(G4String version, G4String dipolState, G4String caloType, G4String beamLine)
 : G4VUserDetectorConstruction(),
   PhysicalWorld(0), PhysicalCore(0), fConvMaterial(0), fWorldMaterial(0), fCaloMaterial(0), fLogicalDipol(0)
 {
   versionType=version;
   dipolStatus = dipolState;
   caloTyp = caloType;
+  BeamLine = beamLine;
   allMaterials = new Materials();
   allMaterials->DefineMaterials();
 
   fSizeXY = 50*mm;
   fCoreThick = 150*mm;
   fConvThick = 1.75*mm;
-  fWorldSize = 4.1*m;
+  fWorldSize = 7.1*m;
   CrystalNumber= 9;
   fDipoleB = 0.1 * tesla;
   fDipoleSize = G4ThreeVector( 50*mm, 25*mm, 100*mm);
   fZtoCalo = 50 * mm;
 
-  SetConvMaterial("G4_W");
+  SetConvMaterial("Galactic");
   SetWorldMaterial("Galactic");
   SetCaloMaterial("TF101");
 
@@ -286,6 +287,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   } //end if-statement for the calorimeter geometry
 
+  if (BeamLine == "On") {
+    ConstructBeamLine(LogicalWorld,magthick);
+
+  }
   PrintParameters();
 
   //always return the root volume
@@ -898,78 +903,6 @@ G4LogicalVolume* DetectorConstruction::ConstructCalorimeter( G4String caloType, 
     fVacStepLV3->SetVisAttributes(CaloVacStepVis);
     fVacStepLV4->SetVisAttributes(CaloVacStepVis);
 
-
-
-   /*
-   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   // Optical boundary surfaces
-   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   // Al <-> Air optical surface copied from QuaSim
-   //
-   G4MaterialPropertiesTable *AlWrapProperty = new G4MaterialPropertiesTable();
-   const G4int n_AlAir=8;
-   // G4double PE_AlWrap[n_AlAir] = {1.38*eV, 1.90*eV, 2.38*eV, 2.48*eV, 5.17*eV, 5.64*eV, 6.20*eV, 7.77*eV };
-   // G4double RE_AlWrap[n_AlAir] = {0.82,    0.83,    0.84,    0.85,    0.86,    0.84,    0.81,    0.74 };
-   G4double PE_AlWrap[n_AlAir] = {1.38*eV, 1.90*eV, 2.38*eV, 2.48*eV, 5.17*eV, 5.64*eV, 6.20*eV, 6.7*eV };
-   G4double RE_AlWrap[n_AlAir] = {0.82,    0.83,    0.84,    0.85,    0.86,    0.84,    0.81,    0.79 };
-   AlWrapProperty -> AddProperty("REFLECTIVITY", PE_AlWrap, RE_AlWrap, n_AlAir);
-
-   // optical and logical surface
-   G4OpticalSurface* OpAlWrapSurface = new G4OpticalSurface("AirAluSurface");
-   OpAlWrapSurface -> SetType(dielectric_metal);
-   OpAlWrapSurface -> SetFinish(ground);
-   G4double AlPolish = 0; // 1 = smooth, 0 = maximum roughness
-   OpAlWrapSurface -> SetPolish(AlPolish);
-   OpAlWrapSurface -> SetModel(glisur);
-   OpAlWrapSurface -> SetMaterialPropertiesTable(AlWrapProperty);
-   // need to attach them to all the physical volumes for the alu
-   G4LogicalBorderSurface* AlWrapSurface =
-            new G4LogicalBorderSurface("AirAluSurface",fAluwrapPV , fAlAirGapPV, OpAlWrapSurface);
-   G4LogicalBorderSurface* AlWrapSurface2 =
-            new G4LogicalBorderSurface("AirAluSurface", fAlAirGapPV, fAluwrapPV, OpAlWrapSurface);
-
-
-    //
-    /// - Quartz <-> Air: Unified model (taken from QuaSi) /have to check if TF1 <-> Air is different
-
-    // properties table
-    G4MaterialPropertiesTable* AirQSurfProp = new G4MaterialPropertiesTable();
-    const G4int n_AirQ=2;
-    G4double OpAirSpecularlobe[n_AirQ] = {1.0, 1.0};
-    G4double OpAirSpecularspike[n_AirQ] = {0.0, 0.0};
-    G4double OpAirBackscatter[n_AirQ] = {0.0, 0.0};
-
-    G4double PE_OpAir[n_AirQ] = {1.38*eV, 6.70*eV};
-    G4double RI_OpAir[n_AirQ] = {1.00029, 1.00029};
-    AirQSurfProp -> AddProperty("RINDEX", PE_OpAir, RI_OpAir, n_AirQ);
-    AirQSurfProp -> AddProperty("SPECULARLOBECONSTANT", PE_OpAir, OpAirSpecularlobe, n_AirQ);
-    AirQSurfProp -> AddProperty("SPECULARSPIKECONSTANT", PE_OpAir, OpAirSpecularspike, n_AirQ);
-    AirQSurfProp -> AddProperty("BACKSCATTERCONSTANT", PE_OpAir, OpAirBackscatter, n_AirQ);
-
-    // optical and logical surface
-    G4OpticalSurface* OpAirSurface = new G4OpticalSurface("QAirSurface");
-    OpAirSurface -> SetType(dielectric_dielectric);
-    OpAirSurface -> SetModel(unified);
-
-    // from Janacek, Morses, Simulating Scintillator Light ..., IEEE 2010:
-    // polished 1.3 degree, etched 3.8 degree, ground 12 degree
-    //          0.023              0.066              0.21
-    // degree   1      2      3      4      5      6      7      8      9      10     11     12
-    // radians  0.017  0.035  0.052  0.070  0.087  0.105  0.122  0.140  0.157  0.175  0.192  0.209
-    // degree   13     14     15
-    // radians  0.227  0.244  0.262
-
-    OpAirSurface -> SetFinish(ground);
-    //  G4double sigma_alpha = 0.023;
-    //  G4double sigma_alpha = 0.066;
-    G4double sigma_alpha = 0.209;
-    OpAirSurface -> SetSigmaAlpha(sigma_alpha);
-    OpAirSurface -> SetMaterialPropertiesTable(AirQSurfProp);
-    G4LogicalBorderSurface* AirSurface =
-    	new G4LogicalBorderSurface("QAirSurface", fDetectorPV, fAlAirGapPV, OpAirSurface);
-    G4LogicalBorderSurface* AirSurface2 =
-    	new G4LogicalBorderSurface("QAirSurface", fAlAirGapPV, fDetectorPV, OpAirSurface);
-    */
 return fVirtCaloLV;
 
 }
@@ -991,6 +924,224 @@ G4LogicalVolume* DetectorConstruction::ConstructDipol(){
 
   return fLogicalDipol;
 }
+
+void DetectorConstruction::ConstructBeamLine(G4LogicalVolume* LogicalWorld, G4double magthick){
+
+  //...............................
+  // Define all parameters
+  //................................
+
+  // BeamLineTube
+  G4double BLLength = 2600*mm;
+  G4double BLInnerR = 18.5*mm;
+  G4double BLOuterR = 19.25*mm;
+
+  // Exit window of vacuum chamber
+  G4double WindowThick = 0.3*mm;
+
+  // Copper Collimator
+  G4double CollimatorLength = 200*mm;
+  G4double CollimatorWidth = 100*mm;
+  G4double CollimatorRadius = 9.4*mm;
+
+  // Lanex Screen
+  G4double LanexRad = 76.2*mm / 2.; // Diameter of Lanex Screen = 3 inches
+  G4double LanexThick = 0.5*mm; // thickness
+
+  //solenoid holder
+  G4double holderBoxWidth = 24.5*cm;
+  G4double holderBoxHeight = 10*cm;
+
+  //Distances between parts
+  G4double DistTubColl = 100*mm;
+  G4double DistCollSol = 200*mm;
+
+  // position of particle gun (at centre ov vacuum chamber, here beginning of tube)
+  G4double IPz = BLLength + WindowThick + DistTubColl + CollimatorLength + DistCollSol;
+
+  //.................................
+  // Get the Materials
+  //.................................
+  G4Material* Steel = allMaterials->GetMat("G4_STAINLESS-STEEL");
+  G4Material* Vacuum = allMaterials->GetMat("Galactic");
+  G4Material* Alu = allMaterials->GetMat("Aluminium");
+  G4Material* Copper = allMaterials->GetMat("G4_Cu");
+  G4Material* Lanex = allMaterials->GetMat("G4_GADOLINIUM_OXYSULFIDE");
+
+  //...............................
+  // beam line steel tube
+  //................................
+  auto SolidBL = new G4Tubs("BLSteelTube", //name
+                              0, // inner radius
+                              BLOuterR,  // outer radius
+                              BLLength/2., // half length in z
+                              0.0*deg,  // starting angle
+                              360.0*deg ); // total angle
+
+  auto LogicBL = new G4LogicalVolume(SolidBL, //its solid
+                                      Steel, // its material
+                                      "BLSteelTube" ); // its name
+
+  new G4PVPlacement(0,                   //no rotation
+                    G4ThreeVector(0.,0.,-IPz+BLLength/2),    //its position
+                            LogicBL,            //its logical volume
+                            "BLSteelTube",                 //its name
+                            LogicalWorld,               //its mother
+                            false,                     //no boolean operat
+                            0);                        //copy number
+
+  //...............................
+  // beam line inner vacuum
+  //................................
+
+  auto SolidBLVac = new G4Tubs("BLVacTube", //name
+                              0, // inner radius
+                              BLInnerR,  // outer radius
+                              BLLength/2., // half length in z
+                              0.0*deg,  // starting angle
+                              360.0*deg ); // total angle
+
+  auto LogicBLVac = new G4LogicalVolume(SolidBLVac, //its solid
+                                      Vacuum, // its material
+                                      "BLVacTube" ); // its name
+
+  new G4PVPlacement(0,                   //no rotation
+                    G4ThreeVector(0.,0.,0.),    //its position
+                            LogicBLVac,            //its logical volume
+                            "BLVacTube",                 //its name
+                            LogicBL,               //its mother
+                            false,                     //no boolean operat
+                            0);                        //copy number
+
+  //...............................
+  // exit window of vacuum pipe
+  //................................
+  auto SolidWindow = new G4Tubs("WindowTube", //name
+                              0, // inner radius
+                              BLOuterR,  // outer radius
+                              WindowThick/2., // half length in z
+                              0.0*deg,  // starting angle
+                              360.0*deg ); // total angle
+
+  auto LogicWindow = new G4LogicalVolume(SolidWindow, //its solid
+                                      Alu, // its material
+                                      "Window" ); // its name
+
+  new G4PVPlacement(0,                   //no rotation
+                    G4ThreeVector(0.,0.,-IPz+BLLength+WindowThick/2.),    //its position
+                            LogicWindow,            //its logical volume
+                            "Window",                 //its name
+                            LogicalWorld,               //its mother
+                            false,                     //no boolean operat
+                            0);                        //copy number
+
+  //...............................
+  // Copper Collimator
+  //................................
+  auto SolidCollimator = new G4Box("CollimatorSolid",  //Name
+                                CollimatorWidth/2.,   // x size
+                                CollimatorWidth/2.,     // y size
+                                CollimatorLength/2.); // z size
+
+  auto LogicCollimator = new G4LogicalVolume(SolidCollimator, //its solid
+                                      Copper, // its material
+                                      "Collimator" ); // its name
+
+  new G4PVPlacement(0,                   //no rotation
+                    G4ThreeVector(0.,0.,-(CollimatorLength/2. + DistCollSol)),    //its position
+                            LogicCollimator,            //its logical volume
+                            "Collimator",                 //its name
+                            LogicalWorld,               //its mother
+                            false,                     //no boolean operat
+                            0);                        //copy number
+
+  //...............................
+  // Copper Collimator  Hole
+  //................................
+  auto SolidCollHole = new G4Tubs("CollHoleSolid", //name
+                              0, // inner radius
+                              CollimatorRadius,  // outer radius
+                              CollimatorLength/2., // half length in z
+                              0.0*deg,  // starting angle
+                              360.0*deg ); // total angle
+
+  auto LogicCollHole = new G4LogicalVolume(SolidCollHole, //its solid
+                                      fWorldMaterial, // its material
+                                      "CollimatorHole" ); // its name
+
+  new G4PVPlacement(0,                   //no rotation
+                    G4ThreeVector(0.,0.,0.),    //its position
+                            LogicCollHole,            //its logical volume
+                            "CollimatorHole",                 //its name
+                            LogicCollimator,               //its mother
+                            false,                     //no boolean operat
+                            0);                        //copy number
+
+  // .........................................
+  // Lanex Screens
+  //..........................................
+  auto SolidLanex = new G4Tubs("LanexSolid", //Name
+                               0, // inner radius
+                               LanexRad, // outer radius
+                               LanexThick/2, // half length in Z
+                               0.0*deg, // starting angle
+                               360.0*deg // total angle
+                             );
+
+  auto LogicLanex = new G4LogicalVolume(SolidLanex, // it's solid
+                                        Lanex, // its material
+                                        "LanexScreen"
+                                      );
+
+  new G4PVPlacement(0,                   //no rotation
+                    G4ThreeVector(0.,0.,-LanexThick),    //its position
+                            LogicLanex,            //its logical volume
+                            "LanexScreen1",                 //its name
+                            LogicalWorld,               //its mother
+                            false,                     //no boolean operat
+                            0);
+
+  new G4PVPlacement(0,                   //no rotation
+                    G4ThreeVector(0.,0.,magthick+LanexThick),    //its position
+                            LogicLanex,            //its logical volume
+                            "LanexScreen1",                 //its name
+                            LogicalWorld,               //its mother
+                            false,                     //no boolean operat
+                            0);
+//..................................
+  //Set all the visual Parameters
+  //..................................
+
+  G4VisAttributes * BLVis= new G4VisAttributes( G4Colour(191/255. ,191/255. ,191/255. ));
+      BLVis->SetVisibility(true);
+      BLVis->SetLineWidth(2);
+      LogicBL->SetVisAttributes(BLVis);
+
+  G4VisAttributes * BLVacVis= new G4VisAttributes( G4Colour(127/255. ,233/255. ,255/255. ));
+      BLVacVis->SetVisibility(true);
+      BLVacVis->SetLineWidth(2);
+      BLVacVis->SetForceSolid(true);
+      LogicBLVac->SetVisAttributes(BLVacVis);
+
+  G4VisAttributes * WindowVis= new G4VisAttributes( G4Colour(252/255. ,252/255. ,12/255. ));
+      WindowVis->SetVisibility(true);
+      WindowVis->SetLineWidth(2);
+      WindowVis->SetForceSolid(true);
+      LogicWindow->SetVisAttributes(WindowVis);
+
+  G4VisAttributes * CollVis= new G4VisAttributes( G4Colour(125/255. ,50/255. ,255/255. ));
+      CollVis->SetVisibility(true);
+      CollVis->SetLineWidth(2);
+      LogicCollimator->SetVisAttributes(CollVis);
+
+  G4VisAttributes * CollHoleVis= new G4VisAttributes( G4Colour(252/255. ,255/255. ,255/255. ));
+      CollHoleVis->SetVisibility(true);
+      CollHoleVis->SetLineWidth(2);
+      CollHoleVis->SetForceSolid(true);
+      LogicCollHole->SetVisAttributes(CollHoleVis);
+
+}
+
 
 void DetectorConstruction::PrintParameters()
 {
