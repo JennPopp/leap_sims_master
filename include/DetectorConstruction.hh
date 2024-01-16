@@ -56,7 +56,7 @@ public:
 
   G4VPhysicalVolume* Construct();
   void ConstructSDandField();
-  G4LogicalVolume* ConstructSolenoid(G4double magthick,G4double maggap2, G4double vacthick);
+  G4LogicalVolume* ConstructSolenoid(G4double magthick,G4double maggap2, G4double vacthick, G4String beamLine);
   G4LogicalVolume* ConstructDipol();
   void ConstructBeamLine(G4LogicalVolume* LogicalWorld, G4double magthick);
   G4LogicalVolume* ConstructCalorimeter(G4String caloType, G4double detthick, G4double detxy , G4double alairgapthick, G4double aluwrapthick, G4double vacthick);
@@ -127,8 +127,8 @@ private:
   G4double              fConvThick;
   G4double              fWorldSize;
   G4double              fDipoleB;
-  G4ThreeVector              fDipoleSize;
-  G4double         fZtoCalo;
+  G4ThreeVector         fDipoleSize;
+  G4double              fZtoCalo;
   G4Material*           fConvMaterial;
   G4Material*           fWorldMaterial;
   G4Material*           fCaloMaterial;
@@ -143,6 +143,11 @@ private:
   G4int CrystalNumber;
 
   G4double caloZposition;
+
+
+  G4double vacthick, conelength,coregap,magthick;
+  G4double absrad, shieldrad,corethick,convthick,coilthick;
+  G4double shieldthick,conedist,Rmax,Routercoil,Ropen; 
 
 };
 

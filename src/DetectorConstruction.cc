@@ -120,10 +120,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   // Solenoid
   //...........................
-  G4double vacthick = 1.0*mm;
-  G4double  maggap1 = 48.5*mm;
-  G4double  maggap2 = 12.5*mm;
-  G4double magthick = 2.*(maggap1+maggap2+fConvThick)+fCoreThick;
+  vacthick = 1.0*mm; // thickness of vacuum steps , aka. idealized detectors
+  coregap = 12.5*mm; // -b: distance between core and cone, else: dist between core and conv. target
+  if (BeamLine == "On"){
+    conelength = 50*mm; // length of opening cone 
+    magthick = 2.*(conelength+coregap)+fCoreThick;
+  }else{
+    conelength = 48.5*mm;
+    magthick = 2.*(conelength+coregap+fConvThick)+fCoreThick;
+  }
+  
+  
+  
 
   //
   //Dipol
@@ -159,7 +167,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   if (versionType == "Pol" || versionType == "PolCal"){
 
     //virtual mother volume containing the rest of the polarimeter
-    G4LogicalVolume* LogicalSolenoid = ConstructSolenoid(magthick, maggap2, vacthick);
+    G4LogicalVolume* LogicalSolenoid = ConstructSolenoid(magthick, coregap, vacthick, BeamLine);
 
     new G4PVPlacement(0,	//rotation
                      G4ThreeVector(0.0*mm, 0.0*mm, magthick/2.),// translation position
@@ -303,18 +311,29 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
-  G4double maggap2, G4double vacthick){
+  G4double coregap, G4double vacthick, G4String beamLine){
     //
     // Geometry Parameters
     //
+    absrad = fSizeXY/2.;
+    shieldrad = 75.0*mm;
+    conelength = 50.0*mm;
+    corethick = fCoreThick;
+    coilthick = corethick + 25.0*mm;
+    shieldthick = corethick - 25.0*mm;
 
-    G4double  absrad  = fSizeXY/2.;
-    G4double shieldrad=75.0*mm;
-    G4double corethick = fCoreThick;
-    G4double convthick = fConvThick;
-    G4double  coilthick = corethick + 25.0*mm;
-    G4double  shieldthick = corethick - 25.0*mm;
-    G4double  conedist = corethick/2. + maggap2;
+    if (beamLine == "On"){
+      Rmax = 162.0*mm;
+      Ropen = 30.0*mm;
+      Routercoil = 161*mm;
+      conedist = corethick/2. + coregap;
+    } else{
+      Rmax = 196.0*mm;
+      Ropen = 36.84308*mm;
+      Routercoil = 170*mm;
+      convthick = fConvThick;
+      conedist = corethick/2. + coregap + convthick;
+    }
 
     //
     //Get materials
@@ -326,9 +345,9 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
 
     // Housing of Magnet
     //
-    G4double DzArrayMagnet   [] = {-magthick/2.  , -conedist , -corethick/2. , corethick/2.,  conedist, magthick/2.    };
-    G4double RminArrayMagnet [] = {36.84308*mm,  absrad,  absrad , absrad,  absrad,  36.84308*mm};
-    G4double RmaxArrayMagnet [] = {196.0*mm   ,  196.0*mm, 196.0*mm ,196.0*mm, 196.0*mm, 196.0*mm    };
+    G4double DzArrayMagnet   [] = {-magthick/2., -conedist, -corethick/2., corethick/2.,  conedist, magthick/2.};
+    G4double RminArrayMagnet [] = {Ropen,  absrad,  absrad , absrad,  absrad,  Ropen};
+    G4double RmaxArrayMagnet [] = {Rmax, Rmax, Rmax, Rmax, Rmax, Rmax};
 
     G4Tubs *solidSolenoid = new G4Tubs("solidSolenoid",
                                         0.0*mm, // inner radius
@@ -367,7 +386,7 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
     //
     G4Tubs *solidCuTube= new G4Tubs("solidCuTube", //name
                                     shieldrad, // inner radius
-                                    170.0*mm,  // outer radius
+                                    Routercoil,  // outer radius
                                     coilthick/2., // half length in z
                                     0.0*deg,  // starting angle
                                     360.0*deg ); // total angle
@@ -408,29 +427,37 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
     			    false,              //no boolean operation
     			    0);                 //copy number
 
+    if (beamLine != "On"){
+      // Conversion Target
+      //
+      G4Tubs *solidConversion = new G4Tubs("solidConversion", // name
+                                          0.0*mm, // inner radius
+                                          absrad, // outer radius
+                                          convthick/2., // half length in z
+                                          0.0*deg, // starting angle
+                                          360.0*deg ); // total angle
 
-    // Conversion Target
-    //
-    G4Tubs *solidConversion = new G4Tubs("solidConversion", // name
-                                        0.0*mm, // inner radius
-                                        absrad, // outer radius
-                                        convthick/2., // half length in z
-                                        0.0*deg, // starting angle
-                                        360.0*deg ); // total angle
+      G4LogicalVolume *LogicalConversion = new G4LogicalVolume(solidConversion, 	 //its solid
+                  fConvMaterial,          //its material
+                  "ConversionTarget" ,	 //its name
+                  0,0,0);
 
-    G4LogicalVolume *LogicalConversion = new G4LogicalVolume(solidConversion, 	 //its solid
-                fConvMaterial,          //its material
-                "ConversionTarget" ,	 //its name
-                0,0,0);
+      new G4PVPlacement(0,	//rotation
+                  G4ThreeVector(0.0*mm, 0.0*mm, -coregap-convthick/2-corethick/2),
+                LogicalConversion,         //its logical volume
+                "PhysicalConversion",   //its name  (2nd constructor)
+                LogicalSolenoid,              //its mother volume
+                false,                 //no boolean operation
+                0);                       //copy number
 
-    new G4PVPlacement(0,	//rotation
-                G4ThreeVector(0.0*mm, 0.0*mm, -maggap2-convthick/2-corethick/2),
-              LogicalConversion,         //its logical volume
-              "PhysicalConversion",   //its name  (2nd constructor)
-              LogicalSolenoid,              //its mother volume
-              false,                 //no boolean operation
-              0);                       //copy number
+      G4VisAttributes * ConversionTargetVis= new G4VisAttributes( G4Colour(105/255. ,105/255. ,105/255. ));
+      ConversionTargetVis->SetVisibility(true);
+      ConversionTargetVis->SetLineWidth(2);
+      ConversionTargetVis->SetForceSolid(true);
+      LogicalConversion->SetVisAttributes(ConversionTargetVis);
 
+      }
+    
 
     // Iron Core
     //
@@ -471,7 +498,7 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
                                            "VacStep1");  //its name
 
     fVacStepPV1 = new G4PVPlacement(0,                 //no rotation
-                         G4ThreeVector(0.,0., - corethick/2 -maggap2 +vacthick/2 +1.0*mm),    //its position
+                         G4ThreeVector(0.,0., - corethick/2 -coregap +vacthick/2 +1.0*mm),    //its position
                                  VacStepLV1,            //its logical volume
                                  "VacStep1",                 //its name
                                  LogicalSolenoid,               //its mother
@@ -526,12 +553,6 @@ G4LogicalVolume* DetectorConstruction::ConstructSolenoid(G4double magthick,
       LeadTubeVis->SetVisibility(true);
       LeadTubeVis->SetLineWidth(1);
       LogicalPbtube->SetVisAttributes(LeadTubeVis);
-
-      G4VisAttributes * ConversionTargetVis= new G4VisAttributes( G4Colour(105/255. ,105/255. ,105/255. ));
-      ConversionTargetVis->SetVisibility(true);
-      ConversionTargetVis->SetLineWidth(2);
-      ConversionTargetVis->SetForceSolid(true);
-      LogicalConversion->SetVisAttributes(ConversionTargetVis);
 
       G4VisAttributes * IronCoreVis= new G4VisAttributes( G4Colour(51/255. ,51/255. ,255/255. ));
       IronCoreVis->SetVisibility(true);
@@ -956,7 +977,7 @@ void DetectorConstruction::ConstructBeamLine(G4LogicalVolume* LogicalWorld, G4do
   G4double DistTubColl = 100*mm;
   G4double DistCollSol = 200*mm;
 
-  // position of particle gun (at centre ov vacuum chamber, here beginning of tube)
+  // position of particle gun (at centre of vacuum chamber, here beginning of tube)
   G4double IPz = BLLength + WindowThick + DistTubColl + CollimatorLength + DistCollSol;
 
   //.................................
