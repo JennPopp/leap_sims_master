@@ -18,7 +18,11 @@ public:
     BeamLine();
     ~BeamLine();
 
-    // Add member functions to construct geometres for this subsystem
+    // Add member functions to construct geometries for this subsystem
     void ConstructBeamLine(G4LogicalVolume* LogicalWorld, G4double magthick); 
+
+private:
+    G4String BeamLine;
+
 };
 #endif
