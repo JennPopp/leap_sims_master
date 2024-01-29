@@ -73,9 +73,14 @@ SteppingAction::~SteppingAction()
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep)
 {
+
   G4StepPoint* endPoint = aStep->GetPostStepPoint();
 
-  G4String procName = endPoint->GetProcessDefinedStep()->GetProcessName();
+  auto definedStep = endPoint->GetProcessDefinedStep();
+
+  G4String procName = "empty";
+  if (definedStep) procName = definedStep->GetProcessName();
+
   fRunAction->CountProcesses(procName);
 
   // get pre-step-volume of the current aStep
@@ -260,6 +265,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     }
 
   } // end if outType=shower
+  //G4cout << "End of the UserSteppingAction()" <<G4endl;
+
 } // end UserSteppingAction
 
 

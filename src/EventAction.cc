@@ -55,6 +55,8 @@ EventAction::~EventAction()
 
 void EventAction::BeginOfEventAction(const G4Event*)
 {
+  G4cout << "Start of the BeginOfEventAction()" <<G4endl;
+
   if (outputType == "bunch"){ // initialisation per event
     if(versionType == "Pol"){
       fEnergySum = 0.; // Sum of energy of particles behind magnet
